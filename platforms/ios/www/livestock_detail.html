@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Profil</title>
+    <link rel="stylesheet" type="text/css" href="onsenui/css/onsenui.css" />
+    <link rel="stylesheet" type="text/css" href="onsenui/css/onsen-css-components.min.css" />
+    <script src="onsenui/js/onsenui.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" src="js/jquery.qrcode.js"></script>
+    <script type="text/javascript" src="js/qrcode2.js"></script>
+    <ons-icon size="30px" style="margin-left: 10px; margin-top: 10px;" icon="md-arrow-back" onclick="BackButton()"></ons-icon>
+</head>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        font: 16px Arial;
+    }
+
+    input[type=text] {
+        border: 1px solid transparent;
+        background-color: #f1f1f1;
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 16px;
+        background-color: #f1f1f1;
+        width: 100%;
+    }
+
+    input[type=number] {
+        border: 1px solid transparent;
+        background-color: #f1f1f1;
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 16px;
+        background-color: #f1f1f1;
+        width: 100%;
+    }
+
+    input[type=date] {
+        border: 1px solid transparent;
+        background-color: #f1f1f1;
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 16px;
+        background-color: #f1f1f1;
+        width: 100%;
+    }
+
+    input[type=color] {
+        border: 1px solid transparent;
+        background-color: #f1f1f1;
+        border-radius: 10px;
+        /*        padding: 1px;*/
+        font-size: 16px;
+        width: 50px;
+        height: 40px;
+        /*        margin: .4rem;*/
+    }
+
+    .Div {
+        margin: auto;
+        margin-top: 40px;
+        margin-bottom: 40px;
+        width: 45%;
+        /*            border: 3px solid #2BA1E1;*/
+        /*            padding: 10px;*/
+    }
+
+    p {
+        font-family: Calibri;
+        font-size: 18px;
+    }
+
+    .speed-dial__item div {
+        position: absolute;
+        background: rgba(0, 0, 0, 0.3);
+        font-size: 18px;
+        padding: 0 5px;
+        border-radius: 10px;
+        top: 0;
+        right: 45px;
+    }
+
+    .speed-dial__item {
+        overflow: visible;
+    }
+
+    ons-speed-dial:before {
+        content: '';
+        display: block;
+        position: fixed;
+        visibility: hidden;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    ons-speed-dial.open:before {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .sidenav {
+        width: 40px;
+        position: fixed;
+        z-index: 1;
+        top: 45%;
+        left: 10px;
+        background: #eee;
+        overflow-x: hidden;
+        padding: 8px 0;
+        /*        border: thick solid #0000FF;*/
+    }
+
+    .sidenav a {
+        padding: 6px 8px 6px 8px;
+        text-decoration: none;
+        font-size: 20px;
+        color: #2196F3;
+        display: block;
+    }
+
+    .sidenav a:hover {
+        color: #064579;
+    }
+
+    select {
+        border: 1px solid transparent;
+        background-color: #f1f1f1;
+        border-radius: 10px;
+        /*        padding: 1px;*/
+        font-size: 16px;
+        width: 50px;
+        height: 40px;
+        /*        margin: .4rem;*/
+    }
+
+</style>
+
+<body>
+
+    <ons-page>
+        <ons-toolbar>
+            <div class="left">
+                <ons-icon size="30px" style="margin-left: 10px" icon="md-arrow-back" onclick="BackButton()"></ons-icon>
+            </div>
+            <div class="center">ID</div>
+            <div class="right"></div>
+        </ons-toolbar>
+        <ons-tabbar swipeable position="auto">
+            <!--        <ons-tabbar>-->
+            <ons-tab page="tab1.html" label="ID" icon="fa-qrcode" active>
+            </ons-tab>
+            <ons-tab page="tab2.html" label="Wurfindex" icon="fa-calendar-alt">
+            </ons-tab>
+            <ons-tab page="tab3.html" label="Arzneimittel" icon="fa-syringe">
+            </ons-tab>
+        </ons-tabbar>
+    </ons-page>
+
+
+    <template id="tab1.html">
+        <ons-page id="Bestandsliste ID">
+            <ons-list>
+                <ons-list-item>
+                    <ons-row style="margin-top: 5px; text-align: center">
+                        <ons-col style="border-right: thick solid black" onclick="modifyInputs()">
+                            <ons-icon id="SortIcon" style="margin-left: 3px" icon="fa-edit"></ons-icon>
+                            Bearbeiten
+                        </ons-col>
+                        <ons-col onclick="deleteDB()">
+                            Löschen
+                            <ons-icon id="FilterIcon" style="margin-left: 3px" icon="fa-trash-alt"></ons-icon>
+                        </ons-col>
+                    </ons-row>
+                </ons-list-item>
+                <ons-list-item>
+                    <ons-row style="margin-top: 5px; text-align: center">
+                        <ons-col style="border-right: thick solid black" onclick="showTemplateDialog('QRCode', 'QRCode.html')">
+                            <ons-icon id="SortIcon" style="margin-left: 3px" icon="fa-qrcode"></ons-icon>
+                            QR-Code
+                        </ons-col>
+                        <ons-col>
+                        </ons-col>
+                    </ons-row>
+                </ons-list-item>
+            </ons-list>
+            <ons-card>
+                <form>
+                    <p style="margin-top: 20px; margin-left: 10%; width:200px; font-weight: 500;">Nutztier Kennzeichnung</p>
+                    <svg id="SvgObj" width="480" height="280">
+                        <clipPath id="cut-off-bottom">
+                            <rect x="0" y="0" width="500" height="100" />
+                        </clipPath>
+
+                        <rect id="rect1" x="50" y="100" rx="20" ry="20" width="250" stroke="black" stroke-width="2" height="150" style="fill:red" />
+                        <circle id="circle1" cx="180" cy="100" r="70" clip-path="url(#cut-off-bottom)" stroke="black" stroke-width="2" style="fill:red" />
+                        <rect id="rect2" x="111" y="98" width="138" height="5" style="fill:red" />
+                        <circle id="circle2" cx="180" cy="90" r="20" fill="white" stroke="black" stroke-width="2" />
+
+                        <text id="Svgtext1" onclick="showInfo('countryCode')" fill="black" font-size="30" font-family="Verdana" x="90" y="140">AT</text>
+                        <text id="Svgtext2" onclick="showInfo('stateCode')" fill="black" font-size="30" font-family="Verdana" x="240" y="140">3</text>
+                        <text id="Svgtext3" onclick="showInfo('LFBISCode')" fill="black" font-size="30" font-family="Verdana" x="120" y="230">4321056</text>
+                        <!--
+                        <foreignObject id="NbrObj" width="150" height="50" x="105" y="155">
+                            <input id="Number" class="input-real" type="number" placeholder="1234" style="text-align: center" />
+                        </foreignObject> 
+-->
+                        <foreignObject id="CodeDigit0Obj" width="40" height="50" x="105" y="155">
+                            <input id="CodeDigit0" class="input-real" type="number" placeholder="X" maxlength="0" style="text-align: center;border-color : black; border-width: medium;" onfocus="this.value=''" disabled />
+                        </foreignObject>
+                        <foreignObject id="CodeDigit1Obj" width="40" height="50" x="105" y="155">
+                            <input id="CodeDigit1" class="input-real" type="number" placeholder="X" maxlength="1" style="text-align: center;border-color : black; border-width: medium;" onfocus="this.value=''" disabled />
+                        </foreignObject>
+                        <foreignObject id="CodeDigit2Obj" width="40" height="50" x="105" y="155">
+                            <input id="CodeDigit2" class="input-real" type="number" placeholder="X" maxlength="1" style="text-align: center;border-color : black; border-width: medium;" onfocus="this.value=''" disabled />
+                        </foreignObject>
+                        <foreignObject id="CodeDigit3Obj" width="40" height="50" x="105" y="155">
+                            <input id="CodeDigit3" class="input-real" type="number" placeholder="X" maxlength="1" style="text-align: center;border-color : black; border-width: medium;" onfocus="this.value=''" disabled />
+                        </foreignObject>
+                    </svg>
+                    <hr>
+                    <ons-row>
+                        <ons-col style="margin-left: 10%; margin-top: 30px">Farbe</ons-col>
+                        <ons-col>
+                            <ons-button id="Color" style="margin-top: 20px; padding: 19px; border-radius: 10px; background-color: yellow; border-color : black; border-width: medium; width: 140px" onclick="showTemplateDialog('color', 'color.html')" disabled></ons-button>
+                        </ons-col>
+                    </ons-row>
+                    <ons-row>
+                    </ons-row>
+                    <ons-row>
+                        <ons-col style="margin-left: 10%; margin-top: 30px">Standort</ons-col>
+                        <ons-col style="margin-left: 1%; margin-top: 20px">
+                            <select id="Place" style="text-align: right; width:140px;" disabled>
+                                <option value="Dekzentrum">Dekzentrum</option>
+                                <option value="Wartestall">Wartestall</option>
+                                <option value="Abferkelbox">Abferkelbox</option>
+                                <option value="Quarantäne Stall">Quarantäne Stall</option>
+                                <option value="Futterventil">Futterventil</option>
+                            </select>
+                        </ons-col>
+                    </ons-row>
+                    <ons-row>
+                        <ons-col style="margin-left: 10%; margin-top: 30px">Geboren am</ons-col>
+                        <ons-col>
+                            <input id="BornOn" type="date" value="tt.mm.jjjj " name="BornOn" style="width:140px; margin-top: 20px" disabled><br><br>
+                        </ons-col>
+                    </ons-row>
+                    <ons-fab style="margin-bottom: 20px; background-color: lightgreen; visibility: hidden" type="submit" position="bottom right" onclick="BackButton()" id="ChangeFab">
+                        <ons-icon icon="ion-checkmark"></ons-icon>
+                    </ons-fab>
+                </form>
+            </ons-card>
+        </ons-page>
+    </template>
+
+    <template id="tab2.html">
+        <ons-page id="Bestandsliste Belegung">
+            <ons-list>
+                <ons-list-item>
+                    <ons-row style="margin-top: 5px; text-align: center">
+                        <ons-col style="border-right: thick solid black" onclick="nextPage('livestock_action.html')">Hinzufügen
+                            <ons-icon style="margin-left: 3px" icon="fa-plus"></ons-icon>
+                        </ons-col>
+                        <ons-col>
+                        </ons-col>
+                    </ons-row>
+                </ons-list-item>
+            </ons-list>
+            <div style="margin-top: 5px" id="containerIndex">
+
+            </div>
+        </ons-page>
+    </template>
+
+    <template id="tab3.html">
+        <ons-page id="Bestandsliste Arzneimittel">
+            <ons-list>
+                <ons-list-item>
+                    <ons-row style="margin-top: 5px; text-align: center">
+                        <ons-col style="border-right: thick solid black" onclick="nextPage('drug_delivery.html')">Hinzufügen
+                            <ons-icon style="margin-left: 3px" icon="fa-plus"></ons-icon>
+                        </ons-col>
+                        <ons-col>
+                        </ons-col>
+                    </ons-row>
+                </ons-list-item>
+            </ons-list>
+            <div style="margin-top: 5px" id="containerMedical">
+            </div>
+        </ons-page>
+    </template>
+
+    <template id="QRCode.html">
+        <ons-dialog id="QRCode">
+            <div style="text-align: center; padding: 5px;">
+                <p>
+                    <b>
+                        Nutztier QR-Code
+                    </b>
+                </p>
+                <div class="Div" id="qrcodeTable">
+                    <p>Loading QR Code...
+                        <ons-progress-circular indeterminate></ons-progress-circular>
+                    </p>
+                </div>
+                <p>
+                    <ons-button onclick="hideDialog('QRCode')">Beenden</ons-button>
+                </p>
+            </div>
+        </ons-dialog>
+    </template>
+
+    <template id="color.html">
+        <ons-dialog id="color" cancelable>
+            <div style="text-align: center; padding: 5px;">
+                <p>
+                    <b>
+                        Farbe auswählen
+                    </b>
+                </p>
+            </div>
+            <ons-list>
+                <ons-list-item onchange="hideDialogColor('color', 'checkColor-1', 'yellow')" tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkColor-1"></ons-checkbox>
+                    </label>
+                    <label for="check-1" class="center">
+                        <ons-icon style="margin-right: 10px; color: yellow;" icon="fa-square-full"></ons-icon>
+                        Gelb
+                    </label>
+                </ons-list-item>
+                <ons-list-item onchange="hideDialogColor('color', 'checkColor-2', 'red')" tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkColor-2"></ons-checkbox>
+                    </label>
+                    <label for="check-1" class="center">
+                        <ons-icon style="margin-right: 10px; color: red;" icon="fa-square-full"></ons-icon>
+                        Rot
+                    </label>
+                </ons-list-item>
+                <ons-list-item onchange="hideDialogColor('color', 'checkColor-3', 'blue')" tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkColor-3"></ons-checkbox>
+                    </label>
+                    <label for="check-2" class="center">
+                        <ons-icon style="margin-right: 10px; color: blue;" icon="fa-square-full"></ons-icon>
+                        Blau
+                    </label>
+                </ons-list-item>
+                <ons-list-item onchange="hideDialogColor('color', 'checkColor-4', 'green')" tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkColor-4"></ons-checkbox>
+                    </label>
+                    <label for="check-2" class="center">
+                        <ons-icon style="margin-right: 10px; color: green;" icon="fa-square-full"></ons-icon>
+                        Grün
+                    </label>
+                </ons-list-item>
+                <ons-list-item onchange="hideDialogColor('color', 'checkColor-5', 'orange')" tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkColor-5"></ons-checkbox>
+                    </label>
+                    <label for="check-2" class="center">
+                        <ons-icon style="margin-right: 10px; color: orange;" icon="fa-square-full"></ons-icon>
+                        Orange
+                    </label>
+                </ons-list-item>
+                <ons-list-item onchange="hideDialogColor('color', 'checkColor-6', 'white')" tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkColor-6"></ons-checkbox>
+                    </label>
+                    <label for="check-2" class="center">
+                        <ons-icon style="margin-right: 10px;  color: whitesmoke;" icon="fa-square"></ons-icon>
+                        Weiß
+                    </label>
+                </ons-list-item>
+            </ons-list>
+        </ons-dialog>
+    </template>
+
+    <script type="text/javascript ">
+        db = window.openDatabase("Database", "1.0", "Nutztier db", 20 * 1024 * 1024); //create 20MB Database
+        var TimestampDBEntry = ""
+        document.addEventListener('prechange', function(event) {
+            document.querySelector('ons-toolbar .center')
+                .innerHTML = event.tabItem.getAttribute('label');
+        });
+
+        $(document).ready(function() {
+            //calc window size and adapte SVG Object
+            var w = window.innerWidth;
+            var h = window.innerHeight;
+            console.log(w)
+            console.log(((w - 250) / 2))
+            console.log(h)
+            var OffsestWidthX = (w - 250 - 50) / 2
+            //set Object width depending on Display width
+            document.getElementById("SvgObj").setAttribute("width", w - 30);
+            document.getElementById("rect1").setAttribute("x", OffsestWidthX);
+            document.getElementById("circle1").setAttribute("cx", OffsestWidthX + 130);
+            document.getElementById("circle2").setAttribute("cx", OffsestWidthX + 130);
+            document.getElementById("rect2").setAttribute("x", OffsestWidthX + 61);
+            document.getElementById("CodeDigit0Obj").setAttribute("x", OffsestWidthX + 40);
+            document.getElementById("CodeDigit1Obj").setAttribute("x", OffsestWidthX + 85);
+            document.getElementById("CodeDigit2Obj").setAttribute("x", OffsestWidthX + 130);
+            document.getElementById("CodeDigit3Obj").setAttribute("x", OffsestWidthX + 175);
+            document.getElementById("Svgtext1").setAttribute("x", OffsestWidthX + 40);
+            document.getElementById("Svgtext2").setAttribute("x", OffsestWidthX + 190);
+            document.getElementById("Svgtext3").setAttribute("x", OffsestWidthX + 70);
+            var color = String(localStorage.LivestockColor)
+            var number = String(localStorage.LivestockNumber)
+            db.transaction(function(transaction) {
+                transaction.executeSql('SELECT * FROM Nutztiere WHERE Color = ? AND Number = ?', [color, number], function(tx, results) {
+                    document.getElementById("Color").style.backgroundColor = results.rows.item(0).Color;
+                    document.getElementById("rect1").style.fill = results.rows.item(0).Color;
+                    document.getElementById("rect2").style.fill = results.rows.item(0).Color;
+                    document.getElementById("circle1").style.fill = results.rows.item(0).Color;
+                    document.getElementById("CodeDigit0").value = results.rows.item(0).Number.charAt(0);
+                    document.getElementById("CodeDigit1").value = results.rows.item(0).Number.charAt(1);
+                    document.getElementById("CodeDigit2").value = results.rows.item(0).Number.charAt(2);
+                    document.getElementById("CodeDigit3").value = results.rows.item(0).Number.charAt(3);
+                    document.getElementById("Place").value = results.rows.item(0).Place;
+                    document.getElementById("BornOn").value = results.rows.item(0).Born;
+                    TimestampDBEntry = results.rows.item(0).Timestamp;
+                }, null);
+            });
+            db.transaction(function(transaction) {
+                transaction.executeSql('SELECT * FROM ArzneimittelvergabeNew WHERE Color = ? AND Number = ?', [color, number], function(tx, results) {
+                    console.log(results)
+                    for (i = 0; i < results.rows.length; i++) {
+                        card = document.createElement("ons-card")
+                        /*generate Medical*/
+                        rowMedical = document.createElement("ons-row")
+                        colMedical = document.createElement("ons-col")
+                        colMedical.innerHTML = results.rows.item(i).drug
+                        colMedical.style.fontWeight = "700";
+                        colMedical.style.marginBottom = "10px";
+                        /*generate Date*/
+                        rowDate = document.createElement("ons-row")
+                        colDateHeader = document.createElement("ons-col")
+                        colDate = document.createElement("ons-col")
+                        colDateHeader.innerHTML = ("Datum")
+                        colDate.innerHTML = results.rows.item(i).date
+                        /*generate Amount*/
+                        rowAmount = document.createElement("ons-row")
+                        colAmountHeader = document.createElement("ons-col")
+                        colAmount = document.createElement("ons-col")
+                        colAmountHeader.innerHTML = ("Abgabemenge")
+                        colAmount.innerHTML = results.rows.item(i).amount + " ml";
+                        /*generate Delay*/
+                        rowDelay = document.createElement("ons-row")
+                        colDelayHeader = document.createElement("ons-col")
+                        colDelay = document.createElement("ons-col")
+                        colDelayHeader.innerHTML = ("Wartefrist")
+                        colDelay.innerHTML = results.rows.item(i).delay + " Tage";
+                        /*append rows to container*/
+                        rowMedical.appendChild(colMedical);
+                        card.appendChild(rowMedical);
+                        rowDate.appendChild(colDateHeader);
+                        rowDate.appendChild(colDate);
+                        card.appendChild(rowDate);
+                        rowAmount.appendChild(colAmountHeader);
+                        rowAmount.appendChild(colAmount);
+                        card.appendChild(rowAmount);
+                        rowDelay.appendChild(colDelayHeader);
+                        rowDelay.appendChild(colDelay);
+                        card.appendChild(rowDelay);
+                        document.getElementById("containerMedical").appendChild(card);
+                    }
+                }, null);
+            });
+            db.transaction(function(transaction) {
+                transaction.executeSql('SELECT * FROM Wurfindex WHERE Color = ? AND Number = ?', [color, number], function(tx, results) {
+                    for (i = 0; i < results.rows.length; i++) {
+                        card = document.createElement("ons-card")
+                        /*generate Type*/
+                        rowType = document.createElement("ons-row")
+                        colType = document.createElement("ons-col")
+                        colType.innerHTML = results.rows.item(i).type
+                        colType.style.fontWeight = "700";
+                        colType.style.marginBottom = "10px";
+                        /*generate Time*/
+                        rowTime = document.createElement("ons-row")
+                        colTimeHeader = document.createElement("ons-col")
+                        colTime = document.createElement("ons-col")
+                        colTimeHeader.innerHTML = ("Uhrzeit")
+                        colTime.innerHTML = results.rows.item(i).time
+                        /*generate Date*/
+                        rowDate = document.createElement("ons-row")
+                        colDateHeader = document.createElement("ons-col")
+                        colDate = document.createElement("ons-col")
+                        colDateHeader.innerHTML = ("Datum")
+                        colDate.innerHTML = results.rows.item(i).date
+                        /*Born alive*/
+                        rowBornAlive = document.createElement("ons-row")
+                        colBornAliveHeader = document.createElement("ons-col")
+                        colBornAlive = document.createElement("ons-col")
+                        colBornAliveHeader.innerHTML = ("Lebend Geboren")
+                        colBornAlive.innerHTML = results.rows.item(i).born_alive
+                        /*Born dead*/
+                        rowBornDead = document.createElement("ons-row")
+                        colBornDeadHeader = document.createElement("ons-col")
+                        colBornDead = document.createElement("ons-col")
+                        colBornDeadHeader.innerHTML = ("Tot geboren")
+                        colBornDead.innerHTML = results.rows.item(i).born_dead
+                        /*append rows to container*/
+                        rowType.appendChild(colType);
+                        card.appendChild(rowType);
+                        rowTime.appendChild(colTimeHeader);
+                        rowTime.appendChild(colTime);
+                        card.appendChild(rowTime);
+                        rowDate.appendChild(colDateHeader);
+                        rowDate.appendChild(colDate);
+                        card.appendChild(rowDate);
+                        if (results.rows.item(i).born_alive.length != 0) {
+                            rowBornAlive.appendChild(colBornAliveHeader);
+                            rowBornAlive.appendChild(colBornAlive);
+                            card.appendChild(rowBornAlive);
+                        }
+                        if (results.rows.item(i).born_dead.length != 0) {
+                            rowBornDead.appendChild(colBornDeadHeader);
+                            rowBornDead.appendChild(colBornDead);
+                            card.appendChild(rowBornDead);
+                        }
+                        document.getElementById("containerIndex").appendChild(card);
+                    }
+                }, null);
+            });
+        });
+
+        var showTemplateDialog = function(my_dialog, my_dialog_html) {
+
+            var dialog = document.getElementById(my_dialog);
+
+            if (dialog) {
+                dialog.show();
+                createQR();
+            } else {
+                ons.createElement(my_dialog_html, {
+                        append: true
+                    })
+                    .then(function(dialog) {
+                        dialog.show();
+                        createQR();
+                    });
+            }
+        };
+
+        //select color
+        var hideDialogColor = function(id, checkbox, color) {
+            document.getElementById("checkColor-1").checked = false;
+            document.getElementById("checkColor-2").checked = false;
+            document.getElementById("checkColor-3").checked = false;
+            document.getElementById("checkColor-4").checked = false;
+            document.getElementById("checkColor-5").checked = false;
+            document.getElementById("checkColor-6").checked = false;
+            document.getElementById(checkbox).checked = true;
+            document.getElementById("Color").style.backgroundColor = color;
+            document.getElementById("rect1").style.fill = color;
+            document.getElementById("rect2").style.fill = color;
+            document.getElementById("circle1").style.fill = color;
+            localStorage.setItem("MarkColor", color);
+            document.getElementById(id).hide();
+        };
+
+        var showInfo = function(code) {
+            if (code == "countryCode") {
+                ons.notification.alert({
+                    message: 'Ländercode: AT steht für Österrreich',
+                    title: 'Ohrmarken Info',
+                });
+            } else if (code == "stateCode") {
+                ons.notification.alert({
+                    message: 'Bundeslandcode: 3 steht für Oberösterreich',
+                    title: 'Ohrmarken Info',
+                });
+            } else if (code == "LFBISCode") {
+                ons.notification.alert({
+                    message: 'LFBIS Nummer deines Betriebs',
+                    title: 'Ohrmarken Info',
+                });
+            }
+        };
+
+        var hideDialog = function(id) {
+            document
+                .getElementById(id)
+                .hide();
+        };
+
+        function setColor(color) {
+            app1.hideFromTemplate()
+            document.getElementById("Color").style.backgroundColor = color;
+        }
+
+        function modifyInputs() {
+            document.getElementById("Color").removeAttribute("disabled");
+            document.getElementById("Number").removeAttribute("disabled");
+            document.getElementById("Place").removeAttribute("disabled");
+            document.getElementById("BornOn").removeAttribute("disabled");
+            document.getElementById('ChangeFab').style.visibility = "visible";
+        }
+
+        function BackButton() {
+            window.location = "livestock.html ";
+        }
+
+        function deleteDB() {
+            ons.notification.confirm({
+                message: 'Möchtest du das Nutztier löschen?',
+                title: 'Nutztier löschen',
+                buttonLabels: ['Ja', 'Nein'],
+                animation: 'default',
+                primaryButtonIndex: 1,
+                cancelable: true,
+                callback: function(index) {
+                    if (index == 0) {
+                        var color = String(localStorage.LivestockColor)
+                        var number = String(localStorage.LivestockNumber)
+                        db1.transaction(function(tx, results) {
+                                tx.executeSql('SELECT * FROM Nutztiere WHERE Color = ? AND Number = ?', [color, number]);
+                            },
+                            function(error) {
+                                alert('Error: ' + error.message + ' code: ' + error.code);
+                            },
+                            function(success) {
+                                window.location = "livestock.html ";
+                            });
+                    }
+                }
+            });
+        }
+
+        //        setTimeout(createQR, 1000);
+
+        function createQR() {
+            document.getElementById("qrcodeTable").innerHTML = "";
+            var Color = document.getElementById("Color").style.backgroundColor;
+            var Number = document.getElementById("Number").value;
+            var Place = document.getElementById("Place").value;
+            var CreatedOn = document.getElementById("BornOn").value;
+            var QRData = Color + "+" + Number + "+" + Place + "+" + CreatedOn;
+            // Clear Previous QR Code
+            $('#qrcode').empty();
+            jQuery('#qrcodeTable').qrcode({
+                render: "table",
+                width: 128,
+                height: 128,
+                text: QRData
+            });
+        }
+
+        function nextPage(page) {
+            window.location = page;
+        }
+
+    </script>
+</body>
+
+</html>
