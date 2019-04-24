@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Dial Code with Flag</title>
+    <link rel="stylesheet" type="text/css" href="onsenui/css/onsenui.css" />
+    <link rel="stylesheet" type="text/css" href="onsenui/css/onsen-css-components.min.css" />
+    <script src="onsenui/js/onsenui.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <ons-fab type="submit" position="bottom right" onclick="write2DB()">
+        <ons-icon icon="md-arrow-forward"></ons-icon>
+    </ons-fab>
+    <ons-icon size="30px" style="margin-left: 10px; margin-top: 10px;" icon="md-arrow-back" onclick="BackButton()"></ons-icon>
+</head>
+
+<style>
+    p {
+        font-family: Calibri;
+        font-size: 18px;
+    }
+
+</style>
+
+<body>
+    <div style="text-align: center; margin-top: 10px; margin-left: 10%; margin-right: 10%;">
+        <p style="text-align: left;">Bitte gib den 8-stelligen Code ein, den du bei deiner Anmeldung erhalten hast</p>
+        <div class="col-md-12 pd-10">
+            <div class="col-md-2">
+                <input id="code" type="text" placeholder="Code" size="10" style="outline: 0; background: transparent; border: 0; border-bottom: 2px solid black; text-align: center; font-size: 18px; margin-left: 10px; margin-top: 15px; padding: 5px; text-align: left" value="34288b3a">
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //create 20MB Database
+        var firstname = "";
+        var lastname = "";
+        var email = "";
+        var uuid = "";
+        var code = "";
+        var tokenUpper = "";
+
+        $(document).ready(function() {
+            firstname = localStorage.getItem("firstname")
+            lastname = (localStorage.getItem("lastname"))
+            var token = lastname.charAt(0) + lastname.charAt(1) + firstname.charAt(0)
+            tokenUpper = token.toUpperCase();
+            email = (localStorage.getItem("email"))
+            uuid = (localStorage.getItem("deviceUUID"))
+            db.transaction(function(tx) {
+                tx.executeSql('DROP TABLE IF EXISTS user');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS user (firstname, lastname, email, code, uuid, token, syncRevServer)');
+            }, function(error) {
+                alert('Error: ' + error.message + ' code: ' + error.code);
+            }, function() {});
+        });
+
+        function write2DB() {
+            code = document.getElementById("code").value;
+            console.log(firstname)
+            console.log(lastname)
+            console.log(tokenUpper)
+            console.log(email)
+            console.log(uuid)
+            db.transaction(function(transaction) {
+                var executeQuery = "INSERT INTO user (firstname, lastname, email, code, uuid, token, syncRevServer) VALUES (?,?,?,?,?,?,?)";
+                transaction.executeSql(executeQuery, [firstname, lastname, email, code, uuid, tokenUpper, '0'], function(tx, result) {
+                        requestData()
+                        //                        window.location = "menu.html ";
+                    },
+                    function(error) {
+                        alert('Error: ' + error.message + ' code: ' + error.code);
+                    });
+            });
+        }
+
+        function requestData() {
+            $.ajax({
+                url: "http://192.168.1.8:5000/database/user/" + code,
+                contentType: "application/json",
+                type: "POST",
+                data: JSON.stringify({
+                    "device_uuid": uuid,
+                    "firstname": firstname,
+                    "lastname": lastname,
+                    "email": email
+                }),
+                success: function(data) {
+                    alert(data)
+                    if (data == "uuid_not_in_database") {
+                        ons.notification.alert({
+                            message: 'Bitte registriere dich unter www.???.at',
+                            title: 'Betrieb nicht in Datenbank',
+                        });
+                    } else {
+                        window.location = "menu.html ";
+                    }
+                }
+            });
+        }
+
+        function BackButton() {
+            window.location = "user_reg_email.html ";
+        }
+
+    </script>
+
+</body>
+
+</html>

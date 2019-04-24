@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>LeerGutVerwaltung</title>
+    <link rel="stylesheet" type="text/css" href="onsenui/css/onsenui.css" />
+    <link rel="stylesheet" type="text/css" href="onsenui/css/onsen-css-components.min.css" />
+    <script src="onsenui/js/onsenui.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <img src="img/logo.png" style="width: 100%; align-content: center; margin-top: 50px" />
+
+    <div style="text-align: center; margin-top: 10px; margin-left: 10px; margin-right: 10px;">
+        <p>Die digitale Gesundheitsakte für deine Nutztiere</p>
+    </div>
+    <section>
+        <ons-button style=" border-radius: 30px;background-color: #2BA1E1; position: fixed; bottom: 40px; right: 10%; left: 10%; text-align: center" icon="ion-log-in" onclick="PageForward()"> Zur Anmeldung
+            <ons-icon icon="ion-log-in" size="25px" style="margin-left: 5%" fixed-width="true"></ons-icon>
+        </ons-button>
+    </section>
+</head>
+
+<style>
+    p {
+        font-family: Calibri;
+        font-size: 22px;
+    }
+
+</style>
+
+<body>
+
+    <script>
+        document.addEventListener("deviceready", onDeviceReady, false);
+        //get device uuid
+        function onDeviceReady() {
+            localStorage.setItem("deviceUUID", device.uuid);
+        }
+
+        function PageForward() {
+            window.location = "user_reg_name.html ";
+        }
+
+    </script>
+</body>
+
+</html>

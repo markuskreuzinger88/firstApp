@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Device Info</title>
+    <!--    <button onclick="ClearDB()">Click me</button>-->
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //create 20MB Database
+        // Wait for device API libraries to load
+        document.addEventListener("deviceready", onDeviceReady, false);
+        // device APIs are available 
+        function onDeviceReady() {
+            db.transaction(function(tx) {
+                tx.executeSql('DROP TABLE IF EXISTS user');
+                tx.executeSql('DROP TABLE IF EXISTS Nutztiere');
+                tx.executeSql('DROP TABLE IF EXISTS Arzneimittelvergabe');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS user (firstname, lastname, email, code, uuid, token)');
+            }, function(error) {
+                alert('Error: ' + error.message + ' code: ' + error.code);
+            }, function() {
+                db.transaction(function(tx) {
+                    tx.executeSql('SELECT * FROM user', [], function(tx, results) {
+                        //check if user table is not empty
+                        //otherwise go to notifying page
+                        if (results.rows.length > 0) {
+                            window.location = "menu.html";
+                        } else {
+                            window.location = "start_page.html";
+                        }
+                    }, null);
+                });
+            });
+        }
+
+    </script>
+</head>
+
+<body>
+</body>
+
+</html>
