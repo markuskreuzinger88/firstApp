@@ -124,30 +124,13 @@
                     <ons-icon size="20px" style="color: black; margin-left: 5px" rotate="90" icon="fa-search">
                     </ons-icon>
                 </p>
-                <ons-row>
-                    <ons-col style="margin-left: 10%; margin-top: 10px">Farbe</ons-col>
+                <ons-list id="container" modifier="inset">
+                </ons-list>
+                <ons-row style="text-align: center; margin-top: 5%; margin-left: 5%; margin-bottom: 10%">
                     <ons-col>
-                        <ons-button id="Color"
-                            style="padding: 19px; border-radius: 10px; background-color: yellow; border-color : black; border-width: medium; width: 140px"
-                            onclick="showTemplateDialog('color', 'color.html')"></ons-button>
                     </ons-col>
-                </ons-row>
-                <ons-row style="margin-top: 20px">
-                    <ons-col style="margin-left: 10%; margin-top: 10px">Nummer</ons-col>
-                    <ons-col>
-                        <div class="autocomplete">
-                            <input id="Nummer" type="number" placeholder="1234" size="500"
-                                style="text-align: right; width:140px">
-                        </div>
-                    </ons-col>
-                </ons-row>
-                <ons-row style="margin-top: 20px; margin-bottom: 30px">
-                    <ons-col style="margin-left: 10%; margin-top: 10px">Scannen</ons-col>
-                    <ons-col>
-                        <ons-button style="background-color: #2BA1E1; border-radius: 10px; width: 140px"
-                            modifier="large" onclick="OpenCam()">
-                            <ons-icon size="15px" style="color: black; margin-left: 10px" icon="fa-qrcode"></ons-icon>
-                        </ons-button>
+                    <ons-col onclick="nextPage('livestock.html')">Hinzufügen
+                        <ons-icon style="margin-left: 3px" icon="fa-plus"></ons-icon>
                     </ons-col>
                 </ons-row>
                 <hr>
@@ -201,82 +184,8 @@
         </ons-card>
     </ons-page>
 
-    <template id="color.html">
-        <ons-dialog id="color">
-            <div style="text-align: center; padding: 5px;">
-                <p>
-                    <b>
-                        Farbe auswählen
-                    </b>
-                </p>
-            </div>
-            <ons-list>
-                <ons-list-item onchange="hideDialogColor('color', 'checkColor-1', 'yellow')" tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkColor-1"></ons-checkbox>
-                    </label>
-                    <label for="check-1" class="center">
-                        <ons-icon style="margin-right: 10px; color: yellow;" icon="fa-square-full"></ons-icon>
-                        Gelb
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogColor('color', 'checkColor-2', 'red')" tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkColor-2"></ons-checkbox>
-                    </label>
-                    <label for="check-1" class="center">
-                        <ons-icon style="margin-right: 10px; color: red;" icon="fa-square-full"></ons-icon>
-                        Rot
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogColor('color', 'checkColor-3', 'blue')" tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkColor-3"></ons-checkbox>
-                    </label>
-                    <label for="check-2" class="center">
-                        <ons-icon style="margin-right: 10px; color: blue;" icon="fa-square-full"></ons-icon>
-                        Blau
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogColor('color', 'checkColor-4', 'green')" tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkColor-4"></ons-checkbox>
-                    </label>
-                    <label for="check-2" class="center">
-                        <ons-icon style="margin-right: 10px; color: green;" icon="fa-square-full"></ons-icon>
-                        Grün
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogColor('color', 'checkColor-5', 'orange')" tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkColor-5"></ons-checkbox>
-                    </label>
-                    <label for="check-2" class="center">
-                        <ons-icon style="margin-right: 10px; color: orange;" icon="fa-square-full"></ons-icon>
-                        Orange
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogColor('color', 'checkColor-6', 'white')" tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkColor-6"></ons-checkbox>
-                    </label>
-                    <label for="check-2" class="center">
-                        <ons-icon style="margin-right: 10px;  color: whitesmoke;" icon="fa-square"></ons-icon>
-                        Weiß
-                    </label>
-                </ons-list-item>
-            </ons-list>
-        </ons-dialog>
-    </template>
-
     <script type="text/javascript">
         db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //create 20MB Database
-        var NutztierYellow = [];
-        var NutztierGreen = [];
-        var NutztierRed = [];
-        var NutztierBlue = [];
-        var NutztierOrange = [];
-        var NutztierWhite = [];
         var code = "";
         var token = "";
         var color = "";
@@ -288,46 +197,14 @@
         var approval_number = "";
         var switchState = "";
         var ipAdress = "";
+        var LiveStockNbr = "AT-3-4321056-";
 
         $(document).ready(function () {
             switchState = localStorage.getItem("settings_request")
             ipAdress = localStorage.getItem("settings_ipAdress")
-            var j = 0;
-            var n = 0;
-            var m = 0;
-            var k = 0;
-            var l = 0;
-            var t = 0;
             var color = String(localStorage.LivestockColor)
             var number = String(localStorage.LivestockNumber)
-            document.getElementById("Color").style.backgroundColor = color;
-            document.getElementById("Nummer").value = number;
-            db.transaction(function (transaction) {
-                transaction.executeSql('SELECT * FROM Nutztiere', [], function (tx, results) {
-                    console.log(results)
-                    for (i = 0; i < results.rows.length; i++) {
-                        if (results.rows.item(i).Color == "yellow") {
-                            NutztierYellow[j] = results.rows.item(i).Number;
-                            j++;
-                        } else if (results.rows.item(i).Color == "green") {
-                            NutztierGreen[n] = results.rows.item(i).Number;
-                            n++;
-                        } else if (results.rows.item(i).Color == "red") {
-                            NutztierRed[m] = results.rows.item(i).Number;
-                            m++;
-                        } else if (results.rows.item(i).Color == "blue") {
-                            NutztierBlue[k] = results.rows.item(i).Number;
-                            k++;
-                        } else if (results.rows.item(i).Color == "orange") {
-                            NutztierOrange[l] = results.rows.item(i).Number;
-                            l++;
-                        } else if (results.rows.item(i).Color == "white") {
-                            NutztierWhite[t] = results.rows.item(i).Number;
-                            t++;
-                        }
-                    }
-                }, null);
-            });
+
             /*read from user table in DB*/
             db.transaction(function (transaction) {
                 transaction.executeSql('SELECT * FROM user', [], function (tx, results) {
@@ -343,60 +220,113 @@
                 tx.executeSql('DROP TABLE IF EXISTS Arzneimittelvergabe');
                 tx.executeSql(
                     'CREATE TABLE IF NOT EXISTS Arzneimittelvergabe (color, number, drug, approval_number, delay, amount, timestamp, DBSyncServer)'
-                    );
+                );
             }, function (error) {
                 alert('Error: ' + error.message + ' code: ' + error.code);
             }, function () {});
 
-            setColor(color)
+            GetDBTaggedResult()
         });
 
-        var showTemplateDialog = function (my_dialog, my_dialog_html) {
+        //get all livestocks which are tagged for drug delivery
+        function GetDBTaggedResult() {
+            var list = document.getElementById("container");
+            while (list.hasChildNodes()) {
+                list.removeChild(list.firstChild);
+            }
+            db.transaction(function (transaction) {
+                transaction.executeSql(
+                    'SELECT * FROM Nutztiere WHERE tagged = ? ORDER BY Number DESC', ['true'],
+                    function (tx, results) {
+                        console.log(results)
+                        DisplayResult(results)
+                    }, null);
+            });
+        }
 
-            var dialog = document.getElementById(my_dialog);
-
-            if (dialog) {
-                dialog.show();
+        function DisplayResult(results) {
+            console.log(results.rows.length)
+            if (results.rows.length > 0) {
+                for (i = 0; i < results.rows.length; i++) {
+                    list = document.createElement("ons-list-item")
+                    //create text center
+                    div_center = document.createElement("div")
+                    div_center.setAttribute("id", i);
+                    div_center.setAttribute("class", "center");
+                    div_center.setAttribute("style", "margin-left: 10px");
+                    //create icon right
+                    div_right = document.createElement("div")
+                    div_right.setAttribute("class", "right");
+                    icon_right = document.createElement("ons-icon")
+                    icon_right.setAttribute("icon", "fa-times");
+                    icon_right.setAttribute("style", "color: red");
+                    icon_right.setAttribute("size", "30px");
+                    icon_right.setAttribute("onclick", "removeListItem(" + i + ")");
+                    //add text center
+                    span_center1 = document.createElement("span")
+                    span_center1.setAttribute("id", "livestockID" + i);
+                    span_center2 = document.createElement("span")
+                    span_center1.setAttribute("class", "list-item__title");
+                    span_center2.setAttribute("class", "list-item__subtitle");
+                    span_center1.innerHTML = LiveStockNbr + results.rows.item(i).Number;
+                    span_center2.innerHTML = results.rows.item(i).Place;
+                    div_left = document.createElement("div")
+                    div_left.setAttribute("class", "left");
+                    //create color mark right
+                    input = document.createElement("input")
+                    input.setAttribute("id", "livestockColor" + i);
+                    input.setAttribute("style",
+                        "margin-right: 5px;border-color : black; border-width: medium; background-color:" + results
+                        .rows
+                        .item(i).Color);
+                    input.setAttribute("size", "3");
+                    input.setAttribute("disabled", "true");
+                    list.setAttribute("tappable", true);
+                    //append childs
+                    div_left.appendChild(input);
+                    div_right.appendChild(icon_right);
+                    list.appendChild(div_left);
+                    list.appendChild(div_right);
+                    div_center.appendChild(span_center1);
+                    div_center.appendChild(span_center2);
+                    list.appendChild(div_center);
+                    document.getElementById("container").appendChild(list);
+                }
             } else {
-                ons.createElement(my_dialog_html, {
-                        append: true
-                    })
-                    .then(function (dialog) {
-                        dialog.show();
-                    });
+                list = document.createElement("ons-list-item")
+                div = document.createElement("div")
+                div.innerHTML = "Kein Nutztier ausgewählt"
+                list.appendChild(div);
+                document.getElementById("container").appendChild(list);
             }
-        };
+        }
 
-        //select color
-        var hideDialogColor = function (id, checkbox, color) {
-            document.getElementById("checkColor-1").checked = false;
-            document.getElementById("checkColor-2").checked = false;
-            document.getElementById("checkColor-3").checked = false;
-            document.getElementById("checkColor-4").checked = false;
-            document.getElementById("checkColor-5").checked = false;
-            document.getElementById("checkColor-6").checked = false;
-            document.getElementById(checkbox).checked = true;
-            document.getElementById("Color").style.backgroundColor = color;
-            localStorage.setItem("LivestockColor", color);
-            document.getElementById(id).hide();
-            setColor(color)
-        };
-
-        function setColor(color) {
-            document.getElementById("Color").style.backgroundColor = color;
-            if (color == "yellow") {
-                autocomplete(document.getElementById("Nummer"), NutztierYellow);
-            } else if (color == "green") {
-                autocomplete(document.getElementById("Nummer"), NutztierGreen);
-            } else if (color == "red") {
-                autocomplete(document.getElementById("Nummer"), NutztierRed);
-            } else if (color == "blue") {
-                autocomplete(document.getElementById("Nummer"), NutztierBlue);
-            } else if (color == "orange") {
-                autocomplete(document.getElementById("Nummer"), NutztierOrange);
-            } else if (color == "white") {
-                autocomplete(document.getElementById("Nummer"), NutztierWhite);
-            }
+        function removeListItem(id) {
+            var color = document.getElementById("livestockColor" + id).style.backgroundColor;
+            var number = document.getElementById("livestockID" + id).innerHTML;
+            //only use livestock 4 digit number
+            number = number.slice(number.length - 4, number.length);
+            ons.notification.confirm({
+                message: 'Möchtest du das Nutztier aus deiner Liste für die Arzneimittelvergabe löschen?',
+                title: 'Nutztier entfernen',
+                buttonLabels: ['Ja', 'Nein'],
+                animation: 'default',
+                primaryButtonIndex: 1,
+                cancelable: true,
+                callback: function (index) {
+                    if (index == 0) {
+                        db.transaction(function (tx) {
+                            tx.executeSql(
+                                "UPDATE Nutztiere SET tagged=? where Color = ? AND Number = ?",
+                                ['false', color, number]);
+                        }, function (error) {
+                            alert('Error: ' + error.message + ' code: ' + error.code);
+                        }, function () {
+                            GetDBTaggedResult()
+                        });
+                    }
+                }
+            });
         }
 
         function autocomplete(inp, arr) {
@@ -743,10 +673,6 @@
             window.location = "menu.html";
         }
 
-        function OpenCam() {
-            window.location = "scan_page.html";
-        }
-
         function DoneButton() {
             color = document.getElementById("Color").style.backgroundColor
             number = document.getElementById("Nummer").value
@@ -848,6 +774,11 @@
                         alert('Error: ' + error.message + ' code: ' + error.code);
                     });
             });
+        }
+
+        function nextPage(page) {
+            localStorage.setItem("lastPage", "drug_delivery");
+            window.location = page;
         }
     </script>
 </body>

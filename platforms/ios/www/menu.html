@@ -376,16 +376,17 @@
         //        });
 
         $(document).ready(function() {
-            db.transaction(function(transaction) {
-                transaction.executeSql('SELECT * FROM user', [], function(tx, results) {
-                    //get buisness code for requests
-                    code = results.rows.item(0).code;
-                    //get current local Revision to be in sync with Server
-                    syncRevLocal = results.rows.item(0).syncRevServer;
-                    //get current mobile uuid
-                    uuid = results.rows.item(0).uuid;
-                }, null);
-            });
+            localStorage.setItem("lastPage", "menu");
+            // db.transaction(function(transaction) {
+            //     transaction.executeSql('SELECT * FROM user', [], function(tx, results) {
+            //         //get buisness code for requests
+            //         code = results.rows.item(0).code;
+            //         //get current local Revision to be in sync with Server
+            //         syncRevLocal = results.rows.item(0).syncRevServer;
+            //         //get current mobile uuid
+            //         uuid = results.rows.item(0).uuid;
+            //     }, null);
+            // });
         });
 
         window.fn = {};
@@ -492,50 +493,6 @@
                 });
         }
 
-        function NewDelivery() {
-            if (localStorage.PasswordSetting == "true") {
-                ons.notification.prompt({
-                        message: 'Bitte gib dein Passwort ein',
-                        title: 'Passwort für Lieferschein bestätigen',
-                        inputType: 'password'
-                    })
-                    .then(function(input) {
-                        if (localStorage.Password == input) {
-                            window.location = "create_qr.html";
-                        } else {
-                            ons.notification.alert({
-                                message: "Ein falsches Passwort wurde eingegeben!",
-                                title: 'Passwort ungültig'
-                            });
-                        }
-                    });
-            } else {
-                window.location = "create_qr.html";
-            }
-        };
-
-        function ConfirmDelivery() {
-            if (localStorage.PasswordSetting == "true") {
-                ons.notification.prompt({
-                        message: 'Bitte gib dein Passwort ein',
-                        title: 'Passwort',
-                        inputType: 'password'
-                    })
-                    .then(function(input) {
-                        if (localStorage.Password == input) {
-                            window.location = "scan_page.html";
-                        } else {
-                            ons.notification.alert({
-                                message: "Ein falsches Passwort wurde eingegeben!",
-                                title: 'Passwort ungültig'
-                            });
-                        }
-                    });
-            } else {
-                window.location = "scan_page.html";
-            }
-        };
-
         function openBrowser() {
             var url = 'https://logcontract.com/privacy';
             var target = '_blank';
@@ -564,14 +521,14 @@
             }
         }
 
-    </script>
+    </script> 
     <script type="text/javascript" src="cordova.js"></script>
-    <script type="text/javascript" src="js/index.js"></script>
+    <!-- <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript" src="js/toast.js"></script>
     <script type="text/javascript" src="js/crc.js"></script>
     <script src="js/log.js"></script>
     <script src="js/profil.js"></script>
-    <script src="js/settings.js"></script>
+    <script src="js/settings.js"></script> -->
 </body>
 
 </html>

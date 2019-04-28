@@ -289,7 +289,7 @@
             <ons-list>
                 <ons-list-item>
                     <ons-row style="margin-top: 5px; text-align: center">
-                        <ons-col style="border-right: thick solid black" onclick="nextPage('drug_delivery.html')">Hinzufügen
+                        <ons-col style="border-right: thick solid black" onclick="newDrugDelivery()">Hinzufügen
                             <ons-icon style="margin-left: 3px" icon="fa-plus"></ons-icon>
                         </ons-col>
                         <ons-col>
@@ -659,6 +659,19 @@
                 width: 128,
                 height: 128,
                 text: QRData
+            });
+        }
+
+        function newDrugDelivery() {
+            // tag livestock for new drug delivery
+            var color = String(localStorage.LivestockColor)
+                        var number = String(localStorage.LivestockNumber)
+            db.transaction(function(tx) {
+                tx.executeSql("UPDATE Nutztiere SET tagged=? where Color = ? AND Number = ?", ['true', color, number]);
+            }, function(error) {
+                alert('Error: ' + error.message + ' code: ' + error.code);
+            }, function() {
+                nextPage('drug_delivery.html');
             });
         }
 

@@ -15,7 +15,8 @@
                 tx.executeSql('DROP TABLE IF EXISTS user');
                 tx.executeSql('DROP TABLE IF EXISTS Nutztiere');
                 tx.executeSql('DROP TABLE IF EXISTS Arzneimittelvergabe');
-                tx.executeSql('CREATE TABLE IF NOT EXISTS user (firstname, lastname, email, code, uuid, token)');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS user (firstname, lastname, email)');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS Nutztiere (Timestamp, Born, Color, Number, Place , tagged, DBSyncServer)');
             }, function(error) {
                 alert('Error: ' + error.message + ' code: ' + error.code);
             }, function() {

@@ -290,9 +290,9 @@
             document.querySelector("#BornOn").value = today;
             //create table in database
             db.transaction(function (tx) {
-                //                tx.executeSql('DROP TABLE IF EXISTS Nutztiere');
+                            //    tx.executeSql('DROP TABLE IF EXISTS Nutztiere');
                 tx.executeSql(
-                    'CREATE TABLE IF NOT EXISTS Nutztiere (Timestamp, Born, Color, Number, Place, crc, DBSyncServer)'
+                    'CREATE TABLE IF NOT EXISTS Nutztiere (Timestamp, Born, Color, Number, Place, tagged, DBSyncServer)'
                     );
             }, function (error) {
                 alert('Error: ' + error.message + ' code: ' + error.code);
@@ -453,8 +453,8 @@
         function write2DB() {
             db.transaction(function (transaction) {
                 var executeQuery =
-                    "INSERT INTO Nutztiere (Timestamp, Born, Color, Number, Place , crc, DBSyncServer) VALUES (?,?,?,?,?,?,?)";
-                transaction.executeSql(executeQuery, [timestamp, born, color, number, place, crc, "true"],
+                    "INSERT INTO Nutztiere (Timestamp, Born, Color, Number, Place , tagged, DBSyncServer) VALUES (?,?,?,?,?,?,?)";
+                transaction.executeSql(executeQuery, [timestamp, born, color, number, place, "false", "true"],
                     function (tx, result) {
                         window.location = "livestock.html";
                     },
