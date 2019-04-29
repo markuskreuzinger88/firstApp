@@ -303,7 +303,7 @@
     </template>
 
     <template id="QRCode.html">
-        <ons-dialog id="QRCode">
+        <ons-dialog id="QRCode" cancelable>
             <div style="text-align: center; padding: 5px;">
                 <p>
                     <b>
@@ -437,7 +437,8 @@
                 }, null);
             });
             db.transaction(function(transaction) {
-                transaction.executeSql('SELECT * FROM ArzneimittelvergabeNew WHERE Color = ? AND Number = ?', [color, number], function(tx, results) {
+                transaction.executeSql('SELECT * FROM Arzneimittelvergabe', [color, number], function(tx, results) {
+                    //                transaction.executeSql('SELECT * FROM Arzneimittelvergabe WHERE Color = ? AND Number = ?', [color, number], function(tx, results) {
                     console.log(results)
                     for (i = 0; i < results.rows.length; i++) {
                         card = document.createElement("ons-card")
@@ -606,11 +607,23 @@
         }
 
         function modifyInputs() {
+            document.getElementById("CodeDigit0").removeAttribute("disabled");
+            document.getElementById("CodeDigit1").removeAttribute("disabled");
+            document.getElementById("CodeDigit2").removeAttribute("disabled");
+            document.getElementById("CodeDigit3").removeAttribute("disabled");
             document.getElementById("Color").removeAttribute("disabled");
             document.getElementById("Number").removeAttribute("disabled");
             document.getElementById("Place").removeAttribute("disabled");
             document.getElementById("BornOn").removeAttribute("disabled");
             document.getElementById('ChangeFab').style.visibility = "visible";
+            //            document.createElement("ons-button")
+            //            document.createElement("ons-icon")
+            //            
+            //            
+            //                                <ons-button style=" border-radius: 10px;background-color: #2BA1E1" modifier="large"
+            //                        onclick="checkInputs()"> Erledigt
+            //                        <ons-icon size="15px" style="margin-left: 5px" icon="fa-check"></ons-icon>
+            //                    </ons-button>
         }
 
         function BackButton() {
@@ -647,8 +660,12 @@
 
         function createQR() {
             document.getElementById("qrcodeTable").innerHTML = "";
+            var CodeDigit0 = document.getElementById("CodeDigit0").value;
+            var CodeDigit1 = document.getElementById("CodeDigit1").value;
+            var CodeDigit2 = document.getElementById("CodeDigit2").value;
+            var CodeDigit3 = document.getElementById("CodeDigit3").value;
+            var Number = CodeDigit0 + CodeDigit1 + CodeDigit2 + CodeDigit3
             var Color = document.getElementById("Color").style.backgroundColor;
-            var Number = document.getElementById("Number").value;
             var Place = document.getElementById("Place").value;
             var CreatedOn = document.getElementById("BornOn").value;
             var QRData = Color + "+" + Number + "+" + Place + "+" + CreatedOn;
@@ -665,7 +682,7 @@
         function newDrugDelivery() {
             // tag livestock for new drug delivery
             var color = String(localStorage.LivestockColor)
-                        var number = String(localStorage.LivestockNumber)
+            var number = String(localStorage.LivestockNumber)
             db.transaction(function(tx) {
                 tx.executeSql("UPDATE Nutztiere SET tagged=? where Color = ? AND Number = ?", ['true', color, number]);
             }, function(error) {

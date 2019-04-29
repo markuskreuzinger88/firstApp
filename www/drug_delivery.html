@@ -142,8 +142,7 @@
                     <ons-col style="margin-left: 10%; margin-top: 10px">Arzneimittel</ons-col>
                     <ons-col>
                         <div class="autocomplete" style="width:140px">
-                            <input id="arzneimittel" type="text" placeholder="Arzneimittel" style="text-align: right;"
-                                required>
+                            <input id="arzneimittel" type="text" placeholder="Arzneimittel" style="text-align: right;" required>
                         </div>
                     </ons-col>
                 </ons-row>
@@ -151,23 +150,20 @@
                     <ons-col style="margin-left: 10%; margin-top: 10px">Zul. Nr.</ons-col>
                     <ons-col>
                         <div class="autocomplete" style="width:140px">
-                            <input id="zulassungsnummer" type="text" placeholder="123456" style="text-align: right;"
-                                readonly>
+                            <input id="zulassungsnummer" type="text" placeholder="123456" style="text-align: right;" readonly>
                         </div>
                     </ons-col>
                 </ons-row>
                 <ons-row style="margin-top: 20px">
                     <ons-col style="margin-left: 10%; margin-top: 10px">Wartezeit</ons-col>
                     <ons-col>
-                        <input type="text" placeholder="0" style="text-align: right; width:80px" min="0" id="wartezeit"
-                            readonly> Tag(e)
+                        <input type="text" placeholder="0" style="text-align: right; width:80px" min="0" id="wartezeit" readonly> Tag(e)
                     </ons-col>
                 </ons-row>
                 <ons-row style="margin-top: 20px">
                     <ons-col style="margin-left: 10%; margin-top: 10px">Abgabemenge</ons-col>
                     <ons-col>
-                        <input id="abgabemenge" type="number" placeholder="10" size="500"
-                            style="text-align: right; width:80px">
+                        <input id="abgabemenge" type="number" placeholder="10" size="500" style="text-align: right; width:80px">
                         <ons-select id="choose-sel" onchange="editSelects(event)">
                             <option value="ml">ml</option>
                             <option value="mg">mg</option>
@@ -175,8 +171,7 @@
                     </ons-col>
                 </ons-row>
                 <section style="margin-left: 10%; margin-right: 10%; margin-top: 30px; margin-bottom: 30px;">
-                    <ons-button style=" border-radius: 10px;background-color: #2BA1E1" modifier="large"
-                        onclick="DoneButton()"> Erledigt
+                    <ons-button style=" border-radius: 10px;background-color: #2BA1E1" modifier="large" onclick="DoneButton()"> Erledigt
                         <ons-icon size="15px" style="margin-left: 5px" icon="fa-check"></ons-icon>
                     </ons-button>
                 </section>
@@ -198,16 +193,18 @@
         var switchState = "";
         var ipAdress = "";
         var LiveStockNbr = "AT-3-4321056-";
+        var arrColor = [];
+        var arrNumber = [];
 
-        $(document).ready(function () {
+        $(document).ready(function() {
             switchState = localStorage.getItem("settings_request")
             ipAdress = localStorage.getItem("settings_ipAdress")
             var color = String(localStorage.LivestockColor)
             var number = String(localStorage.LivestockNumber)
 
             /*read from user table in DB*/
-            db.transaction(function (transaction) {
-                transaction.executeSql('SELECT * FROM user', [], function (tx, results) {
+            db.transaction(function(transaction) {
+                transaction.executeSql('SELECT * FROM user', [], function(tx, results) {
                     //get buisness code for requests
                     code = results.rows.item(0).code;
                     //get user token
@@ -216,14 +213,14 @@
             });
 
             /*create table in DB*/
-            db.transaction(function (tx) {
+            db.transaction(function(tx) {
                 tx.executeSql('DROP TABLE IF EXISTS Arzneimittelvergabe');
                 tx.executeSql(
                     'CREATE TABLE IF NOT EXISTS Arzneimittelvergabe (color, number, drug, approval_number, delay, amount, timestamp, DBSyncServer)'
                 );
-            }, function (error) {
+            }, function(error) {
                 alert('Error: ' + error.message + ' code: ' + error.code);
-            }, function () {});
+            }, function() {});
 
             GetDBTaggedResult()
         });
@@ -234,10 +231,10 @@
             while (list.hasChildNodes()) {
                 list.removeChild(list.firstChild);
             }
-            db.transaction(function (transaction) {
+            db.transaction(function(transaction) {
                 transaction.executeSql(
                     'SELECT * FROM Nutztiere WHERE tagged = ? ORDER BY Number DESC', ['true'],
-                    function (tx, results) {
+                    function(tx, results) {
                         console.log(results)
                         DisplayResult(results)
                     }, null);
@@ -246,9 +243,12 @@
 
         function DisplayResult(results) {
             console.log(results.rows.length)
+            arrColor = [];
+            arrNumber = [];
             if (results.rows.length > 0) {
                 for (i = 0; i < results.rows.length; i++) {
                     list = document.createElement("ons-list-item")
+                    list.setAttribute("onclick", "removeListItem(" + i + ")");
                     //create text center
                     div_center = document.createElement("div")
                     div_center.setAttribute("id", i);
@@ -260,7 +260,7 @@
                     icon_right = document.createElement("ons-icon")
                     icon_right.setAttribute("icon", "fa-times");
                     icon_right.setAttribute("style", "color: red");
-                    icon_right.setAttribute("size", "30px");
+                    icon_right.setAttribute("size", "25px");
                     icon_right.setAttribute("onclick", "removeListItem(" + i + ")");
                     //add text center
                     span_center1 = document.createElement("span")
@@ -291,6 +291,8 @@
                     div_center.appendChild(span_center2);
                     list.appendChild(div_center);
                     document.getElementById("container").appendChild(list);
+                    arrColor.push(results.rows.item(i).Color);
+                    arrNumber.push(results.rows.item(i).Number);
                 }
             } else {
                 list = document.createElement("ons-list-item")
@@ -313,15 +315,15 @@
                 animation: 'default',
                 primaryButtonIndex: 1,
                 cancelable: true,
-                callback: function (index) {
+                callback: function(index) {
                     if (index == 0) {
-                        db.transaction(function (tx) {
+                        db.transaction(function(tx) {
                             tx.executeSql(
                                 "UPDATE Nutztiere SET tagged=? where Color = ? AND Number = ?",
                                 ['false', color, number]);
-                        }, function (error) {
+                        }, function(error) {
                             alert('Error: ' + error.message + ' code: ' + error.code);
-                        }, function () {
+                        }, function() {
                             GetDBTaggedResult()
                         });
                     }
@@ -334,7 +336,7 @@
             the text field element and an array of possible autocompleted values:*/
             var currentFocus;
             /*execute a function when someone writes in the text field:*/
-            inp.addEventListener("input", function (e) {
+            inp.addEventListener("input", function(e) {
                 var a, b, i, val = this.value;
                 /*close any already open lists of autocompleted values*/
                 closeAllLists();
@@ -360,7 +362,7 @@
                         /*insert a input field that will hold the current array item's value:*/
                         b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
                         /*execute a function when someone clicks on the item value (DIV element):*/
-                        b.addEventListener("click", function (e) {
+                        b.addEventListener("click", function(e) {
                             /*insert the value for the autocomplete text field:*/
                             inp.value = this.getElementsByTagName("input")[0].value;
                             /*close the list of autocompleted values,
@@ -372,7 +374,7 @@
                 }
             });
             /*execute a function presses a key on the keyboard:*/
-            inp.addEventListener("keydown", function (e) {
+            inp.addEventListener("keydown", function(e) {
                 var x = document.getElementById(this.id + "autocomplete-list");
                 if (x) x = x.getElementsByTagName("div");
                 if (e.keyCode == 40) {
@@ -426,7 +428,7 @@
                 }
             }
             /*execute a function when someone clicks in the document:*/
-            document.addEventListener("click", function (e) {
+            document.addEventListener("click", function(e) {
                 closeAllLists(e.target);
                 //                arzneimittel=document.getElementById("Arzneimittel").value)
                 arrayIndex = arzneimittel.indexOf(document.getElementById("arzneimittel").value)
@@ -645,7 +647,7 @@
                 data: JSON.stringify({
                     "code": "XYZ"
                 }),
-                success: function (data) {
+                success: function(data) {
                     //                    var fields = data.split(, );
                     var jsonString = JSON.stringify(data);
                     var DataObject = JSON.parse(jsonString);
@@ -663,7 +665,7 @@
                     //                    countries = fields;
                     //                    alert(countries)
                 },
-                failure: function (errMsg) {
+                failure: function(errMsg) {
                     // navigator.notification.alert(errMsg);
                 }
             });
@@ -674,8 +676,8 @@
         }
 
         function DoneButton() {
-            color = document.getElementById("Color").style.backgroundColor
-            number = document.getElementById("Nummer").value
+            console.log(arrColor)
+            console.log(arrNumber)
             drug = document.getElementById("arzneimittel").value
             delay = document.getElementById("wartezeit").value
             amount = document.getElementById("abgabemenge").value
@@ -684,53 +686,39 @@
             //set timestamp to each database entry in millisec
             timestamp = Date.now();
             /*check livestock nummber and color*/
-            if (document.getElementById("Nummer").value.length != 0) {
-                db.transaction(function (transaction) {
-                    transaction.executeSql('SELECT * FROM Nutztiere WHERE Color = ? AND Number = ?', [color,
-                        number
-                    ], function (tx, results) {
-                        if (results.rows.length == 1) {
-                            /*check drug field and if drug exists*/
-                            if (document.getElementById("arzneimittel").value.length != 0) {
-                                if (arzneimittel.includes(drug)) {
-                                    /*check amount field*/
-                                    if (document.getElementById("abgabemenge").value.length != 0) {
-                                        if (switchState == 'true') {
-                                            requestData()
-                                        } else {
-                                            write2DB()
-                                        }
-                                        requestData()
-                                    } else {
-                                        ons.notification.alert({
-                                            message: 'Bitte die Abgabemenge eingeben',
-                                            title: 'Abgabemenge überprüfen',
-                                        });
-                                    }
-                                } else {
-                                    ons.notification.alert({
-                                        message: 'Das Arzneimittel befindet sich nicht in der Datenbank',
-                                        title: 'Arzneimittel überprüfen',
-                                    });
-                                }
+            if (arrNumber.length > 0) {
+                /*check drug field and if drug exists*/
+                if (drug.length != 0) {
+                    if (arzneimittel.includes(drug)) {
+                        /*check amount field*/
+                        if (amount.length != 0) {
+                            if (switchState == 'true') {
+                                requestData()
                             } else {
-                                ons.notification.alert({
-                                    message: 'Bitte vergib ein Arzneimittel',
-                                    title: 'Arzneimittel überprüfen',
-                                });
+                                write2DB()
                             }
                         } else {
                             ons.notification.alert({
-                                message: 'Das Nutztier befindet sich nicht in der Datenbank',
-                                title: 'Nutztier Kennzeichnung überprüfen',
+                                message: 'Bitte die Abgabemenge eingeben',
+                                title: 'Abgabemenge überprüfen',
                             });
                         }
-                    }, null);
-                });
+                    } else {
+                        ons.notification.alert({
+                            message: 'Das Arzneimittel befindet sich nicht in der Datenbank',
+                            title: 'Arzneimittel überprüfen',
+                        });
+                    }
+                } else {
+                    ons.notification.alert({
+                        message: 'Bitte vergib ein Arzneimittel',
+                        title: 'Arzneimittel überprüfen',
+                    });
+                }
             } else {
                 ons.notification.alert({
-                    message: 'Bitte vergib eine Nutztier Zulassungsnummer',
-                    title: 'Nutztier Kennzeichnung überprüfen',
+                    message: 'Bitte wähle ein Nutztier aus deiner Datenbank aus',
+                    title: 'Nutztier auswählen',
                 });
             }
         }
@@ -753,7 +741,7 @@
                     "timestamp": timestamp,
                     "user": token
                 }),
-                success: function (data) {
+                success: function(data) {
                     alert(data)
                     write2DB()
                 }
@@ -762,24 +750,28 @@
 
         function write2DB() {
             /*write to DB*/
-            db.transaction(function (transaction) {
-                var executeQuery =
-                    "INSERT INTO Arzneimittelvergabe (color, number, drug, approval_number, delay, amount, timestamp, DBSyncServer) VALUES (?,?,?,?,?,?,?,?)";
-                transaction.executeSql(executeQuery, [color, number, drug, approval_number, delay, amount,
-                        timestamp, "true"
-                    ], function (tx, result) {
-                        window.location = "menu.html ";
-                    },
-                    function (error) {
-                        alert('Error: ' + error.message + ' code: ' + error.code);
-                    });
-            });
+            console.log(arrColor.length)
+            for (i = 0; i < arrColor.length; i++) {
+                db.transaction(function(transaction) {
+                    var executeQuery =
+                        "INSERT INTO Arzneimittelvergabe (color, number, drug, approval_number, delay, amount, timestamp, DBSyncServer) VALUES (?,?,?,?,?,?,?,?)";
+                    transaction.executeSql(executeQuery, [arrColor[i], arrNumber[i], drug, approval_number, delay, amount,
+                            timestamp, "true"
+                        ], function(tx, result) {
+                            window.location = "menu.html ";
+                        },
+                        function(error) {
+                            alert('Error: ' + error.message + ' code: ' + error.code);
+                        });
+                });
+            }
         }
 
         function nextPage(page) {
             localStorage.setItem("lastPage", "drug_delivery");
             window.location = page;
         }
+
     </script>
 </body>
 
