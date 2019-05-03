@@ -2,11 +2,14 @@
 <html lang="en">
 
 <head>
-    <title>LeerGutVerwaltung</title>
+    <title>Debug Settings</title>
     <link rel="stylesheet" type="text/css" href="onsenui/css/onsenui.css" />
     <link rel="stylesheet" type="text/css" href="onsenui/css/onsen-css-components.min.css" />
     <script src="onsenui/js/onsenui.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <div class="left">
+            <ons-back-button onclick="window.history.back()"></ons-back-button></div>
+    </div>
     <ons-list-header>request</ons-list-header>
     <ons-list-item>
         <div class="center">
@@ -23,9 +26,6 @@
                 value="http://192.168.1.8:5000/">
         </div>
     </ons-list-item>
-    <ons-fab type="submit" position="bottom right" onclick="nextPage()">
-        <ons-icon icon="md-arrow-forward"></ons-icon>
-    </ons-fab>
 </head>
 
 <body>
@@ -36,6 +36,7 @@
         function onDeviceReady() {
             if ("settings_request" in localStorage) {
                 switchState = localStorage.getItem("settings_request")
+                console.log(switchState)
                 if (switchState == 'true') {
                     document.getElementById("switch").checked = true
                 } else {
@@ -53,6 +54,7 @@
         function switchFunc() {
             switchState = document.getElementById("switch").checked
             localStorage.setItem("settings_request", switchState);
+            console.log(switchState)
         }
 
         function inputFunc() {
@@ -60,9 +62,6 @@
             localStorage.setItem("settings_ipAdress", ipAdress);
         }
 
-        function nextPage() {
-            window.location = "user_reg_name.html ";
-        }
     </script>
 </body>
 

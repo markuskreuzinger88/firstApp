@@ -11,12 +11,14 @@
         document.addEventListener("deviceready", onDeviceReady, false);
         // device APIs are available 
         function onDeviceReady() {
+            //only for debugging!!!!!
+            localStorage.setItem("settings_request", 'true');
             db.transaction(function(tx) {
                 tx.executeSql('DROP TABLE IF EXISTS user');
                 tx.executeSql('DROP TABLE IF EXISTS Nutztiere');
                 tx.executeSql('DROP TABLE IF EXISTS Arzneimittelvergabe');
-                tx.executeSql('CREATE TABLE IF NOT EXISTS user (firstname, lastname, email)');
-                tx.executeSql('CREATE TABLE IF NOT EXISTS Nutztiere (Timestamp, Born, Color, Number, Place , tagged, DBSyncServer)');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS user (firstname, lastname, email, password)');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS Nutztiere (Timestamp, Born, Color, Number, Place , tagged, DBSyncServer)')
             }, function(error) {
                 alert('Error: ' + error.message + ' code: ' + error.code);
             }, function() {
@@ -27,7 +29,7 @@
                         if (results.rows.length > 0) {
                             window.location = "menu.html";
                         } else {
-                            window.location = "start_page.html";
+                            window.location = "login.html";
                         }
                     }, null);
                 });

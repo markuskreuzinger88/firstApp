@@ -116,6 +116,33 @@
                     "lastname": lastname,
                     "email": email
                 }),
+                headers: {
+                    'Authorization':'Bearer xxxx'
+                },
+                success: function (data) {
+                    alert(data)
+                    // if (data == "uuid_not_in_database") {
+                    //     ons.notification.alert({
+                    //         message: 'Bitte registriere dich unter www.???.at',
+                    //         title: 'Betrieb nicht in Datenbank',
+                    //     });
+                    // } else {
+                        window.location = "menu.html ";
+                    // }
+                }
+            });
+        }
+
+        function login() {
+            // http://localhost/AniCare/api/token/
+            // grant_type=password&username=AniCareAdmin&password=anicare
+            var endpoint = ipAdress + "api/token/" + code
+            alert(endpoint)
+            $.ajax({
+                url: endpoint,
+                contentType: "application/x-www-form-urlencoded",
+                type: "POST",
+                data: "grant_type=password&username=AniCareAdmin&password=anicare&client_id=app",
                 success: function (data) {
                     alert(data)
                     // if (data == "uuid_not_in_database") {
