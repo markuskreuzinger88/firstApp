@@ -8,7 +8,8 @@
     <script src="onsenui/js/onsenui.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
     <div class="left">
-            <ons-back-button onclick="window.history.back()"></ons-back-button></div>
+        <ons-back-button onclick="window.history.back()"></ons-back-button>
+    </div>
     </div>
     <ons-list-header>request</ons-list-header>
     <ons-list-item>
@@ -23,7 +24,26 @@
     <ons-list-item>
         <div class="center">
             <input onchange="inputFunc()" style="border: none" id="ipAdress" type="text" maxlength="50" size="50"
-                value="http://192.168.1.8:5000/">
+                value="192.168.1.8">
+        </div>
+    </ons-list-item>
+    <ons-list-header>Default credentials</ons-list-header>
+    <ons-list-item>
+        <div class="center">
+            switch on
+        </div>
+        <div class="right" onchange="switchFuncCredentials()">
+            <ons-switch id="switchCredentials"></ons-switch>
+        </div>
+    </ons-list-item>
+    <ons-list-item>
+        <div class="center">
+            User: AniCareAdmin
+        </div>
+    </ons-list-item>
+    <ons-list-item>
+        <div class="center">
+            PWD: anicare
         </div>
     </ons-list-item>
 </head>
@@ -36,11 +56,18 @@
         function onDeviceReady() {
             if ("settings_request" in localStorage) {
                 switchState = localStorage.getItem("settings_request")
-                console.log(switchState)
                 if (switchState == 'true') {
                     document.getElementById("switch").checked = true
                 } else {
                     document.getElementById("switch").checked = false
+                }
+            }
+            if ("settings_credentials" in localStorage) {
+                switchStateCredentials = localStorage.getItem("settings_credentials")
+                if (switchStateCredentials == 'true') {
+                    document.getElementById("switchCredentials").checked = true
+                } else {
+                    document.getElementById("switchCredentials").checked = false
                 }
             }
             if ("settings_ipAdress" in localStorage) {
@@ -54,7 +81,6 @@
         function switchFunc() {
             switchState = document.getElementById("switch").checked
             localStorage.setItem("settings_request", switchState);
-            console.log(switchState)
         }
 
         function inputFunc() {
@@ -62,6 +88,10 @@
             localStorage.setItem("settings_ipAdress", ipAdress);
         }
 
+        function switchFuncCredentials() {
+            switchState = document.getElementById("switchCredentials").checked
+            localStorage.setItem("settings_credentials", switchState);
+        }
     </script>
 </body>
 

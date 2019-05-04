@@ -19,12 +19,12 @@
         <param name="ios-package" value="CDVGestureHandler" />
         <param name="onload" value="true" />
     </feature>
-    <name>firstApp</name>
+    <name>StallOX</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        An application to increase farmer productivity and record relevant data
     </description>
     <author email="dev@cordova.apache.org" href="http://cordova.io">
-        Apache Cordova Team
+        StallOX Team
     </author>
     <content src="index.html" />
     <access origin="*" />
@@ -49,4 +49,6 @@
     <preference name="PageLength" value="0" />
     <preference name="PaginationBreakingMode" value="page" />
     <preference name="PaginationMode" value="unpaginated" />
+    <preference name="SplashScreenDelay" value="3000" />
+    <preference name="SplashMaintainAspectRatio" value="true" />
 </widget>
