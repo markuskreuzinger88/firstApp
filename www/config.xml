@@ -25,7 +25,7 @@
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
     </platform>
-        <preference name="SplashScreenDelay" value="3000" />
+        <preference name="SplashScreenDelay" value="5000" />
     <engine name="ios" spec="~4.5.5" />
     <engine name="android" spec="~7.1.4" />
 </widget>
