@@ -161,6 +161,13 @@
                             style="width:140px; margin-top: 20px"><br><br>
                     </ons-col>
                 </ons-row>
+                <ons-row>
+                    <ons-col style="margin-left: 10%; margin-top: 30px">Erstellt am</ons-col>
+                    <ons-col>
+                        <input id="CreatedOn" type="date" value="tt.mm.jjjj "
+                            style="width:140px; margin-top: 20px"><br><br>
+                    </ons-col>
+                </ons-row>
                 <section style="margin-left: 10%; margin-right: 10%; margin-top: 10%;  margin-bottom: 10%">
                     <ons-button style=" border-radius: 10px;background-color: #2BA1E1" modifier="large"
                         onclick="checkInputs()"> Erledigt
@@ -241,20 +248,20 @@
 
     <script type="text/javascript ">
         db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //create 20MB Database
-        var place = "";
-        var color = "";
         var number = "";
-        var born = "";
-        var createdOn = "";
-        var timestamp = "";
-        var crc = "";
-        var code = "";
-        var token = "";
-        var uuid = "";
+        var email = "";
+        var bearerToken = "";
         var switchState = "";
         var ipAdress = "";
+        var place = "";
+        var color = "";
+        var born = "";
+        var createdOn = "";
+        var switchState = "";
 
         $(document).ready(function () {
+            BornOn.max = new Date().toISOString().split("T")[0];
+            CreatedOn.max = new Date().toISOString().split("T")[0];
             switchState = localStorage.getItem("settings_request")
             ipAdress = localStorage.getItem("settings_ipAdress")
             //calc window size and adapte SVG Object
@@ -288,25 +295,25 @@
             }
             let today = new Date().toISOString().substr(0, 10);
             document.querySelector("#BornOn").value = today;
+            document.querySelector("#CreatedOn").value = today;
             //create table in database
             db.transaction(function (tx) {
-                            //    tx.executeSql('DROP TABLE IF EXISTS Nutztiere');
+                //    tx.executeSql('DROP TABLE IF EXISTS Nutztiere');
                 tx.executeSql(
                     'CREATE TABLE IF NOT EXISTS Nutztiere (Timestamp, Born, Color, Number, Place, tagged, DBSyncServer)'
-                    );
+                );
             }, function (error) {
                 alert('Error: ' + error.message + ' code: ' + error.code);
             }, function () {});
             db.transaction(function (transaction) {
                 transaction.executeSql('SELECT * FROM user', [], function (tx, results) {
-                    //get buisness code for requests
-                    code = results.rows.item(0).code;
+                    //get email
+                    email = results.rows.item(0).email;
                     //get user token
-                    token = results.rows.item(0).token;
-                    //get current mobile uuid
-                    uuid = results.rows.item(0).uuid;
+                    bearerToken = results.rows.item(0).bearerToken;
                 }, null);
             });
+
             //select between inputs
             $("#CodeDigit0").keyup(function () {
                 if (document.getElementById("CodeDigit0").value != '') {
@@ -399,17 +406,12 @@
             var CodeDigit1 = document.getElementById("CodeDigit1").value;
             var CodeDigit2 = document.getElementById("CodeDigit2").value;
             var CodeDigit3 = document.getElementById("CodeDigit3").value;
-            number = CodeDigit0 + CodeDigit1 + CodeDigit2 + CodeDigit3
             place = document.getElementById("ChooseSelPlace").value;
-            localStorage.setItem("ChooseSelPlaceStorage", place);
             color = document.getElementById("Color").style.backgroundColor;
             born = document.getElementById("BornOn").value;
-            let today = new Date().toISOString().substr(0, 10);
-            //set timestamp to each database entry in millisec
-            timestamp = Date.now();
-            //calculate crc over data
-            crc = CRC32(place + color + number + born + createdOn + timestamp)
-            console.log(crc)
+            created = document.getElementById("CreatedOn").value;
+            localStorage.setItem("ChooseSelPlaceStorage", place);
+            number = CodeDigit0 + CodeDigit1 + CodeDigit2 + CodeDigit3
             if (number.length == 4) {
                 if (switchState == 'true') {
                     requestData()
@@ -426,26 +428,39 @@
         }
 
         function requestData() {
-            var endpoint = ipAdress + "database/livestock/" + code
+            var DEBUGIP = localStorage.getItem("settings_ipAdress")
+            var endpoint = 'http://' + DEBUGIP + '/AniCare/Animal/SaveAnimal'
             alert(endpoint)
+            alert(bearerToken)
             $.ajax({
+                headers: {
+                    // 'Accept': 'application/json',
+                    // 'Content-Type': 'application/json',
+                    'Authorization': bearerToken
+                },
                 url: endpoint,
                 contentType: "application/json",
                 type: "POST",
                 data: JSON.stringify({
-                    "action": "commit",
-                    "crc": crc,
+                    "id": 0,
+                    "creationDate": created,
+                    "createdBy": email,
+                    "customerId": 0,
+                    "typeId": 0,
                     "number": number,
                     "color": color,
-                    "place": place,
-                    "born": born,
-                    "timestamp": timestamp,
-                    "user": token,
-                    "device_uuid": uuid
+                    "birthday": born,
+                    "isLocked": true
                 }),
-                success: function (data) {
+                success: function (response) {
+                    var data = JSON.stringify(response);
                     alert(data)
+                    alert(response.success)
                     write2DB()
+                },
+                error: function (xhr, status, error) {
+                    var errorMessage = xhr.status + ': ' + xhr.statusText
+                    alert('Livestock add failed! Error - ' + errorMessage);
                 }
             });
         }
@@ -453,8 +468,8 @@
         function write2DB() {
             db.transaction(function (transaction) {
                 var executeQuery =
-                    "INSERT INTO Nutztiere (Timestamp, Born, Color, Number, Place , tagged, DBSyncServer) VALUES (?,?,?,?,?,?,?)";
-                transaction.executeSql(executeQuery, [timestamp, born, color, number, place, "false", "true"],
+                    "INSERT INTO Nutztiere (born, color, number, place, created, user, sync) VALUES (?,?,?,?,?,?,?)";
+                transaction.executeSql(executeQuery, [born, color, number, place, created, email, "true"],
                     function (tx, result) {
                         window.location = "livestock.html";
                     },

@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Create QR Data</title>
+
+    <script src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+    <script src="onsenui/js/onsenui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="onsenui/css/onsenui.css" />
+    <link rel="stylesheet" type="text/css" href="onsenui/css/onsen-css-components.min.css" />
+
+    <link rel="stylesheet" type="text/css" href="css/toast.css" />
+
+    <ons-navigator id="myNavigator" page="splitter.html">
+    </ons-navigator>
+
+    <ons-template id="splitter.html">
+        <ons-splitter>
+            <ons-splitter-side style="background-color: white" id="menu-splitter" side="left" width="250px" collapse swipeable>
+                <!--                <ons-page style="background-color: black">-->
+                <ons-list>
+                    <ons-list-item style="margin-top: 20px">
+                        <div class="left">
+                            <img class="list-item__thumbnail" src="img/logo_v2.0.png">
+                        </div>
+                        <div class="center">
+                            <span class="list-item__title">LogContract</span><span class="list-item__subtitle">www.logcontract.com</span>
+                        </div>
+                    </ons-list-item>
+                    <ons-list-item modifier="nodivider" style="margin-top: 30px" onclick="fn.load('home.html')" tappable>
+                        <div class="left">
+                            <ons-icon icon="ion-home" class="list-item__icon"></ons-icon>
+                        </div>
+                        <div class="center">
+                            Start
+                        </div>
+                    </ons-list-item>
+                    <!--                    <ons-list-item modifier="nodivider" onclick="fn.load('profil.html')" tappable>-->
+                    <ons-list-item modifier="nodivider" tappable>
+                        <div class="left">
+                            <ons-icon icon="ion-person" class="list-item__icon"></ons-icon>
+                        </div>
+                        <div class="center">
+                            Profil
+                        </div>
+                    </ons-list-item>
+                    <!--                    <ons-list-item modifier="nodivider" onclick="fn.load('log.html')" tappable>-->
+                    <ons-list-item modifier="nodivider" tappable>
+                        <div class="left">
+                            <ons-icon icon="fa-database" class="list-item__icon"></ons-icon>
+                        </div>
+                        <div class="center">
+                            Lieferscheine
+                        </div>
+                    </ons-list-item>
+                    <!--                    <ons-list-item modifier="nodivider" onclick="fn.load('settings.html')" tappable>-->
+                    <ons-list-item modifier="nodivider" tappable>
+                        <div class="left">
+                            <ons-icon icon="fa-cog" class="list-item__icon"></ons-icon>
+                        </div>
+                        <div class="center">
+                            Einstellungen
+                        </div>
+                    </ons-list-item>
+                    <!--                    <ons-list-item modifier="nodivider" onclick="fn.load('about.html')" tappable>-->
+                    <ons-list-item modifier="nodivider" tappable>
+                        <div class="left">
+                            <ons-icon icon="fa-info" class="list-item__icon"></ons-icon>
+                        </div>
+                        <div class="center">
+                            Über
+                        </div>
+                    </ons-list-item>
+                    <!--                    <ons-list-item modifier="nodivider" onclick="openBrowser()" tappable>-->
+                    <ons-list-item modifier="nodivider" tappable>
+                        <div class="left">
+                            <ons-icon icon="fa-lock" class="list-item__icon"></ons-icon>
+                        </div>
+                        <div class="center">
+                            Rechtliche Hinweise
+                        </div>
+                    </ons-list-item>
+                    <ons-list-item modifier="nodivider">
+                    </ons-list-item>
+                    <ons-list-item modifier="nodivider">
+                    </ons-list-item>
+                    <ons-list-item modifier="nodivider" onclick="showConfirm()" tappable>
+                        <div class="left">
+                            <ons-icon icon="ion-log-out" class="list-item__icon"></ons-icon>
+                        </div>
+                        <div class="center">
+                            Abmelden
+                        </div>
+                    </ons-list-item>
+                </ons-list>
+                <!--                    <img src="img/logo_v2.0.png" alt="Onsen UI" style="width: 100%">-->
+                <!--                </ons-page>-->
+            </ons-splitter-side>
+            <ons-splitter-content id="content" page="home.html"></ons-splitter-content>
+        </ons-splitter>
+    </ons-template>
+
+    <template id="home.html">
+        <ons-page id="home">
+            <ons-toolbar>
+                <div class="left">
+                    <ons-toolbar-button onclick="fn.open()">
+                        <ons-icon icon="md-menu" style="font-size: 32px; width: 1em;"></ons-icon>
+                    </ons-toolbar-button>
+                </div>
+                <div class="right">
+                    <ons-toolbar-button onclick="syncDataServer()">
+                        <ons-icon icon="fa-sync" style="font-size: 20px; width: 1em;"></ons-icon>
+                    </ons-toolbar-button>
+                </div>
+                <div class="center" style="text-align: center; font-family: Calibri; font-size: 20px;">Start</div>
+                <div class="right">
+                    <!--
+                    <ons-toolbar-button onclick="showConfirm()">
+                        <ons-icon icon="ion-log-out" style="font-size: 32px; width: 1em;"></ons-icon>
+                    </ons-toolbar-button>
+-->
+                </div>
+            </ons-toolbar>
+            <ons-card>
+
+                <!--
+                <img src="img/logo_v2.0.png" alt="Onsen UI" style="width: 100%">
+                <div class="content" style="text-align: center; margin-top: 20px; font-family: Calibri; font-size: 18px;">Per App Waren und Güter einfach und sicher verwalten
+                </div>
+                <hr>
+-->
+                <div style="margin: 30px auto 5px; text-align: center; font-family: Calibri; font-size: 22px; font-weight: 700">Bitte wähle</div>
+                <ons-row class="user_cover">
+                    <ons-col onclick="changeSite('drug_delivery.html')">
+                        <div class="user_thumbnail" style="background-color: #dd6218">
+                            <ons-icon icon="fa-syringe"></ons-icon>
+                        </div>
+                        <div class="username" id="user_2_name">Arzneimittelabgabe</div>
+                    </ons-col>
+                    <ons-col onclick="changeSite('livestock.html')">
+                        <div class="user_thumbnail" style="background-color: #00a899">
+                            <ons-icon icon="fa-database"></ons-icon>
+                        </div>
+                        <div class="username" id="user_2_name">Bestandsliste</div>
+                    </ons-col>
+                </ons-row>
+                <ons-row class="user_cover">
+                    <ons-col onclick="openHome()">
+                        <div class="user_thumbnail" style="background-color: #e3aa05">
+                            <ons-icon icon="fa-briefcase-medical"></ons-icon>
+                        </div>
+                        <div class="username" id="user_2_name">Medikamente</div>
+                    </ons-col>
+                    <ons-col onclick="openHome()">
+                        <div class="user_thumbnail" style="background-color: #94b052">
+                            <ons-icon icon="fa-calendar-alt"></ons-icon>
+                        </div>
+                        <div class="username" id="username_4">Erinnerungen</div>
+                    </ons-col>
+                </ons-row>
+
+                <style type="text/css">
+                    .user_cover {
+                        padding: 0px 40px;
+                        margin: 20px 0px;
+                    }
+
+                    .username {
+                        text-align: center;
+                        color: black;
+                        width: 100%;
+                        font-size: 12px;
+                        margin-top: 5px;
+                    }
+
+                    .user_thumbnail {
+                        width: 100px;
+                        height: 100px;
+                        display: table;
+                        text-align: center;
+                        margin: auto;
+                    }
+
+                    .user_thumbnail img {
+                        margin-left: 15px;
+                        margin-top: 15px;
+                        width: 70px;
+                        font-size: 70px;
+                        display: table-cell;
+                        vertical-align: middle;
+                    }
+
+                    .user_thumbnail ons-icon {
+                        font-size: 70px;
+                        display: table-cell;
+                        vertical-align: middle;
+                    }
+
+                </style>
+            </ons-card>
+        </ons-page>
+    </template>
+    <template id="profil.html">
+        <ons-page>
+            <ons-toolbar>
+                <div class="left">
+                    <ons-toolbar-button onclick="fn.open()">
+                        <ons-icon icon="md-menu" style="font-size: 32px; width: 1em;"></ons-icon>
+                    </ons-toolbar-button>
+                </div>
+                <div class="center" style="text-align: center; font-family: Calibri; font-size: 20px;">Profil</div>
+                <div class="right">
+                </div>
+            </ons-toolbar>
+            <ons-card>
+                <ons-row>
+                    <ons-col style="margin-left: 20px; margin-top: 10px; font-family: Calibri; font-size: 16px; color: darkgray">Vorname</ons-col>
+                </ons-row>
+                <ons-row>
+                    <ons-col style="margin-left: 20px; margin-top: 10px; font-family: Calibri; font-size: 18px" id=firstname>-</ons-col>
+                </ons-row>
+                <ons-row>
+                    <ons-col style="margin-left: 20px; margin-top: 30px; font-family: Calibri; font-size: 16px; color: darkgray">Nachname</ons-col>
+                </ons-row>
+                <ons-row>
+                    <ons-col style="margin-left: 20px; margin-top: 10px; font-family: Calibri; font-size: 18px" id="lastname">-</ons-col>
+                </ons-row>
+                <ons-row>
+                    <ons-col style="margin-left: 20px; margin-top: 30px; font-family: Calibri; font-size: 16px; color: darkgray">Telefonnummer</ons-col>
+                </ons-row>
+                <ons-row>
+                    <ons-col style="margin-left: 20px; margin-top: 10px; font-family: Calibri; font-size: 18px" id="handynummer">-</ons-col>
+                </ons-row>
+                <ons-row>
+                    <ons-col style="margin-left: 20px; margin-top: 30px; font-family: Calibri; font-size: 16px; color: darkgray">E-mail</ons-col>
+                </ons-row>
+                <ons-row>
+                    <ons-col style="margin-left: 20px; margin-top: 10px; font-family: Calibri; font-size: 18px" id="email">-</ons-col>
+                </ons-row>
+                <ons-row>
+                    <ons-col style="margin-left: 20px; margin-top: 30px; font-family: Calibri; font-size: 16px; color: darkgray">Firma</ons-col>
+                </ons-row>
+                <ons-row>
+                    <ons-col style="margin-left: 20px; margin-top: 10px; font-family: Calibri; font-size: 18px" id="chosenCompany">-</ons-col>
+                </ons-row>
+                <ons-row>
+                    <ons-col style="margin-left: 20px; margin-top: 30px; font-family: Calibri; font-size: 16px; color: darkgray">Passwort</ons-col>
+                </ons-row>
+                <ons-row>
+                    <ons-col type="password" style="margin-left: 20px; margin-top: 10px; font-family: Calibri; font-size: 18px">
+                        <input type="password" value="FakePSW" id="myInput" style="border: 0"></ons-col>
+                </ons-row>
+            </ons-card>
+        </ons-page>
+    </template>
+
+    <template id="settings.html">
+        <ons-page>
+            <ons-toolbar>
+                <div class="left">
+                    <ons-toolbar-button onclick="fn.open()">
+                        <ons-icon icon="md-menu" style="font-size: 32px; width: 1em;"></ons-icon>
+                    </ons-toolbar-button>
+                </div>
+                <div class="center" style="text-align: center; font-family: Calibri; font-size: 20px;">Einstellungen</div>
+                <div class="right">
+                </div>
+            </ons-toolbar>
+            <ons-card>
+                <ons-list>
+                    <ons-list-item style="margin-top: 10px; font-family: Calibri; font-size: 18px">
+                        <div class="center">
+                            <span class="list-item__title">E-Mail</span><span class="list-item__subtitle">E-Mail Benachrichtigung</span>
+                        </div>
+                        <div class="right">
+                            <ons-switch disabled></ons-switch>
+                        </div>
+                    </ons-list-item>
+                    <ons-list-item style="font-family: Calibri; font-size: 18px">
+                        <div class="center">
+                            <span class="list-item__title">Töne</span><span class="list-item__subtitle">Akustische Bestätigung</span>
+                        </div>
+                        <div class="right">
+                            <ons-switch id="SoundSwitch" onchange="WriteDB()"></ons-switch>
+                        </div>
+                    </ons-list-item>
+                    <ons-list-item style="font-family: Calibri; font-size: 18px">
+                        <div class="center">
+                            <span class="list-item__title">Passwort</span><span class="list-item__subtitle">Passwortabfrage vor Aktionen</span>
+                        </div>
+                        <div class="right">
+                            <ons-switch id="PasswordSwitch" onchange="PasswordQuery()"></ons-switch>
+                        </div>
+                    </ons-list-item>
+                </ons-list>
+                <ons-button style="margin-top: 30px;" modifier="large" onclick="Reset()">Reset + Logout</ons-button>
+            </ons-card>
+        </ons-page>
+    </template>
+
+    <template id="log.html">
+        <ons-page id="log">
+            <div id="DivLog" style="text-align: center; margin-top: 50%; margin-left: 20px">
+                <p>Es sind noch keine Lieferscheine vorhanden</p>
+            </div>
+            <ons-toolbar>
+                <div class="left">
+                    <ons-toolbar-button onclick="fn.open()">
+                        <ons-icon icon="md-menu" style="font-size: 32px; width: 1em;"></ons-icon>
+                    </ons-toolbar-button>
+                </div>
+                <div class="center" style="text-align: center; font-family: Calibri; font-size: 20px;">Lieferscheine</div>
+                <div class="right">
+                </div>
+            </ons-toolbar>
+        </ons-page>
+    </template>
+
+    <template id="about.html">
+        <ons-page>
+            <ons-toolbar>
+                <div class="left">
+                    <ons-toolbar-button onclick="fn.open()">
+                        <ons-icon icon="md-menu" style="font-size: 32px; width: 1em;"></ons-icon>
+                    </ons-toolbar-button>
+                </div>
+                <div class="center" style="text-align: center; font-family: Calibri; font-size: 20px;">Über LogC</div>
+                <div class="right">
+                </div>
+            </ons-toolbar>
+            <p>This is the About page...</p>
+        </ons-page>
+    </template>
+
+    <style>
+        p {
+            font-family: Calibri;
+            font-size: 18px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <script type="text/javascript">
+        db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //create 20MB Database
+        var NbrofCol = 20;
+        var LogIndexDB = 18;
+        var LogindexDBField = 0;
+        var LogIndexDBFieldStart = 27;
+        var LogIndexDBFieldEnd = 31;
+        //LOG Variables
+        var LogFieldarr = [];
+        var LogFieldarrSort = [];
+        var res = [];
+        var ArraySort = [];
+        var fields = [];
+        var NbrLogFields = 5;
+        var code = "";
+        var syncRevLocal = "";
+        var uuid = "";
+        var countEntries = "";
+
+        var myNavigator = document.getElementById('myNavigator');
+
+        //        $(document).ready(function() {
+        //            db.transaction(function(tx) {
+        //                tx.executeSql("UPDATE LOGS SET log=? where id=?;", ["menu.html", 9]);
+        //            });
+        //        });
+
+        $(document).ready(function() {
+            localStorage.setItem("lastPage", "menu");
+            // db.transaction(function(transaction) {
+            //     transaction.executeSql('SELECT * FROM user', [], function(tx, results) {
+            //         //get buisness code for requests
+            //         code = results.rows.item(0).code;
+            //         //get current local Revision to be in sync with Server
+            //         syncRevLocal = results.rows.item(0).syncRevServer;
+            //         //get current mobile uuid
+            //         uuid = results.rows.item(0).uuid;
+            //     }, null);
+            // });
+        });
+
+        window.fn = {};
+
+        window.fn.open = function() {
+            var menu = document.getElementById('menu-splitter');
+            menu.open();
+        };
+
+        window.fn.load = function(page) {
+            var content = document.getElementById('content');
+            var menu = document.getElementById('menu-splitter');
+            content.load(page)
+                .then(menu.close.bind(menu));
+        }
+
+        function changeSite(page) {
+            window.location = page;
+        }
+
+        function syncDataServer() {
+            $.ajax({
+                url: "http://192.168.0.105:5000/database/update/livestock/" + code,
+                contentType: "application/json",
+                type: "POST",
+                data: JSON.stringify({
+                    "localRev": syncRevLocal,
+                    "device_uuid": uuid
+                }),
+                success: function(data) {
+                    entries = data.split('[').length - 2;
+                    countEntries = syncRevLocal + data.split('[').length - 2;
+                    alert("Einträge hinzugefügt oder gelöscht:" + entries)
+                    fields = data.split(',');
+                    //delete noch hinzufügen!!!!!!!!!!
+                    for (i = 0; i <= (data.split(',').length - 1); i = i + 1) {
+                        if ((fields[i + 1].slice(2, fields[i + 1].length - 1)) == 'commit') {
+                            var crc = fields[i + 2].slice(2, fields[i + 2].length - 1)
+                            var number = fields[i + 3].slice(2, fields[i + 3].length - 1)
+                            var color = fields[i + 4].slice(2, fields[i + 4].length - 1)
+                            var place = fields[i + 5].slice(2, fields[i + 5].length - 1)
+                            var born = fields[i + 6].slice(2, fields[i + 6].length - 1)
+                            var timestamp = fields[i + 2].slice(2, fields[i + 2].length - 1)
+                            updateDBadd(timestamp, born, color, number, place, crc)
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateDBdelete(timestamp, born, color, number, place, crc) {
+            db.transaction(function(transaction) {
+                var executeQuery = "INSERT INTO Nutztiere (Timestamp, Born, Color, Number, Place , crc, DBSyncServer) VALUES (?,?,?,?,?,?,?)";
+                transaction.executeSql(executeQuery, [timestamp, born, color, number, place, crc, "true"], function(tx, result) {},
+                    function(error) {
+                        alert('Error: ' + error.message + ' code: ' + error.code);
+                    });
+            });
+            //update Revisoin number to for sync with Server
+            db.transaction(function(tx) {
+                tx.executeSql("UPDATE user SET syncRevServer=?", [countEntries]);
+            }, function(error) {
+                alert('Error: ' + error.message + ' code: ' + error.code);
+            }, function() {});
+        }
+
+        function updateDBadd(timestamp, born, color, number, place, crc) {
+            db.transaction(function(transaction) {
+                var executeQuery = "INSERT INTO Nutztiere (Timestamp, Born, Color, Number, Place , crc, DBSyncServer) VALUES (?,?,?,?,?,?,?)";
+                transaction.executeSql(executeQuery, [timestamp, born, color, number, place, crc, "true"], function(tx, result) {},
+                    function(error) {
+                        alert('Error: ' + error.message + ' code: ' + error.code);
+                    });
+            });
+            //update Revisoin number to for sync with Server
+            db.transaction(function(tx) {
+                tx.executeSql("UPDATE user SET syncRevServer=?", [countEntries]);
+            }, function(error) {
+                alert('Error: ' + error.message + ' code: ' + error.code);
+            }, function() {});
+        }
+
+        function PasswordQuery() {
+            ons.notification.prompt({
+                    message: 'Bitte gib dein Passwort',
+                    title: 'Passwort für Lieferschein erstellen',
+                    inputType: 'password'
+                })
+                .then(function(input) {
+                    //compare passwords
+                    if (localStorage.Password == input) {
+                        WriteDB();
+                    } else {
+                        if (localStorage.PasswordSetting == "true") {
+                            document.getElementById("PasswordSwitch").checked = true;
+                        } else {
+                            document.getElementById("PasswordSwitch").checked = false;
+                        }
+                        ons.notification.alert({
+                            message: "Ein falsches Passwort wurde eingegeben!",
+                            title: 'Passwort ungültig'
+                        });
+                    }
+                });
+        }
+
+        function openBrowser() {
+            var url = 'https://logcontract.com/privacy';
+            var target = '_blank';
+            var options = "location = yes"
+            var ref = cordova.InAppBrowser.open(url, target, options);
+
+            ref.addEventListener('loadstart', loadstartCallback);
+            ref.addEventListener('loadstop', loadstopCallback);
+            ref.addEventListener('loaderror', loaderrorCallback);
+            ref.addEventListener('exit', exitCallback);
+
+            function loadstartCallback(event) {
+                console.log('Loading started: ' + event.url)
+            }
+
+            function loadstopCallback(event) {
+                console.log('Loading finished: ' + event.url)
+            }
+
+            function loaderrorCallback(error) {
+                console.log('Loading error: ' + error.message)
+            }
+
+            function exitCallback() {
+                console.log('Browser is closed...')
+            }
+        }
+
+    </script> 
+    <script type="text/javascript" src="cordova.js"></script>
+    <!-- <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/toast.js"></script>
+    <script type="text/javascript" src="js/crc.js"></script>
+    <script src="js/log.js"></script>
+    <script src="js/profil.js"></script>
+    <script src="js/settings.js"></script> -->
+</body>
+
+</html>

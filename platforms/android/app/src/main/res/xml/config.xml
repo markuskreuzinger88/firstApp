@@ -20,19 +20,8 @@
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
     <allow-intent href="market:*" />
-    <icon density="ldpi" src="res/icon/android/ldpi.png" />
-    <icon density="mdpi" src="res/icons/android/mdpi.png" />
-    <icon density="hdpi" src="res/icons/android/hdpi.png" />
-    <icon density="xhdpi" src="res/icons/android/xhdpi.png" />
-    <icon density="xxhdpi" src="res/icons/android/xxhdpi.png" />
-    <icon density="xxxhdpi" src="res/icons/android/xxxhdpi.png" />
-    <splash density="land-ldpi" src="res/screens/android/splash-port-ldpi.png" />
-    <splash density="land-mdpi" src="res/screens/android/splash-port-mdpi.png" />
-    <splash density="land-hdpi" src="res/screens/android/splash-port-hdpi.png" />
-    <splash density="land-xhdpi" src="res/screens/android/splash-port-xhdpi.png" />
-    <splash density="land-xxhdpi" src="res/screens/android/splash-port-xxhdpi.png" />
-    <splash density="land-xxxhdpi" src="res/screens/android/splash-port-xxxhdpi.png" />
     <preference name="loglevel" value="DEBUG" />
-    <preference name="SplashScreenDelay" value="3000" />
+    <preference name="SplashScreenDelay" value="5000" />
+    <preference name="phonegap-version" value="cli-8.1.1" />
     <preference name="SplashMaintainAspectRatio" value="true" />
 </widget>

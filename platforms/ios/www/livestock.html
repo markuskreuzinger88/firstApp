@@ -335,15 +335,15 @@
                 span_center2 = document.createElement("span")
                 span_center1.setAttribute("class", "list-item__title");
                 span_center2.setAttribute("class", "list-item__subtitle");
-                span_center1.innerHTML = LiveStockNbr + results.rows.item(i).Number;
-                span_center2.innerHTML = results.rows.item(i).Place;
+                span_center1.innerHTML = LiveStockNbr + results.rows.item(i).number;
+                span_center2.innerHTML = results.rows.item(i).place;
                 div_left = document.createElement("div")
                 div_left.setAttribute("class", "left");
                 input = document.createElement("input")
                 input.setAttribute("id", "livestockColor" + i);
                 input.setAttribute("style",
                     "margin-right: 5px;border-color : black; border-width: medium; background-color:" + results.rows
-                    .item(i).Color);
+                    .item(i).color);
                 input.setAttribute("size", "3");
                 input.setAttribute("disabled", "true");
                 list.setAttribute("tappable", true);

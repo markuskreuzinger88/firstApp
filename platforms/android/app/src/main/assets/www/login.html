@@ -215,11 +215,9 @@
           type: "POST",
           data: data,
           success: function (response) {
-            var jsonString = JSON.stringify(response);
-            var fields = jsonString.split('"');
-            var access_token = fields[3];
-            var refresh_token = fields[13];
-            write2DB(access_token, refresh_token)
+            var bearerToken = "Bearer " + response.access_token
+            var refreshToken = response.refresh_token
+            write2DB(bearerToken, refreshToken)
           },
           error: function (xhr, status, error) {
             var errorMessage = xhr.status + ': ' + xhr.statusText
@@ -229,13 +227,13 @@
       }
 
       //Write to database
-      function write2DB(access_token, refresh_token) {
+      function write2DB(bearerToken, refreshToken) {
         var email = document.getElementById("email").value;
         var psw = document.getElementById("psw").value;
         db.transaction(function (transaction) {
           var executeQuery =
-            "INSERT INTO user (access_token, refresh_token, email, password) VALUES (?,?,?,?)";
-          transaction.executeSql(executeQuery, [access_token, refresh_token, email, psw],
+            "INSERT INTO user (bearerToken, refreshToken, email, password) VALUES (?,?,?,?)";
+          transaction.executeSql(executeQuery, [bearerToken, refreshToken, email, psw],
             function (tx, result) {
               window.location = "menu.html ";
             },
