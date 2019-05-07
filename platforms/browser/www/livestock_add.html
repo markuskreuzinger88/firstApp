@@ -98,47 +98,32 @@
                         <rect x="0" y="0" width="500" height="100" />
                     </clipPath>
 
-                    <rect id="rect1" x="50" y="100" rx="20" ry="20" width="250" stroke="black" stroke-width="2"
-                        height="150" style="fill:red" />
-                    <circle id="circle1" cx="180" cy="100" r="70" clip-path="url(#cut-off-bottom)" stroke="black"
-                        stroke-width="2" style="fill:red" />
+                    <rect id="rect1" x="50" y="100" rx="20" ry="20" width="250" stroke="black" stroke-width="2" height="150" style="fill:red" />
+                    <circle id="circle1" cx="180" cy="100" r="70" clip-path="url(#cut-off-bottom)" stroke="black" stroke-width="2" style="fill:red" />
                     <rect id="rect2" x="111" y="98" width="138" height="5" style="fill:red" />
                     <circle id="circle2" cx="180" cy="90" r="20" fill="white" stroke="black" stroke-width="2" />
 
-                    <text id="Svgtext1" onclick="showInfo('countryCode')" fill="black" font-size="30"
-                        font-family="Verdana" x="90" y="140">AT</text>
-                    <text id="Svgtext2" onclick="showInfo('stateCode')" fill="black" font-size="30"
-                        font-family="Verdana" x="240" y="140">3</text>
-                    <text id="Svgtext3" onclick="showInfo('LFBISCode')" fill="black" font-size="30"
-                        font-family="Verdana" x="120" y="230">4321056</text>
+                    <text id="Svgtext1" onclick="showInfo('countryCode')" fill="black" font-size="30" font-family="Verdana" x="90" y="140">AT</text>
+                    <text id="Svgtext2" onclick="showInfo('stateCode')" fill="black" font-size="30" font-family="Verdana" x="240" y="140">3</text>
+                    <text id="Svgtext3" onclick="showInfo('LFBISCode')" fill="black" font-size="30" font-family="Verdana" x="120" y="230">4321056</text>
                     <foreignObject id="CodeDigit0Obj" width="40" height="50" x="105" y="155">
-                        <input id="CodeDigit0" class="input-real" type="number" placeholder="X" maxlength="0"
-                            style="text-align: center;border-color : black; border-width: medium;"
-                            onfocus="this.value=''" />
+                        <input id="CodeDigit0" class="input-real" type="number" placeholder="X" maxlength="0" style="text-align: center;border-color : black; border-width: medium;" onfocus="this.value=''" />
                     </foreignObject>
                     <foreignObject id="CodeDigit1Obj" width="40" height="50" x="105" y="155">
-                        <input id="CodeDigit1" class="input-real" type="number" placeholder="X" maxlength="1"
-                            style="text-align: center;border-color : black; border-width: medium;"
-                            onfocus="this.value=''" />
+                        <input id="CodeDigit1" class="input-real" type="number" placeholder="X" maxlength="1" style="text-align: center;border-color : black; border-width: medium;" onfocus="this.value=''" />
                     </foreignObject>
                     <foreignObject id="CodeDigit2Obj" width="40" height="50" x="105" y="155">
-                        <input id="CodeDigit2" class="input-real" type="number" placeholder="X" maxlength="1"
-                            style="text-align: center;border-color : black; border-width: medium;"
-                            onfocus="this.value=''" />
+                        <input id="CodeDigit2" class="input-real" type="number" placeholder="X" maxlength="1" style="text-align: center;border-color : black; border-width: medium;" onfocus="this.value=''" />
                     </foreignObject>
                     <foreignObject id="CodeDigit3Obj" width="40" height="50" x="105" y="155">
-                        <input id="CodeDigit3" class="input-real" type="number" placeholder="X" maxlength="1"
-                            style="text-align: center;border-color : black; border-width: medium;"
-                            onfocus="this.value=''" />
+                        <input id="CodeDigit3" class="input-real" type="number" placeholder="X" maxlength="1" style="text-align: center;border-color : black; border-width: medium;" onfocus="this.value=''" />
                     </foreignObject>
                 </svg>
                 <hr>
                 <ons-row id="RowColor">
                     <ons-col id="Col1Color" style="margin-left: 10%; margin-top: 30px">Farbe</ons-col>
                     <ons-col id="Col2Color">
-                        <ons-button id="Color"
-                            style="margin-top: 20px; padding: 19px; border-radius: 10px; background-color: red; border-color : black; border-width: medium; width: 140px"
-                            onclick="showTemplateDialog('color', 'color.html')"></ons-button>
+                        <ons-button id="Color" style="margin-top: 20px; padding: 19px; border-radius: 10px; background-color: red; border-color : black; border-width: medium; width: 140px" onclick="showTemplateDialog('color', 'color.html')"></ons-button>
                     </ons-col>
                 </ons-row>
                 <ons-row>
@@ -157,20 +142,17 @@
                 <ons-row>
                     <ons-col style="margin-left: 10%; margin-top: 30px">Geboren am</ons-col>
                     <ons-col>
-                        <input id="BornOn" type="date" value="tt.mm.jjjj "
-                            style="width:140px; margin-top: 20px"><br><br>
+                        <input id="BornOn" type="date" value="tt.mm.jjjj " style="width:140px; margin-top: 20px"><br><br>
                     </ons-col>
                 </ons-row>
                 <ons-row>
                     <ons-col style="margin-left: 10%; margin-top: 30px">Erstellt am</ons-col>
                     <ons-col>
-                        <input id="CreatedOn" type="date" value="tt.mm.jjjj "
-                            style="width:140px; margin-top: 20px"><br><br>
+                        <input id="CreatedOn" type="date" value="tt.mm.jjjj " style="width:140px; margin-top: 20px"><br><br>
                     </ons-col>
                 </ons-row>
                 <section style="margin-left: 10%; margin-right: 10%; margin-top: 10%;  margin-bottom: 10%">
-                    <ons-button style=" border-radius: 10px;background-color: #2BA1E1" modifier="large"
-                        onclick="checkInputs()"> Erledigt
+                    <ons-button style=" border-radius: 10px;background-color: #2BA1E1" modifier="large" onclick="checkInputs()"> Erledigt
                         <ons-icon size="15px" style="margin-left: 5px" icon="fa-check"></ons-icon>
                     </ons-button>
                 </section>
@@ -259,7 +241,7 @@
         var createdOn = "";
         var switchState = "";
 
-        $(document).ready(function () {
+        $(document).ready(function() {
             BornOn.max = new Date().toISOString().split("T")[0];
             CreatedOn.max = new Date().toISOString().split("T")[0];
             switchState = localStorage.getItem("settings_request")
@@ -296,17 +278,8 @@
             let today = new Date().toISOString().substr(0, 10);
             document.querySelector("#BornOn").value = today;
             document.querySelector("#CreatedOn").value = today;
-            //create table in database
-            db.transaction(function (tx) {
-                //    tx.executeSql('DROP TABLE IF EXISTS Nutztiere');
-                tx.executeSql(
-                    'CREATE TABLE IF NOT EXISTS Nutztiere (Timestamp, Born, Color, Number, Place, tagged, DBSyncServer)'
-                );
-            }, function (error) {
-                alert('Error: ' + error.message + ' code: ' + error.code);
-            }, function () {});
-            db.transaction(function (transaction) {
-                transaction.executeSql('SELECT * FROM user', [], function (tx, results) {
+            db.transaction(function(transaction) {
+                transaction.executeSql('SELECT * FROM user', [], function(tx, results) {
                     //get email
                     email = results.rows.item(0).email;
                     //get user token
@@ -315,7 +288,7 @@
             });
 
             //select between inputs
-            $("#CodeDigit0").keyup(function () {
+            $("#CodeDigit0").keyup(function() {
                 if (document.getElementById("CodeDigit0").value != '') {
                     if (document.getElementById("CodeDigit1").value == '') {
                         document.getElementById("CodeDigit1").focus();
@@ -324,7 +297,7 @@
                     }
                 }
             });
-            $("#CodeDigit1").keyup(function () {
+            $("#CodeDigit1").keyup(function() {
                 if (document.getElementById("CodeDigit1").value != '') {
                     if (document.getElementById("CodeDigit2").value == '') {
                         document.getElementById("CodeDigit2").focus();
@@ -333,7 +306,7 @@
                     }
                 }
             });
-            $("#CodeDigit2").keyup(function () {
+            $("#CodeDigit2").keyup(function() {
                 if (document.getElementById("CodeDigit2").value != '') {
                     if (document.getElementById("CodeDigit3").value == '') {
                         document.getElementById("CodeDigit3").focus();
@@ -342,14 +315,14 @@
                     }
                 }
             });
-            $("#CodeDigit3").keyup(function () {
+            $("#CodeDigit3").keyup(function() {
                 if (document.getElementById("CodeDigit3").value != '') {
                     document.getElementById("CodeDigit3").blur();
                 }
             });
         });
 
-        var showTemplateDialog = function (my_dialog, my_dialog_html) {
+        var showTemplateDialog = function(my_dialog, my_dialog_html) {
 
             var dialog = document.getElementById(my_dialog);
 
@@ -359,13 +332,13 @@
                 ons.createElement(my_dialog_html, {
                         append: true
                     })
-                    .then(function (dialog) {
+                    .then(function(dialog) {
                         dialog.show();
                     });
             }
         };
 
-        var showInfo = function (code) {
+        var showInfo = function(code) {
             if (code == "countryCode") {
                 ons.notification.alert({
                     message: 'Ländercode: AT steht für Österrreich',
@@ -385,7 +358,7 @@
         };
 
         //select color
-        var hideDialogColor = function (id, checkbox, color) {
+        var hideDialogColor = function(id, checkbox, color) {
             document.getElementById("checkColor-1").checked = false;
             document.getElementById("checkColor-2").checked = false;
             document.getElementById("checkColor-3").checked = false;
@@ -452,13 +425,13 @@
                     "birthday": born,
                     "isLocked": true
                 }),
-                success: function (response) {
+                success: function(response) {
                     var data = JSON.stringify(response);
                     alert(data)
                     alert(response.success)
                     write2DB()
                 },
-                error: function (xhr, status, error) {
+                error: function(xhr, status, error) {
                     var errorMessage = xhr.status + ': ' + xhr.statusText
                     alert('Livestock add failed! Error - ' + errorMessage);
                 }
@@ -466,47 +439,16 @@
         }
 
         function write2DB() {
-            db.transaction(function (transaction) {
+            db.transaction(function(transaction) {
                 var executeQuery =
-                    "INSERT INTO Nutztiere (born, color, number, place, created, user, sync) VALUES (?,?,?,?,?,?,?)";
-                transaction.executeSql(executeQuery, [born, color, number, place, created, email, "true"],
-                    function (tx, result) {
+                    "INSERT INTO livestock (born, color, number, place, created, user, tagged, sync) VALUES (?,?,?,?,?,?,?,?)";
+                transaction.executeSql(executeQuery, [born, color, number, place, created, email, "false", "true"],
+                    function(tx, result) {
                         window.location = "livestock.html";
                     },
-                    function (error) {
+                    function(error) {
                         alert('Error: ' + error.message + ' code: ' + error.code);
                     });
-            });
-        }
-
-        function readDB() {
-            db.transaction(function (transaction) {
-                transaction.executeSql('SELECT * FROM Nutztiere', [], function (tx, results) {
-                    //                    alert(results.rows)
-                    console.log(results.rows)
-                    //                    var len = results.rows.length,
-                    //                        i;
-                    //                    $("#rowCount").append(len);
-                    //                    for (i = 0; i < len; i++) {
-                    //                        $("#TableData").append("<tr><td>" + results.rows.item(i).id + "</td><td>" + results.rows.item(i).title + "</td><td>" + results.rows.item(i).desc + "</td></tr>");
-                    //                    }
-
-                }, null);
-            });
-        }
-
-        function deleteDB() {
-            db.transaction(function (transaction) {
-                var executeQuery = "DROP TABLE IF EXISTS Nutztiere";
-                transaction.executeSql(executeQuery, [],
-                    function (tx, result) {
-                        localStorage.clear();
-                        alert('Table deleted successfully.');
-                    },
-                    function (error) {
-                        alert('Error occurred while droping the table.');
-                    }
-                );
             });
         }
 
@@ -514,6 +456,7 @@
             window.location = "livestock.html ";
 
         }
+
     </script>
     <script type="text/javascript" src="js/crc32.js"></script>
 </body>

@@ -126,11 +126,17 @@
                 </p>
                 <ons-list id="container" modifier="inset">
                 </ons-list>
-                <ons-row style="text-align: center; margin-top: 5%; margin-left: 5%; margin-bottom: 10%">
+                <ons-row style="margin-top: 5%; margin-left: 5%; margin-bottom: 10%">
                     <ons-col>
+                        <p onclick="removetag()" id="removeLivestocks" style="margin-top: -5px">
+                            <ons-icon style="margin-left: 3px" icon="fa-trash"></ons-icon>
+                            Alle löschen
+                        </p>
                     </ons-col>
-                    <ons-col onclick="nextPage('livestock.html')">Hinzufügen
-                        <ons-icon style="margin-left: 3px" icon="fa-plus"></ons-icon>
+                    <ons-col style="text-align: center;">
+                        <p onclick="nextPage('livestock.html')" style="margin-top: -5px"> Hinzufügen
+                            <ons-icon style="margin-left: 3px" icon="fa-plus"></ons-icon>
+                        </p>
                     </ons-col>
                 </ons-row>
                 <hr>
@@ -181,7 +187,7 @@
 
     <script type="text/javascript">
         db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //create 20MB Database
-        var code = "";
+        var email = "";
         var token = "";
         var color = "";
         var number = "";
@@ -206,22 +212,11 @@
             db.transaction(function(transaction) {
                 transaction.executeSql('SELECT * FROM user', [], function(tx, results) {
                     //get buisness code for requests
-                    code = results.rows.item(0).code;
+                    email = results.rows.item(0).email;
                     //get user token
-                    token = results.rows.item(0).token;
+                    token = results.rows.item(0).bearerToken;
                 }, null);
             });
-
-            /*create table in DB*/
-            db.transaction(function(tx) {
-                tx.executeSql('DROP TABLE IF EXISTS Arzneimittelvergabe');
-                tx.executeSql(
-                    'CREATE TABLE IF NOT EXISTS Arzneimittelvergabe (color, number, drug, approval_number, delay, amount, timestamp, DBSyncServer)'
-                );
-            }, function(error) {
-                alert('Error: ' + error.message + ' code: ' + error.code);
-            }, function() {});
-
             GetDBTaggedResult()
         });
 
@@ -233,7 +228,7 @@
             }
             db.transaction(function(transaction) {
                 transaction.executeSql(
-                    'SELECT * FROM Nutztiere WHERE tagged = ? ORDER BY Number DESC', ['true'],
+                    'SELECT * FROM livestock WHERE tagged = ? ORDER BY Number DESC', ['true'],
                     function(tx, results) {
                         console.log(results)
                         DisplayResult(results)
@@ -258,9 +253,9 @@
                     div_right = document.createElement("div")
                     div_right.setAttribute("class", "right");
                     icon_right = document.createElement("ons-icon")
-                    icon_right.setAttribute("icon", "fa-times");
+                    icon_right.setAttribute("icon", "fa-trash");
                     icon_right.setAttribute("style", "color: red");
-                    icon_right.setAttribute("size", "25px");
+                    icon_right.setAttribute("size", "20px");
                     icon_right.setAttribute("onclick", "removeListItem(" + i + ")");
                     //add text center
                     span_center1 = document.createElement("span")
@@ -268,8 +263,8 @@
                     span_center2 = document.createElement("span")
                     span_center1.setAttribute("class", "list-item__title");
                     span_center2.setAttribute("class", "list-item__subtitle");
-                    span_center1.innerHTML = LiveStockNbr + results.rows.item(i).Number;
-                    span_center2.innerHTML = results.rows.item(i).Place;
+                    span_center1.innerHTML = LiveStockNbr + results.rows.item(i).number;
+                    span_center2.innerHTML = results.rows.item(i).place;
                     div_left = document.createElement("div")
                     div_left.setAttribute("class", "left");
                     //create color mark right
@@ -278,7 +273,7 @@
                     input.setAttribute("style",
                         "margin-right: 5px;border-color : black; border-width: medium; background-color:" + results
                         .rows
-                        .item(i).Color);
+                        .item(i).color);
                     input.setAttribute("size", "3");
                     input.setAttribute("disabled", "true");
                     list.setAttribute("tappable", true);
@@ -291,8 +286,9 @@
                     div_center.appendChild(span_center2);
                     list.appendChild(div_center);
                     document.getElementById("container").appendChild(list);
-                    arrColor.push(results.rows.item(i).Color);
-                    arrNumber.push(results.rows.item(i).Number);
+                    arrColor.push(results.rows.item(i).color);
+                    arrNumber.push(results.rows.item(i).number);
+                    console.log(arrColor)
                 }
             } else {
                 list = document.createElement("ons-list-item")
@@ -300,6 +296,8 @@
                 div.innerHTML = "Kein Nutztier ausgewählt"
                 list.appendChild(div);
                 document.getElementById("container").appendChild(list);
+                document.getElementById("removeLivestocks").innerHTML = "";
+                document.getElementById("removeLivestocks").disabled = true;
             }
         }
 
@@ -319,8 +317,32 @@
                     if (index == 0) {
                         db.transaction(function(tx) {
                             tx.executeSql(
-                                "UPDATE Nutztiere SET tagged=? where Color = ? AND Number = ?",
+                                "UPDATE livestock SET tagged=? where Color = ? AND Number = ?",
                                 ['false', color, number]);
+                        }, function(error) {
+                            alert('Error: ' + error.message + ' code: ' + error.code);
+                        }, function() {
+                            GetDBTaggedResult()
+                        });
+                    }
+                }
+            });
+        }
+
+        function removetag() {
+            ons.notification.confirm({
+                message: 'Möchtest du alle Nutztier aus deiner Liste für die Arzneimittelvergabe löschen?',
+                title: 'Nutztier entfernen',
+                buttonLabels: ['Ja', 'Nein'],
+                animation: 'default',
+                primaryButtonIndex: 1,
+                cancelable: true,
+                callback: function(index) {
+                    if (index == 0) {
+                        db.transaction(function(tx) {
+                            tx.executeSql(
+                                "UPDATE livestock SET tagged=?",
+                                ['false']);
                         }, function(error) {
                             alert('Error: ' + error.message + ' code: ' + error.code);
                         }, function() {
@@ -678,6 +700,7 @@
         function DoneButton() {
             console.log(arrColor)
             console.log(arrNumber)
+            alert("hallo")
             drug = document.getElementById("arzneimittel").value
             delay = document.getElementById("wartezeit").value
             amount = document.getElementById("abgabemenge").value
@@ -750,21 +773,12 @@
 
         function write2DB() {
             /*write to DB*/
-            console.log(arrColor.length)
-            for (i = 0; i < arrColor.length; i++) {
-                db.transaction(function(transaction) {
-                    var executeQuery =
-                        "INSERT INTO Arzneimittelvergabe (color, number, drug, approval_number, delay, amount, timestamp, DBSyncServer) VALUES (?,?,?,?,?,?,?,?)";
-                    transaction.executeSql(executeQuery, [arrColor[i], arrNumber[i], drug, approval_number, delay, amount,
-                            timestamp, "true"
-                        ], function(tx, result) {
-                            window.location = "menu.html ";
-                        },
-                        function(error) {
-                            alert('Error: ' + error.message + ' code: ' + error.code);
-                        });
-                });
-            }
+            db.transaction(function(transaction) {
+                for (i = 0; i < arrColor.length; i++) {
+                    var executeQuery = "INSERT INTO drug_delivery (color, number, drug, approval_number, delay, amount, timestamp, DBSyncServer) VALUES (?,?,?,?,?,?,?,?)";
+                    transaction.executeSql(executeQuery, [arrColor[i], arrNumber[i], drug, approval_number, delay, amount, timestamp, "true"]);
+                };
+            });
         }
 
         function nextPage(page) {
