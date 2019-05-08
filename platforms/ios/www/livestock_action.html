@@ -37,7 +37,7 @@
 </head>
 
 <template id="occupancy.html">
-    <ons-dialog id="occupancy">
+    <ons-dialog id="occupancy" cancelable>
         <div style="text-align: center; padding: 5px;">
             <p>
                 <b>
@@ -71,7 +71,7 @@
 </template>
 
 <template id="pregnancy.html">
-    <ons-dialog id="pregnancy">
+    <ons-dialog id="pregnancy" cancelable>
         <div style="text-align: center; padding: 5px;">
             <p>
                 <b>
@@ -105,7 +105,7 @@
 </template>
 
 <template id="stripOff.html">
-    <ons-dialog id="stripOff">
+    <ons-dialog id="stripOff" cancelable>
         <div style="text-align: center; padding: 5px;">
             <p>
                 <b>
@@ -139,7 +139,7 @@
 </template>
 
 <template id="farrow.html">
-    <ons-dialog id="farrow">
+    <ons-dialog id="farrow" cancelable>
         <div style="text-align: center; padding: 5px;">
             <p>
                 <b>
@@ -188,6 +188,8 @@
 
     <script type="text/javascript">
         db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //create 20MB Database
+        var born_alive = "";
+        var born_dead = "";
 
         var showTemplateDialog = function(my_dialog, my_dialog_html, CreatedOnDate, CreatedOnTime) {
 
@@ -214,59 +216,53 @@
         };
 
         var saveDialog = function(id, type, CreatedOnDate, CreatedOnTime) {
-            var color = String(localStorage.LivestockColor)
-            var number = String(localStorage.LivestockNumber)
-            var type = type
-            var date = document.getElementById(CreatedOnDate).value;
-            var time = document.getElementById(CreatedOnTime).value;
-            if (document.getElementById("BornAlive").value.length != 0) {
+            if (id == 'farrow') {
                 var born_alive = document.getElementById("BornAlive").value;
-            } else {
-                if (id == 'farrow') {
+                var born_dead = document.getElementById("BornDead").value;
+                if (document.getElementById("BornAlive").value.length != 0) {
+                    var born_alive = document.getElementById("BornAlive").value;
+                } else {
                     ons.notification.alert({
                         message: 'Bitte überprüfe das Eingabefeld "Lebend geboren"!',
                         title: 'Eingabefelder Fehler',
                     });
                     return
-                } else {
-                    var born_alive = ""
                 }
-            }
-            if (document.getElementById("BornDead").value.length != 0) {
-                var born_dead = document.getElementById("BornDead").value;
-            } else {
-                if (id == 'farrow') {
+                if (document.getElementById("BornDead").value.length != 0) {
+                    var born_dead = document.getElementById("BornDead").value;
+                } else {
                     ons.notification.alert({
                         message: 'Bitte überprüfe das Eingabefeld "Tot geboren"!',
                         title: 'Eingabefelder Fehler',
                     });
                     return
-                } else {
-                    var born_dead = ""
                 }
             }
-            db.transaction(function(tx) {
-                //                tx.executeSql('DROP TABLE IF EXISTS Wurfindex');
-                tx.executeSql('CREATE TABLE IF NOT EXISTS Wurfindex (color, number, type, date, time, born_alive, born_dead)');
-            }, function(error) {
-                alert('Error: ' + error.message + ' code: ' + error.code);
-            }, function() {
-                db.transaction(function(transaction) {
-                    var executeQuery = "INSERT INTO Wurfindex (color, number, type, date, time, born_alive, born_dead) VALUES (?,?,?,?,?,?,?)";
-                    transaction.executeSql(executeQuery, [color, number, type, date, time, born_alive, born_dead], function(tx, result) {
-                            document.getElementById(id).hide();
-                            window.location = "nutztier_detail.html ";
-                        },
-                        function(error) {
-                            alert('Error: ' + error.message + ' code: ' + error.code);
-                        });
-                });
-
-            });
+            write2DB(type, CreatedOnDate, CreatedOnTime)
         };
 
+        function write2DB(type, CreatedOnDate, CreatedOnTime) {
+            var color = String(localStorage.LivestockColor)
+            var number = String(localStorage.LivestockNumber)
+            var date = document.getElementById(CreatedOnDate).value;
+            var time = document.getElementById(CreatedOnTime).value;
+            db.transaction(function(transaction) {
+                var executeQuery =
+                    "INSERT INTO livestock_action (color, number, type, date, time, born_alive, born_dead, sync) VALUES (?,?,?,?,?,?,?,?)";
+                transaction.executeSql(executeQuery, [color, number, type, date, time, born_alive, born_dead, "true"],
+                    function(tx, result) {
+                        window.location = "livestock_detail.html";
+                        //                        window.location == "window.history.back()"
+                    },
+                    function(error) {
+                        alert('Error: ' + error.message + ' code: ' + error.code);
+                    });
+            });
+        }
+
         function BackButton() {
-            window.location = "livestock_detail.html ";
+            window.location == "window.history.back()"
+            //            window.location = "livestock_detail.html ";
         }
 
     </script>

@@ -292,7 +292,7 @@
         var lastPage = "";
 
         $(document).ready(function() {
-            ShowResultDBSort('SELECT * FROM Nutztiere ORDER BY Number DESC')
+            ShowResultDBSort('SELECT * FROM livestock ORDER BY Number DESC')
             localStorage.removeItem('ColorFilter');
             localStorage.setItem('DBSort', "checkSort-1");
             localStorage.removeItem('PlaceFilter');
@@ -336,15 +336,15 @@
                 span_center1.setAttribute("class", "list-item__title");
                 span_center2.setAttribute("class", "list-item__subtitle");
                 span_center1.innerHTML = LiveStockNbr + results.rows.item(i).number;
-                span_center2.innerHTML = results.rows.item(i).place;
+                span_center2.innerHTML = results.rows.item(i).place + "<br>" +
+                    results.rows.item(i).born;
                 div_left = document.createElement("div")
                 div_left.setAttribute("class", "left");
                 input = document.createElement("input")
                 input.setAttribute("id", "livestockColor" + i);
                 input.setAttribute("style",
-                    "margin-right: 5px;border-color : black; border-width: medium; background-color:" + results.rows
+                    "width: 40px; height :40px;margin-right: 5px;border-color : black; border-width: medium; background-color:" + results.rows
                     .item(i).color);
-                input.setAttribute("size", "3");
                 input.setAttribute("disabled", "true");
                 list.setAttribute("tappable", true);
                 //modify selection depending on last site --> when last page drug delivery
@@ -386,14 +386,14 @@
             if (tag.checked == true) {
                 tag.checked = false
                 db.transaction(function(tx) {
-                    tx.executeSql("UPDATE Nutztiere SET tagged=? where Color = ? AND Number = ?", ['false',
+                    tx.executeSql("UPDATE livestock SET tagged=? where Color = ? AND Number = ?", ['false',
                         color, number
                     ]);
                 });
             } else {
                 tag.checked = true
                 db.transaction(function(tx) {
-                    tx.executeSql("UPDATE Nutztiere SET tagged=? where Color = ? AND Number = ?", ['true',
+                    tx.executeSql("UPDATE livestock SET tagged=? where Color = ? AND Number = ?", ['true',
                         color, number
                     ]);
                 });
@@ -441,13 +441,13 @@
             var Checkbox = localStorage.DBSort
             if (Checkbox == "checkSort-1") {
                 if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("PlaceFilter") === null)) {
-                    ShowResultDBSort('SELECT * FROM Nutztiere ORDER BY Number DESC')
+                    ShowResultDBSort('SELECT * FROM livestock ORDER BY Number DESC')
                 } else if ((localStorage.getItem("ColorFilter") !== null) && (localStorage.getItem("PlaceFilter") ===
                         null)) {
-                    ShowResultDBColorFilter('SELECT * FROM Nutztiere WHERE Color = ? ORDER BY Number DESC', ColorFilter)
+                    ShowResultDBColorFilter('SELECT * FROM livestock WHERE Color = ? ORDER BY Number DESC', ColorFilter)
                 } else if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("PlaceFilter") !==
                         null)) {
-                    ShowResultDBColorFilter('SELECT * FROM Nutztiere WHERE Place = ? ORDER BY Number DESC', PlaceFilter)
+                    ShowResultDBColorFilter('SELECT * FROM livestock WHERE Place = ? ORDER BY Number DESC', PlaceFilter)
                 } else {
                     ShowResultDBColorPlaceFilter(
                         'SELECT * FROM Nutztiere WHERE Color = ? and Place = ? ORDER BY Number DESC', ColorFilter,
@@ -455,42 +455,42 @@
                 }
             } else if (Checkbox == "checkSort-2") {
                 if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("PlaceFilter") === null)) {
-                    ShowResultDBSort('SELECT * FROM Nutztiere ORDER BY Number ASC')
+                    ShowResultDBSort('SELECT * FROM livestock ORDER BY Number ASC')
                 } else if ((localStorage.getItem("ColorFilter") !== null) && (localStorage.getItem("PlaceFilter") ===
                         null)) {
-                    ShowResultDBColorFilter('SELECT * FROM Nutztiere WHERE Color = ? ORDER BY Number ASC', ColorFilter)
+                    ShowResultDBColorFilter('SELECT * FROM livestock WHERE Color = ? ORDER BY Number ASC', ColorFilter)
                 } else if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("PlaceFilter") !==
                         null)) {
-                    ShowResultDBColorFilter('SELECT * FROM Nutztiere WHERE Place = ? ORDER BY Number ASC', PlaceFilter)
+                    ShowResultDBColorFilter('SELECT * FROM livestock WHERE Place = ? ORDER BY Number ASC', PlaceFilter)
                 } else {
                     ShowResultDBColorPlaceFilter(
-                        'SELECT * FROM Nutztiere WHERE Color = ? and Place = ? ORDER BY Number ASC', ColorFilter,
+                        'SELECT * FROM livestock WHERE Color = ? and Place = ? ORDER BY Number ASC', ColorFilter,
                         PlaceFilter)
                 }
             } else if (Checkbox == "checkSort-3") {
                 if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("PlaceFilter") === null)) {
-                    ShowResultDBSort('SELECT * FROM Nutztiere ORDER BY Color')
+                    ShowResultDBSort('SELECT * FROM livestock ORDER BY Color')
                 } else if ((localStorage.getItem("ColorFilter") !== null) && (localStorage.getItem("PlaceFilter") ===
                         null)) {
-                    ShowResultDBColorFilter('SELECT * FROM Nutztiere WHERE Color = ? ORDER BY Color', ColorFilter)
+                    ShowResultDBColorFilter('SELECT * FROM livestock WHERE Color = ? ORDER BY Color', ColorFilter)
                 } else if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("PlaceFilter") !==
                         null)) {
-                    ShowResultDBColorFilter('SELECT * FROM Nutztiere WHERE Place = ? ORDER BY Color', PlaceFilter)
+                    ShowResultDBColorFilter('SELECT * FROM livestock WHERE Place = ? ORDER BY Color', PlaceFilter)
                 } else {
-                    ShowResultDBColorPlaceFilter('SELECT * FROM Nutztiere WHERE Color = ? and Place = ? ORDER BY Color',
+                    ShowResultDBColorPlaceFilter('SELECT * FROM livestock WHERE Color = ? and Place = ? ORDER BY Color',
                         ColorFilter, PlaceFilter)
                 }
             } else if (Checkbox == "checkSort-4") {
                 if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("PlaceFilter") === null)) {
-                    ShowResultDBSort('SELECT * FROM Nutztiere ORDER BY Place')
+                    ShowResultDBSort('SELECT * FROM livestock ORDER BY Place')
                 } else if ((localStorage.getItem("ColorFilter") !== null) && (localStorage.getItem("PlaceFilter") ===
                         null)) {
-                    ShowResultDBColorFilter('SELECT * FROM Nutztiere WHERE Color = ? ORDER BY Place', ColorFilter)
+                    ShowResultDBColorFilter('SELECT * FROM livestock WHERE Color = ? ORDER BY Place', ColorFilter)
                 } else if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("PlaceFilter") !==
                         null)) {
-                    ShowResultDBColorFilter('SELECT * FROM Nutztiere WHERE Place = ? ORDER BY Place', PlaceFilter)
+                    ShowResultDBColorFilter('SELECT * FROM livestock WHERE Place = ? ORDER BY Place', PlaceFilter)
                 } else {
-                    ShowResultDBColorPlaceFilter('SELECT * FROM Nutztiere WHERE Color = ? and Place = ? ORDER BY Place',
+                    ShowResultDBColorPlaceFilter('SELECT * FROM livestock WHERE Color = ? and Place = ? ORDER BY Place',
                         ColorFilter, PlaceFilter)
                 }
             }

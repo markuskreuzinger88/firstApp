@@ -15,11 +15,16 @@
             localStorage.setItem("settings_request", 'true');
             localStorage.setItem("settings_credentials", 'false');
             db.transaction(function(tx) {
-                tx.executeSql('DROP TABLE IF EXISTS user');
                 tx.executeSql('DROP TABLE IF EXISTS Nutztiere');
                 tx.executeSql('DROP TABLE IF EXISTS Arzneimittelvergabe');
+                tx.executeSql('DROP TABLE IF EXISTS user');
+                tx.executeSql('DROP TABLE IF EXISTS livestock');
+                tx.executeSql('DROP TABLE IF EXISTS drug_delivery');
+                tx.executeSql('DROP TABLE IF EXISTS livestock_action');
                 tx.executeSql('CREATE TABLE IF NOT EXISTS user (bearerToken, refreshToken, email, password)');
-                tx.executeSql('CREATE TABLE IF NOT EXISTS Nutztiere (born, color, number, place , created, user, sync)')
+                tx.executeSql('CREATE TABLE IF NOT EXISTS livestock (born, color, number, place , created, user, tagged, sync)')
+                tx.executeSql('CREATE TABLE IF NOT EXISTS drug_delivery (color, number, drug, approval_number, delay, amount, timestamp, DBSyncServer)')
+                tx.executeSql('CREATE TABLE IF NOT EXISTS livestock_action (color, number, type, date, time, born_alive, born_dead, sync)')
             }, function(error) {
                 alert('Error: ' + error.message + ' code: ' + error.code);
             }, function() {
