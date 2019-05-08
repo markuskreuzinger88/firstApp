@@ -28,44 +28,42 @@ import BaseElement from './base/base-element';
 import contentReady from '../ons/content-ready';
 
 var scheme = {
-  '.progress-bar': 'progress-bar--*',
-  '.progress-bar__primary': 'progress-bar--*__primary',
-  '.progress-bar__secondary': 'progress-bar--*__secondary'
+  '.progress-circular': 'progress-circular--*',
+  '.progress-circular__background': 'progress-circular--*__background',
+  '.progress-circular__primary': 'progress-circular--*__primary',
+  '.progress-circular__secondary': 'progress-circular--*__secondary'
 };
 
-var template = util.createElement('\n  <div class="progress-bar">\n    <div class="progress-bar__secondary"></div>\n    <div class="progress-bar__primary"></div>\n  </div>\n');
+var template = util.createElement('\n  <svg class="progress-circular">\n    <circle class="progress-circular__background" />\n    <circle class="progress-circular__secondary" cx="50%" cy="50%" r="40%" />\n    <circle class="progress-circular__primary" cx="50%" cy="50%" r="40%" />\n  </svg>\n');
 
 var INDET = 'indeterminate';
 
 /**
- * @element ons-progress-bar
+ * @element ons-progress-circular
  * @category visual
- * @modifier material
- *   [en]Display a Material Design progress bar.[/en]
- *   [ja]マテリアルデザインのスタイルでプログレスバーを表示します。[/ja]
  * @description
  *   [en]
- *     The component is used to display a linear progress bar. It can either display a progress bar that shows the user how much of a task has been completed. In the case where the percentage is not known it can be used to display an animated progress bar so the user can see that an operation is in progress.
+ *     This component displays a circular progress indicator. It can either be used to show how much of a task has been completed or to show a looping animation to indicate that an operation is currently running.
  *   [/en]
  *   [ja][/ja]
- * @codepen zvQbGj
- * @tutorial vanilla/Reference/progress
- * @seealso ons-progress-circular
- *   [en]The `<ons-progress-circular>` component displays a circular progress indicator.[/en]
+ * @codepen EVzMjR
+ * @tutorial vanilla/Reference/progress-circular
+ * @seealso ons-progress-bar
+ *   [en]The `<ons-progress-bar>` component displays a bar progress indicator.[/en]
  *   [ja][/ja]
  * @example
- * <ons-progress-bar
+ * <ons-progress-circular
  *  value="55"
  *  secondary-value="87">
- * </ons-progress-bar>
+ * </ons-progress-circular>
  *
- * <ons-progress-bar
+ * <ons-progress-circular
  *  indeterminate>
- * </ons-progress-bar>
+ * </ons-progress-circular>
  */
 
-var ProgressBarElement = function (_BaseElement) {
-  _inherits(ProgressBarElement, _BaseElement);
+var ProgressCircularElement = function (_BaseElement) {
+  _inherits(ProgressCircularElement, _BaseElement);
 
   /**
    * @attribute modifier
@@ -98,10 +96,10 @@ var ProgressBarElement = function (_BaseElement) {
    *   [ja]この属性が設定された場合、ループするアニメーションが表示されます。[/ja]
    */
 
-  function ProgressBarElement() {
-    _classCallCheck(this, ProgressBarElement);
+  function ProgressCircularElement() {
+    _classCallCheck(this, ProgressCircularElement);
 
-    var _this = _possibleConstructorReturn(this, (ProgressBarElement.__proto__ || _Object$getPrototypeOf(ProgressBarElement)).call(this));
+    var _this = _possibleConstructorReturn(this, (ProgressCircularElement.__proto__ || _Object$getPrototypeOf(ProgressCircularElement)).call(this));
 
     contentReady(_this, function () {
       return _this._compile();
@@ -109,46 +107,7 @@ var ProgressBarElement = function (_BaseElement) {
     return _this;
   }
 
-  _createClass(ProgressBarElement, [{
-    key: '_compile',
-    value: function _compile() {
-      if (!this._isCompiled()) {
-        this._template = template.cloneNode(true);
-      } else {
-        this._template = util.findChild(this, '.progress-bar');
-      }
-
-      this._primary = util.findChild(this._template, '.progress-bar__primary');
-      this._secondary = util.findChild(this._template, '.progress-bar__secondary');
-
-      this._updateDeterminate();
-      this._updateValue();
-
-      this.appendChild(this._template);
-
-      autoStyle.prepare(this);
-      ModifierUtil.initModifier(this, scheme);
-    }
-  }, {
-    key: '_isCompiled',
-    value: function _isCompiled() {
-      if (!util.findChild(this, '.progress-bar')) {
-        return false;
-      }
-
-      var barElement = util.findChild(this, '.progress-bar');
-
-      if (!util.findChild(barElement, '.progress-bar__secondary')) {
-        return false;
-      }
-
-      if (!util.findChild(barElement, '.progress-bar__primary')) {
-        return false;
-      }
-
-      return true;
-    }
-  }, {
+  _createClass(ProgressCircularElement, [{
     key: 'attributeChangedCallback',
     value: function attributeChangedCallback(name, last, current) {
       if (name === 'modifier') {
@@ -174,10 +133,23 @@ var ProgressBarElement = function (_BaseElement) {
     value: function _updateValue() {
       var _this3 = this;
 
-      contentReady(this, function () {
-        _this3._primary.style.width = _this3.hasAttribute('value') ? _this3.getAttribute('value') + '%' : '0%';
-        _this3._secondary.style.width = _this3.hasAttribute('secondary-value') ? _this3.getAttribute('secondary-value') + '%' : '0%';
-      });
+      if (this.hasAttribute('value')) {
+        contentReady(this, function () {
+          var per = Math.ceil(_this3.getAttribute('value') * 251.32 * 0.01);
+          _this3._primary.style['stroke-dasharray'] = per + '%, 251.32%';
+        });
+      }
+      if (this.hasAttribute('secondary-value')) {
+        contentReady(this, function () {
+          var per = Math.ceil(_this3.getAttribute('secondary-value') * 251.32 * 0.01);
+          _this3._secondary.style.display = null;
+          _this3._secondary.style['stroke-dasharray'] = per + '%, 251.32%';
+        });
+      } else {
+        contentReady(this, function () {
+          _this3._secondary.style.display = 'none';
+        });
+      }
     }
 
     /**
@@ -188,6 +160,45 @@ var ProgressBarElement = function (_BaseElement) {
      *   [ja]現在の進行状況の値を指定します。0から100の間の値を指定して下さい。[/ja]
      */
 
+  }, {
+    key: '_compile',
+    value: function _compile() {
+      if (this._isCompiled()) {
+        this._template = util.findChild(this, '.progress-circular');
+      } else {
+        this._template = template.cloneNode(true);
+      }
+
+      this._primary = util.findChild(this._template, '.progress-circular__primary');
+      this._secondary = util.findChild(this._template, '.progress-circular__secondary');
+
+      this._updateDeterminate();
+      this._updateValue();
+
+      this.appendChild(this._template);
+
+      autoStyle.prepare(this);
+      ModifierUtil.initModifier(this, scheme);
+    }
+  }, {
+    key: '_isCompiled',
+    value: function _isCompiled() {
+      if (!util.findChild(this, '.progress-circular')) {
+        return false;
+      }
+
+      var svg = util.findChild(this, '.progress-circular');
+
+      if (!util.findChild(svg, '.progress-circular__secondary')) {
+        return false;
+      }
+
+      if (!util.findChild(svg, '.progress-circular__primary')) {
+        return false;
+      }
+
+      return true;
+    }
   }, {
     key: 'value',
     set: function set(value) {
@@ -249,11 +260,11 @@ var ProgressBarElement = function (_BaseElement) {
     }
   }]);
 
-  return ProgressBarElement;
+  return ProgressCircularElement;
 }(BaseElement);
 
-export default ProgressBarElement;
+export default ProgressCircularElement;
 
 
-onsElements.ProgressBar = ProgressBarElement;
-customElements.define('ons-progress-bar', ProgressBarElement);
+onsElements.ProgressCircular = ProgressCircularElement;
+customElements.define('ons-progress-circular', ProgressCircularElement);
