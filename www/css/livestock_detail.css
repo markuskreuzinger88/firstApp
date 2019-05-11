@@ -1,0 +1,249 @@
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        font: 16px Arial;
+    }
+
+    input[type=text] {
+        border: 1px solid transparent;
+        background-color: #f1f1f1;
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 16px;
+        background-color: #f1f1f1;
+        width: 100%;
+    }
+
+    input[type=number] {
+        border: 1px solid transparent;
+        background-color: #f1f1f1;
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 16px;
+        background-color: #f1f1f1;
+        width: 100%;
+    }
+
+    input[type=date] {
+        border: 1px solid transparent;
+        background-color: #f1f1f1;
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 16px;
+        background-color: #f1f1f1;
+        width: 100%;
+    }
+
+    input[type=color] {
+        border: 1px solid transparent;
+        background-color: #f1f1f1;
+        border-radius: 10px;
+        /*        padding: 1px;*/
+        font-size: 16px;
+        width: 50px;
+        height: 40px;
+        /*        margin: .4rem;*/
+    }
+
+    .Div {
+        margin: auto;
+        margin-top: 40px;
+        margin-bottom: 40px;
+        width: 45%;
+        /*            border: 3px solid #2BA1E1;*/
+        /*            padding: 10px;*/
+    }
+
+    p {
+        font-family: Calibri;
+        font-size: 18px;
+    }
+
+    .speed-dial__item div {
+        position: absolute;
+        background: rgba(0, 0, 0, 0.3);
+        font-size: 18px;
+        padding: 0 5px;
+        border-radius: 10px;
+        top: 0;
+        right: 45px;
+    }
+
+    .speed-dial__item {
+        overflow: visible;
+    }
+
+    ons-speed-dial:before {
+        content: '';
+        display: block;
+        position: fixed;
+        visibility: hidden;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    ons-speed-dial.open:before {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .sidenav {
+        width: 40px;
+        position: fixed;
+        z-index: 1;
+        top: 45%;
+        left: 10px;
+        background: #eee;
+        overflow-x: hidden;
+        padding: 8px 0;
+        /*        border: thick solid #0000FF;*/
+    }
+
+    .sidenav a {
+        padding: 6px 8px 6px 8px;
+        text-decoration: none;
+        font-size: 20px;
+        color: #2196F3;
+        display: block;
+    }
+
+    .sidenav a:hover {
+        color: #064579;
+    }
+
+    select {
+        border: 1px solid transparent;
+        background-color: #f1f1f1;
+        border-radius: 10px;
+        /*        padding: 1px;*/
+        font-size: 16px;
+        width: 50px;
+        height: 40px;
+        /*        margin: .4rem;*/
+    }
+
+    /* The actual timeline (the vertical ruler) */
+    .timeline {
+        position: relative;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* The actual timeline (the vertical ruler) */
+    .timeline::after {
+        content: '';
+        position: absolute;
+        width: 6px;
+        background-color: white;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        margin-left: -3px;
+    }
+
+    /* Container around content */
+    .container {
+        padding: 10px 40px;
+        position: relative;
+        background-color: inherit;
+        width: 50%;
+    }
+
+    /* The circles on the timeline */
+    .container::after {
+        content: '';
+        position: absolute;
+        width: 25px;
+        height: 25px;
+        right: -17px;
+        background-color: white;
+        border: 4px solid #FF9F55;
+        top: 15px;
+        border-radius: 50%;
+        z-index: 1;
+    }
+
+    /* Place the container to the left */
+    .left {
+        left: 0;
+    }
+
+    /* Place the container to the right */
+    .right {
+        left: 50%;
+    }
+
+  /* Add arrows to the right container (pointing left) */
+  .right::before {
+    content: " ";
+    height: 0;
+    position: absolute;
+    top: 22px;
+    width: 0;
+    z-index: 1;
+    left: 30px;
+    border: medium solid white;
+    border-width: 10px 10px 10px 0;
+    border-color: transparent white transparent transparent;
+  }
+
+    /* Fix the circle for containers on the right side */
+    .right::after {
+        left: -16px;
+    }
+
+    /* The actual content */
+    .content {
+        padding: 20px 30px;
+        background-color: white;
+        position: relative;
+        border-radius: 6px;
+    }
+
+    /* Media queries - Responsive timeline on screens less than 600px wide */
+    @media screen and (max-width: 600px) {
+
+        /* Place the timelime to the left */
+        .timeline::after {
+            left: 31px;
+        }
+
+        /* Full-width containers */
+        .container {
+            width: 100%;
+            padding-left: 70px;
+            padding-right: 25px;
+        }
+
+        /* Make sure that all arrows are pointing leftwards */
+        .container::before {
+            left: 60px;
+            border: medium solid white;
+            border-width: 10px 10px 10px 0;
+            border-color: transparent white transparent transparent;
+        }
+
+        /* Make sure all circles are at the same spot */
+        .left::after,
+        .right::after {
+            left: 15px;
+        }
+
+        /* Make all right containers behave like the left ones */
+        .right {
+            left: 0%;
+        }
+    }
+
+    .textarea {
+        margin: 10px;
+        width: 93%;
+        background-color: transparent;
+    }

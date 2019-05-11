@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Device Info</title>
+    <title>Index Page</title>
     <!--    <button onclick="ClearDB()">Click me</button>-->
     <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
     <script type="text/javascript" charset="utf-8">
@@ -23,8 +23,8 @@
                 tx.executeSql('DROP TABLE IF EXISTS livestock_action');
                 tx.executeSql('CREATE TABLE IF NOT EXISTS user (bearerToken, refreshToken, email, password)');
                 tx.executeSql('CREATE TABLE IF NOT EXISTS livestock (born, color, number, place , created, user, tagged, sync)')
-                tx.executeSql('CREATE TABLE IF NOT EXISTS drug_delivery (color, number, drug, approval_number, delay, amount, timestamp, DBSyncServer)')
-                tx.executeSql('CREATE TABLE IF NOT EXISTS livestock_action (color, number, type, date, time, born_alive, born_dead, sync)')
+                tx.executeSql('CREATE TABLE IF NOT EXISTS drug_delivery (color, number, drug, approval_number, delay, amount, created, DBSyncServer)')
+                tx.executeSql('CREATE TABLE IF NOT EXISTS livestock_action (color, number, type, date, time, result, text, sync)')
             }, function(error) {
                 alert('Error: ' + error.message + ' code: ' + error.code);
             }, function() {

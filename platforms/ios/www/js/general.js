@@ -1,0 +1,1 @@
+console.log(document.querySelector('ons-back-button').options.callback())

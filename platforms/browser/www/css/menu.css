@@ -1,0 +1,46 @@
+.user_cover {
+    padding: 0px 40px;
+    margin: 20px 0px;
+}
+
+.username {
+    text-align: center;
+    color: black;
+    width: 100%;
+    font-size: 12px;
+    margin-top: 5px;
+    font-weight: 700;
+    font-family: Calibri;
+    font-size: 15px;
+}
+
+.user_thumbnail {
+    width: 100px;
+    height: 100px;
+    display: table;
+    text-align: center;
+    margin: auto;
+    background-color: #008F97;
+}
+
+.user_thumbnail img {
+    margin-left: 15px;
+    margin-top: 15px;
+    width: 70px;
+    font-size: 70px;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.user_thumbnail ons-icon {
+    font-size: 50px;
+    display: table-cell;
+    vertical-align: middle;
+    color: white;
+
+    p {
+        font-family: Calibri;
+        font-size: 18px;
+    }
+
+}
