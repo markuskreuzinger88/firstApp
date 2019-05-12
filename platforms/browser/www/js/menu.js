@@ -4,8 +4,6 @@ document.addEventListener("init", function () {
         localStorage.setItem("lastPage", "menu");
     });
 
-
-
 });
 
 window.fn = {};

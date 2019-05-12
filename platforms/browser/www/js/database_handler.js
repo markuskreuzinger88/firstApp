@@ -61,3 +61,20 @@ function write2DBdrug() {
         }
     };
 }
+
+//Write to database
+function write2DBLogin(bearerToken, refreshToken) {
+    var email = document.getElementById("email").value;
+    var psw = document.getElementById("psw").value;
+    db.transaction(function (transaction) {
+        var executeQuery =
+            "INSERT INTO user (bearerToken, refreshToken, email, password) VALUES (?,?,?,?)";
+        transaction.executeSql(executeQuery, [bearerToken, refreshToken, email, psw],
+            function (tx, result) {
+                document.querySelector('#nav1').pushPage('home_splitter.html');  
+            },
+            function (error) {
+                alert('Error: ' + error.message + ' code: ' + error.code);
+            });
+    });
+}

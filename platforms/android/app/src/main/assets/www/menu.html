@@ -14,42 +14,94 @@
     <link rel="stylesheet" type="text/css" href="css/menu.css" />
     <link rel="stylesheet" type="text/css" href="css/toast.css" />
     <script type="text/javascript" src="js/menu.js"></script>
+    <script type="text/javascript" src="js/login.js"></script>
     <script type="text/javascript" src="js/livestock.js"></script>
     <script type="text/javascript" src="js/livestock_add.js"></script>
     <script type="text/javascript" src="js/livestock_detail.js"></script>
     <script type="text/javascript" src="js/livestock_action.js"></script>
     <script type="text/javascript" src="js/drug_delivery.js"></script>
     <script type="text/javascript" src="js/database_handler.js"></script>
-    <script type="text/javascript" src="js/general.js"></script>
     <link rel="stylesheet" type="text/css" href="css/livestock_add.css" />
     <link rel="stylesheet" type="text/css" href="css/livestock_action.css" />
     <script type="text/javascript" src="js/jquery.qrcode.js"></script>
     <script type="text/javascript" src="js/qrcode2.js"></script>
 
-    <!-- <ons-navigator id="myNavigator" page="splitter.html">
-    </ons-navigator> -->
-
-
-
     <ons-navigator id="nav1" page="login.html"> </ons-navigator>
+
+    <!--  The Login Page -->
 
     <template id="login.html">
         <ons-page id="login">
-            <ons-toolbar>
-                <div class="left">
-                    <ons-toolbar-button onclick="nav1.pushPage('home_splitter.html')">
-                        <ons-icon icon="md-menu" style="font-size: 32px; width: 1em;"></ons-icon>
-                    </ons-toolbar-button>
+            <div class="left">
+                <ons-icon size="20px" style="margin-left: 10px; margin-top: 10px; color: #008F97;" icon="fa-bug"
+                    onclick="window.location.href='settings.html'"">
+              </ons-icon>
+            </div>
+            <img src=" img/logo22.png" style="width: 80%; margin-left: 10%; margin-top: 10%" />
+                <p class="header">Willkommen</p>
+                <div class="container">
+                    <form action="/menu.html">
+                        <input id="firstname" name="loginName" placeholder="Vorname">
+                        <input id="lastname" name="loginName" placeholder="Nachname">
+                        <input type="email" id="email" name="login" placeholder="Email" required>
+                        <input type="password" id="psw" name="login" placeholder="Passwort" required>
+                        <p class="link" style="text-align: right">Passwort vergessen?</p>
+                        <ons-button modifier="large" style="background-color: #008F97; text-align: center"
+                            onclick="checkInputsLogin()">
+                            Anmelden
+                        </ons-button>
+                        <p class="link" style="text-align: center; margin-top: 10%"
+                            onclick="window.location.href='register.html'">
+                            Noch
+                            nicht angemeldet?<br />Registrieren</p>
+                    </form>
                 </div>
-                <div class="right">
-                    <ons-toolbar-button onclick="syncDataServer()">
-                        <ons-icon icon="fa-sync" style="font-size: 20px; width: 1em;"></ons-icon>
-                    </ons-toolbar-button>
-                </div>
-                <div class="center" style="text-align: center; font-family: Calibri; font-size: 20px;">Start</div>
-                <div class="right">
-                </div>
-            </ons-toolbar>
+                <style type="text/css">
+                    input[name=login] {
+                        width: 100%;
+                        padding: 12px;
+                        border: 1px solid #ccc;
+                        /* border-radius: 4px; */
+                        box-sizing: border-box;
+                        margin-bottom: -1px;
+                    }
+
+                    input[name=loginName] {
+                        width: 50%;
+                        padding: 12px;
+                        border: 1px solid #ccc;
+                        box-sizing: border-box;
+                        margin-bottom: -1px;
+                        margin-right: -1px;
+                        float: left;
+                    }
+
+                    .container {
+                        background-color: #ffffff;
+                        padding: 20px;
+                    }
+
+                    .header {
+                        font-family: Arial, Helvetica, sans-serif;
+                        font-size: 30px;
+                        text-align: center;
+                        color: #ccc;
+                        text-transform: uppercase;
+                        margin-top: 10%;
+                    }
+
+                    .link {
+                        font-family: Arial, Helvetica, sans-serif;
+                        font-size: 15px;
+                        color: #ccc;
+                    }
+
+                    .toast {
+                        background-color: red;
+                        margin: 0;
+                        text-align: center;
+                    }
+                </style>
         </ons-page>
     </template>
 
@@ -165,11 +217,8 @@
         </ons-page>
     </template>
 
-
     <template id="menu.html">
-
         <ons-page id="menu">
-            <!-- <ons-navigator id="nav1" var="app.navi" page="menu.html"></ons-navigator> -->
             <ons-toolbar>
                 <div class="left">
                     <ons-toolbar-button onclick="fn.open()">
@@ -185,10 +234,6 @@
                 <div class="right">
                 </div>
             </ons-toolbar>
-            <!-- <ons-splitter>
-                    <ons-splitter-side style="background-color: white" id="menu-splitter" side="left" width="250px" collapse
-                        swipeable>
-                </ons-splitter> -->
             <ons-card>
                 <div
                     style="margin-top: 30px; margin-left: 50px; text-align: left; font-family: Calibri; font-size: 30px; font-weight: 700">
@@ -235,7 +280,7 @@
                         <div class="user_thumbnail">
                             <ons-icon icon="fa-chart-line"></ons-icon>
                         </div>
-                        <div class="username" id="username_4">Statistik</div>
+                        <div class="username" id="username_4">Auswertungen</div>
                     </ons-col>
                 </ons-row>
             </ons-card>
@@ -441,47 +486,6 @@
             <ons-list style="margin-top: 5px" id="container">
             </ons-list>
         </ons-page>
-    </template>
-
-    <template id="search.html">
-        <ons-dialog id="search">
-            <div style="text-align: center; padding: 5px;">
-                <p>
-                    <b>
-                        Nutztier suchen
-                    </b>
-                </p>
-            </div>
-            <ons-list>
-                <ons-list-item tappable>
-                    <label class="left">
-                        <!--                    <ons-checkbox input-id="checkSearch-1"></ons-checkbox>-->
-                    </label>
-                    <label for="check-1" class="center">
-                        <ons-icon style="margin-right: 10px" icon="fa-qrcode"></ons-icon>
-                        QR Code scannen
-                    </label>
-                </ons-list-item>
-                <ons-list-item onclick="hideDialogSearch('search', 'checkSearch-2')" tappable>
-                    <label class="left">
-                        <!--                    <ons-checkbox input-id="checkSearch-2"></ons-checkbox>-->
-                    </label>
-                    <label for="check-2" class="center">
-                        <ons-icon style="margin-right: 10px" icon="fa-id-card-alt"></ons-icon>
-                        Nummer eingeben
-                    </label>
-                </ons-list-item>
-                <ons-list-item onclick="hideDialogSearch('search', 'checkSearch-3')" tappable>
-                    <label class="left">
-                        <!--                    <ons-checkbox input-id="checkSearch-3"></ons-checkbox>-->
-                    </label>
-                    <label for="check-2" class="center">
-                        <ons-icon style="margin-right: 10px;" icon="fa-ban"></ons-icon>
-                        Suche beenden
-                    </label>
-                </ons-list-item>
-            </ons-list>
-        </ons-dialog>
     </template>
 
     <template id="sort.html">

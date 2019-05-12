@@ -2,10 +2,15 @@
     var LiveStockNbr = "AT-3-4321056-"
     var lastPage = "";
 
-    document.addEventListener("init", function (event) {
+    document.addEventListener('postpop', function (event) {
         var page = event.target;
         console.log(page.id)
-        if (page.id === 'livestock') {
+    });
+
+    $(document).on('postpop', '#nav1', function (event) {
+        var page = event.target;
+        console.log(page.id)
+        if (page.matches('#livestock')) {
             var list = document.getElementById("container");
             while (list.hasChildNodes()) {
                 list.removeChild(list.firstChild);
@@ -24,6 +29,29 @@
             }
         }
     });
+
+    // document.addEventListener("init", function (event) {
+    //     var page = event.target;
+    //     console.log(page.id)
+    //     if (page.id === 'livestock') {
+    //         var list = document.getElementById("container");
+    //         while (list.hasChildNodes()) {
+    //             list.removeChild(list.firstChild);
+    //         }
+    //         ShowResultDBSort('SELECT * FROM livestock ORDER BY Number DESC')
+    //         localStorage.removeItem('ColorFilter');
+    //         localStorage.setItem('DBSort', "checkSort-1");
+    //         localStorage.removeItem('PlaceFilter');
+    //         lastPage = localStorage.getItem("lastPage")
+    //         if (lastPage == "drug_delivery") {
+    //             col = document.getElementById("actionCol").innerHTML = "Scannen"
+    //             icon = document.createElement("ons-icon")
+    //             icon.setAttribute("icon", "fa-qrcode")
+    //             icon.setAttribute("style", "margin-left: 10px");
+    //             document.getElementById("actionCol").appendChild(icon);
+    //         }
+    //     }
+    // });
 
     function showTemplateDialog(my_dialog, my_dialog_html) {
 
@@ -308,14 +336,14 @@
         }
         var Checkbox = localStorage.DBSort
         if (Checkbox == "checkSort-1") {
-            ShowResultDBColorFilter('SELECT * FROM Nutztiere WHERE Number LIKE ? ORDER BY Number DESC',
+            ShowResultDBColorFilter('SELECT * FROM livestock WHERE Number LIKE ? ORDER BY Number DESC',
                 numberSearch)
         } else if (Checkbox == "checkSort-2") {
-            ShowResultDBColorFilter('SELECT * FROM Nutztiere WHERE Number LIKE ? ORDER BY Number ASC', numberSearch)
+            ShowResultDBColorFilter('SELECT * FROM livestock WHERE Number LIKE ? ORDER BY Number ASC', numberSearch)
         } else if (Checkbox == "checkSort-3") {
-            ShowResultDBColorFilter('SELECT * FROM Nutztiere WHERE Number LIKE ? ORDER BY Color', numberSearch)
+            ShowResultDBColorFilter('SELECT * FROM livestock WHERE Number LIKE ? ORDER BY Color', numberSearch)
         } else if (Checkbox == "checkSort-4") {
-            ShowResultDBColorFilter('SELECT * FROM Nutztiere WHERE Number LIKE ? ORDER BY Place', numberSearch)
+            ShowResultDBColorFilter('SELECT * FROM livestock WHERE Number LIKE ? ORDER BY Place', numberSearch)
         }
     }
 
