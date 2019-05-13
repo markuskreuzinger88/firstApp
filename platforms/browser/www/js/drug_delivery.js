@@ -1,8 +1,6 @@
 db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //create 20MB Database
 var email = "";
 var token = "";
-var color = "";
-var number = "";
 var drug = "";
 var delay = "";
 var amount = "";
@@ -15,33 +13,41 @@ var arrColor = [];
 var arrNumber = [];
 var createdOn = "";
 
-document.addEventListener("init", function (event) {
-    var page = event.target;
-    if (page.id === 'drug_delivery') {
-        CreatedOn.max = new Date().toISOString().split("T")[0];
-        let today = new Date().toISOString().substr(0, 10);
-        document.querySelector("#CreatedOn").value = today;
-        switchState = localStorage.getItem("settings_request")
-        ipAdress = localStorage.getItem("settings_ipAdress")
-        var color = String(localStorage.LivestockColor)
-        var number = String(localStorage.LivestockNumber)
-
-        /*read from user table in DB*/
-        db.transaction(function (transaction) {
-            transaction.executeSql('SELECT * FROM user', [], function (tx, results) {
-                //get buisness code for requests
-                email = results.rows.item(0).email;
-                //get user token
-                token = results.rows.item(0).bearerToken;
-            }, null);
-        });
-        GetDBTaggedResult()
+$(document).on('prepop', '#nav1', function (event) {
+    var event = event.originalEvent;
+    if (event.enterPage.id === 'drug_delivery') {
+        getDrugDeliveryView()
     }
 });
 
+document.addEventListener("init", function (event) {
+    var page = event.target;
+    if (page.id === 'drug_delivery') {
+        getDrugDeliveryView() 
+    }
+});
+
+function getDrugDeliveryView() {
+    CreatedOn.max = new Date().toISOString().split("T")[0];
+    let today = new Date().toISOString().substr(0, 10);
+    document.querySelector("#CreatedOn").value = today;
+    switchState = localStorage.getItem("settings_request")
+    ipAdress = localStorage.getItem("settings_ipAdress")
+    /*read from user table in DB*/
+    db.transaction(function (transaction) {
+        transaction.executeSql('SELECT * FROM user', [], function (tx, results) {
+            //get buisness code for requests
+            email = results.rows.item(0).email;
+            //get user token
+            token = results.rows.item(0).bearerToken;
+        }, null);
+    });
+    GetDBTaggedResult()
+}
+
 //get all livestocks which are tagged for drug delivery
 function GetDBTaggedResult() {
-    var list = document.getElementById("container");
+    var list = document.getElementById("drugDeliveryContainer");
     while (list.hasChildNodes()) {
         list.removeChild(list.firstChild);
     }
@@ -62,7 +68,7 @@ function DisplayResultDrugDelivery(results) {
     if (results.rows.length > 0) {
         for (i = 0; i < results.rows.length; i++) {
             list = document.createElement("ons-list-item")
-            list.setAttribute("onclick", "removeListItem(" + i + ")");
+            list.setAttribute("onclick", "removeListItemDrug(" + i + ")");
             //create text center
             div_center = document.createElement("div")
             div_center.setAttribute("id", i);
@@ -75,23 +81,22 @@ function DisplayResultDrugDelivery(results) {
             icon_right.setAttribute("icon", "fa-trash");
             icon_right.setAttribute("style", "color: red");
             icon_right.setAttribute("size", "20px");
-            icon_right.setAttribute("onclick", "removeListItem(" + i + ")");
+            icon_right.setAttribute("onclick", "removeListItemDrug(" + i + ")");
             //add text center
             span_center1 = document.createElement("span")
-            span_center1.setAttribute("id", "livestockID" + i);
+            span_center1.setAttribute("id", "livestockIDDrug" + i);
             span_center2 = document.createElement("span")
             span_center1.setAttribute("class", "list-item__title");
             span_center2.setAttribute("class", "list-item__subtitle");
             span_center1.innerHTML = LiveStockNbr + results.rows.item(i).number;
-            span_center2.innerHTML = results.rows.item(i).place;
+            span_center2.innerHTML = results.rows.item(i).place + "<br>" + results.rows.item(i).born;
             div_left = document.createElement("div")
             div_left.setAttribute("class", "left");
             //create color mark right
             input = document.createElement("input")
-            input.setAttribute("id", "livestockColor" + i);
+            input.setAttribute("id", "livestockColorDrug" + i);
             input.setAttribute("style",
-                "margin-right: 5px;border-color : black; border-width: medium; background-color:" + results
-                .rows
+                "width: 40px; height :40px;margin-right: 5px;border-color : black; border: 2px solid black; border-radius: 10px; background-color:" + results.rows
                 .item(i).color);
             input.setAttribute("size", "3");
             input.setAttribute("disabled", "true");
@@ -104,7 +109,7 @@ function DisplayResultDrugDelivery(results) {
             div_center.appendChild(span_center1);
             div_center.appendChild(span_center2);
             list.appendChild(div_center);
-            document.getElementById("container").appendChild(list);
+            document.getElementById("drugDeliveryContainer").appendChild(list);
             arrColor.push(results.rows.item(i).color);
             arrNumber.push(results.rows.item(i).number);
             console.log(arrColor)
@@ -114,15 +119,15 @@ function DisplayResultDrugDelivery(results) {
         div = document.createElement("div")
         div.innerHTML = "Kein Nutztier ausgewählt"
         list.appendChild(div);
-        document.getElementById("container").appendChild(list);
+        document.getElementById("drugDeliveryContainer").appendChild(list);
         document.getElementById("removeLivestocks").innerHTML = "";
         document.getElementById("removeLivestocks").disabled = true;
     }
 }
 
-function removeListItem(id) {
-    var color = document.getElementById("livestockColor" + id).style.backgroundColor;
-    var number = document.getElementById("livestockID" + id).innerHTML;
+function removeListItemDrug(id) {
+    var color = document.getElementById("livestockColorDrug" + id).style.backgroundColor;
+    var number = document.getElementById("livestockIDDrug" + id).innerHTML;
     //only use livestock 4 digit number
     number = number.slice(number.length - 4, number.length);
     ons.notification.confirm({
@@ -475,7 +480,7 @@ var zulassungsnummer = ['838031', '838423', '8-00295', '8-00773', '8-00479', '8-
 ];
 
 /*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
-autocomplete(document.getElementById("arzneimittel"), arzneimittel);
+// autocomplete(document.getElementById("arzneimittel"), arzneimittel);
 
 
 function getDrugs() {
@@ -586,31 +591,4 @@ function requestData() {
             write2DB()
         }
     });
-}
-
-function write2DB() {
-    console.log(timestamp)
-    for (i = 0; i < arrColor.length; i++) {
-        (function (i) {
-            db.transaction(function (transaction) {
-                var executeQuery =
-                    "INSERT INTO drug_delivery (color, number, drug, approval_number, delay, amount, created, DBSyncServer) VALUES (?,?,?,?,?,?,?,?)";
-                transaction.executeSql(executeQuery, [arrColor[i], arrNumber[i], drug,
-                    approval_number, delay, amount, createdOn, "true"
-                ]);
-            });
-        })(i);
-        // Remove taged entry i DB and change site to menu when for loop is done
-        if (i == arrColor.length - 1) {
-            db.transaction(function (tx) {
-                tx.executeSql(
-                    "UPDATE livestock SET tagged=?",
-                    ['false']);
-            }, function (error) {
-                alert('Error: ' + error.message + ' code: ' + error.code);
-            }, function () {
-                document.querySelector('#nav1').popPage();  
-            });
-        }
-    };
 }

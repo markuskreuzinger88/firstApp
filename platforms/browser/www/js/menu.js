@@ -1,11 +1,3 @@
-document.addEventListener("init", function () {
-
-    $(document).ready(function () {
-        localStorage.setItem("lastPage", "menu");
-    });
-
-});
-
 window.fn = {};
 
 window.fn.open = function () {

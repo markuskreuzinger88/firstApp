@@ -12,6 +12,7 @@ function write2DBAction(type, CreatedOnDateID, CreatedOnTimeID, textareaID, resu
             "INSERT INTO livestock_action (color, number, type, date, time, result, text, sync) VALUES (?,?,?,?,?,?,?,?)";
         transaction.executeSql(executeQuery, [color, number, type, date, time, result, text, "true"],
             function (tx, result) {
+                console.log(result)
                 document.querySelector('#nav1').popPage();   
             },
             function (error) {

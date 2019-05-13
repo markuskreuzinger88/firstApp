@@ -1,59 +1,42 @@
     db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //create 20MB Database
     var LiveStockNbr = "AT-3-4321056-"
-    var lastPage = "";
+    var leavePage = "";
 
-    document.addEventListener('postpop', function (event) {
-        var page = event.target;
-        console.log(page.id)
-    });
-
-    $(document).on('postpop', '#nav1', function (event) {
-        var page = event.target;
-        console.log(page.id)
-        if (page.matches('#livestock')) {
-            var list = document.getElementById("container");
-            while (list.hasChildNodes()) {
-                list.removeChild(list.firstChild);
-            }
-            ShowResultDBSort('SELECT * FROM livestock ORDER BY Number DESC')
-            localStorage.removeItem('ColorFilter');
-            localStorage.setItem('DBSort', "checkSort-1");
-            localStorage.removeItem('PlaceFilter');
-            lastPage = localStorage.getItem("lastPage")
-            if (lastPage == "drug_delivery") {
-                col = document.getElementById("actionCol").innerHTML = "Scannen"
-                icon = document.createElement("ons-icon")
-                icon.setAttribute("icon", "fa-qrcode")
-                icon.setAttribute("style", "margin-left: 10px");
-                document.getElementById("actionCol").appendChild(icon);
-            }
+    //detect if livestock add is popped, then update livestock view on page livestock
+    $(document).on('prepop', '#nav1', function (event) {
+        var event = event.originalEvent;
+        if (event.enterPage.id === 'livestock') {
+            readDBLivestock()
         }
     });
 
-    // document.addEventListener("init", function (event) {
-    //     var page = event.target;
-    //     console.log(page.id)
-    //     if (page.id === 'livestock') {
-    //         var list = document.getElementById("container");
-    //         while (list.hasChildNodes()) {
-    //             list.removeChild(list.firstChild);
-    //         }
-    //         ShowResultDBSort('SELECT * FROM livestock ORDER BY Number DESC')
-    //         localStorage.removeItem('ColorFilter');
-    //         localStorage.setItem('DBSort', "checkSort-1");
-    //         localStorage.removeItem('PlaceFilter');
-    //         lastPage = localStorage.getItem("lastPage")
-    //         if (lastPage == "drug_delivery") {
-    //             col = document.getElementById("actionCol").innerHTML = "Scannen"
-    //             icon = document.createElement("ons-icon")
-    //             icon.setAttribute("icon", "fa-qrcode")
-    //             icon.setAttribute("style", "margin-left: 10px");
-    //             document.getElementById("actionCol").appendChild(icon);
-    //         }
-    //     }
-    // });
+    $(document).on('postpush', '#nav1', function (event) {
+        var event = event.originalEvent;
+        leavePage = event.leavePage.id;
+        if (event.enterPage.id === 'livestock') {
+            readDBLivestock()
+        }
+    });
 
-    function showTemplateDialog(my_dialog, my_dialog_html) {
+    function readDBLivestock() {
+        var list = document.getElementById("container");
+        while (list.hasChildNodes()) {
+            list.removeChild(list.firstChild);
+        }
+        localStorage.removeItem('ColorFilter');
+        localStorage.setItem('DBSort', "checkSort-1");
+        localStorage.removeItem('PlaceFilter');
+        if (leavePage == "drug_delivery") {
+            col = document.getElementById("actionCol").innerHTML = "Scannen"
+            icon = document.createElement("ons-icon")
+            icon.setAttribute("icon", "fa-qrcode")
+            icon.setAttribute("style", "margin-left: 10px");
+            document.getElementById("actionCol").appendChild(icon);
+        }
+        ShowResultDBSort('SELECT * FROM livestock ORDER BY Number DESC')
+    }
+
+    function showTemplateDialogView(my_dialog, my_dialog_html) {
 
         var dialog = document.getElementById(my_dialog);
 
@@ -90,18 +73,15 @@
             input = document.createElement("input")
             input.setAttribute("id", "livestockColor" + i);
             input.setAttribute("style",
-                "width: 40px; height :40px;margin-right: 5px;border-color : black; border-width: medium; background-color:" + results.rows
+                "width: 40px; height :40px;margin-right: 5px;border-color : black; border: 2px solid black; border-radius: 10px; background-color:" + results.rows
                 .item(i).color);
             input.setAttribute("disabled", "true");
             list.setAttribute("tappable", true);
             //modify selection depending on last site --> when last page drug delivery
             //use tag icon else use chevron
-            if (lastPage == "menu") {
-                //menu
-                list.setAttribute("modifier", "chevron");
-                list.setAttribute("onclick", "livestockDetail(" + i + ")");
-            } else {
-                //drug delivery
+            if (leavePage == "drug_delivery") {
+                console.log(leavePage)
+                console.log('GAHAGAHGAHGAHAG')
                 list.setAttribute("onclick", "livestockTag(" + i + ")");
                 div_right = document.createElement("ons-checkbox")
                 div_right.setAttribute("class", "right");
@@ -113,6 +93,9 @@
                     div_right.checked = false;
                 }
                 list.appendChild(div_right);
+            } else {
+                list.setAttribute("modifier", "chevron");
+                list.setAttribute("onclick", "livestockDetail(" + i + ")");
             }
             div_left.appendChild(input);
             list.appendChild(div_left);
@@ -128,8 +111,12 @@
         var tag = document.getElementById("tag" + id);
         var color = document.getElementById("livestockColor" + id).style.backgroundColor;
         var number = document.getElementById("livestockID" + id).innerHTML;
+        console.log(number)
         //only use livestock 4 digit number
         number = number.slice(number.length - 4, number.length);
+        console.log(number)
+        console.log(id)
+        console.log(tag.checked)
         if (tag.checked == true) {
             tag.checked = false
             db.transaction(function (tx) {
@@ -169,6 +156,7 @@
     function ShowResultDBSort(Command) {
         db.transaction(function (transaction) {
             transaction.executeSql(Command, [], function (tx, results) {
+                console.log(results)
                 DisplayResult(results)
             }, null);
         });
@@ -278,7 +266,7 @@
         } else {
             localStorage.setItem('ColorFilter', color);
         }
-        showTemplateDialog('FilterPlace', 'FilterPlace.html')
+        showTemplateDialogView('FilterPlace', 'FilterPlace.html')
         //            CommandDB()
     };
 
@@ -354,18 +342,5 @@
         //only select last four numbers
         localStorage.LivestockNumber = (document.getElementById("livestockID" + ID).innerHTML).slice(stringLen - 4,
             stringLen);
-        // window.location = "livestock_detail.html ";
         document.querySelector('#nav1').pushPage('livestock_detail.html');
-    }
-
-    function changeSite() {
-        if (lastPage == "menu") {
-            window.location = "livestock_add.html";
-        } else {
-            alert("not implemented")
-        }
-    }
-
-    function BackButton() {
-        window.location = lastPage + ".html ";
     }
