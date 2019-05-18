@@ -343,6 +343,8 @@ function newDrugDelivery() {
     // tag livestock for new drug delivery
     var color = String(localStorage.LivestockColor)
     var number = String(localStorage.LivestockNumber)
+    console.log(color)
+    console.log(number)
     db.transaction(function (tx) {
         tx.executeSql("UPDATE livestock SET tagged=? where Color = ? AND Number = ?", ['true', color,
             number
@@ -350,6 +352,6 @@ function newDrugDelivery() {
     }, function (error) {
         alert('Error: ' + error.message + ' code: ' + error.code);
     }, function () {
-        nextPage('drug_delivery.html');
+        document.querySelector('#nav1').pushPage('drug_delivery.html');
     });
 }
