@@ -36,7 +36,7 @@ checkInputsLogin = function () {
                         // Validate length
                         if (psw.value.length >= 8) {
                             if (DEBUGswitchState == 'true') {
-                                loginServer()
+                                RESTLogin()
                             } else {
                                 write2DB("dummy_token1", "dummy_token2")
                             }
@@ -61,7 +61,7 @@ checkInputsLogin = function () {
         }
     } else {
         if (DEBUGswitchState == 'true') {
-            loginServer()
+            RESTLogin()
         } else {
             write2DBLogin("dummy_token1", "dummy_token2")
         }
@@ -72,30 +72,4 @@ pushMsg = function (title, msg) {
         timeout: 3000,
         animation: 'fall'
     })
-}
-
-//request Data to Servser
-function loginServer() {
-    var DEBUGIP = localStorage.getItem("settings_ipAdress")
-    var DEBUGCredentials = localStorage.getItem("settings_credentials")
-    var email = document.getElementById("email").value;
-    var psw = document.getElementById("psw").value;
-    var endpoint = 'http://' + DEBUGIP + '/AniCare/api/token'
-    var data = "grant_type=password&username=" + email + "&password=" + psw + "&client_id=app";
-    alert("Endpoint: " + endpoint + "\n" + "Data: " + data)
-    $.ajax({
-        url: endpoint,
-        contentType: "application/x-www-form-urlencoded",
-        type: "POST",
-        data: data,
-        success: function (response) {
-            var bearerToken = "Bearer " + response.access_token
-            var refreshToken = response.refresh_token
-            write2DBLogin(bearerToken, refreshToken)
-        },
-        error: function (xhr, status, error) {
-            var errorMessage = xhr.status + ': ' + xhr.statusText
-            alert('Login failed! Error - ' + errorMessage);
-        }
-    });
 }

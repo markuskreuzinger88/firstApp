@@ -159,8 +159,7 @@ function checkInputs() {
     number = CodeDigit0 + CodeDigit1 + CodeDigit2 + CodeDigit3
     if (number.length == 4) {
         if (switchState == 'true') {
-            // requestData()
-            write2DBLivestock()
+            RESTAddLivestock()
         } else {
             write2DBLivestock()
         }
@@ -171,42 +170,4 @@ function checkInputs() {
         });
     }
 
-}
-
-function requestData() {
-    var DEBUGIP = localStorage.getItem("settings_ipAdress")
-    var endpoint = 'http://' + DEBUGIP + '/AniCare/Animal/SaveAnimal'
-    alert(endpoint)
-    alert(bearerToken)
-    $.ajax({
-        headers: {
-            // 'Accept': 'application/json',
-            // 'Content-Type': 'application/json',
-            'Authorization': bearerToken
-        },
-        url: endpoint,
-        contentType: "application/json",
-        type: "POST",
-        data: JSON.stringify({
-            "id": 0,
-            "creationDate": created,
-            "createdBy": email,
-            "customerId": 0,
-            "typeId": 0,
-            "number": number,
-            "color": color,
-            "birthday": born,
-            "isLocked": true
-        }),
-        success: function (response) {
-            var data = JSON.stringify(response);
-            alert(data)
-            alert(response.success)
-            write2DBLivestock()
-        },
-        error: function (xhr, status, error) {
-            var errorMessage = xhr.status + ': ' + xhr.statusText
-            alert('Livestock add failed! Error - ' + errorMessage);
-        }
-    });
 }

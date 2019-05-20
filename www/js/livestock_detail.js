@@ -68,7 +68,6 @@ function setMarkDetailView() {
 };
 
 function setActionDetailView() {
-    console.log('jep2')
     var list = document.getElementById("containerIndex");
     while (list.hasChildNodes()) {
         list.removeChild(list.firstChild);
@@ -101,19 +100,48 @@ function setActionDetailView() {
                     colDateHeader.innerHTML = ("Datum")
                     colDate.innerHTML = results.rows.item(i).date
                     /*result*/
-                    rowResult = document.createElement("ons-row")
-                    colresultHeader = document.createElement("ons-col")
-                    colresult = document.createElement("ons-col")
-                    colresultHeader.innerHTML = ("Ergebnis")
+                    if (results.rows.item(i).type == 'Abgeferkelt') {
+                        rowResult1 = document.createElement("ons-row")
+                        rowResult2 = document.createElement("ons-row")
+                        rowResult3 = document.createElement("ons-row")
+                        colresultHeader1 = document.createElement("ons-col")
+                        colresultHeader2 = document.createElement("ons-col")
+                        colresultHeader3 = document.createElement("ons-col")
+                        colresultHeader1.innerHTML = ("lebendig")
+                        colresultHeader2.innerHTML = ("tot")
+                        colresultHeader3.innerHTML = ("Mumien")
+                        colresult1 = document.createElement("ons-col")
+                        colresult2 = document.createElement("ons-col")
+                        colresult3 = document.createElement("ons-col")
+                        str = results.rows.item(i).result
+                        var res = str.split("+");
+                        colresult1.innerHTML = res[0]
+                        colresult2.innerHTML = res[1]
+                        colresult3.innerHTML = res[2]
+                        rowResult1.appendChild(colresultHeader1);
+                        rowResult1.appendChild(colresult1);
+                        rowResult2.appendChild(colresultHeader2);
+                        rowResult2.appendChild(colresult2);
+                        rowResult3.appendChild(colresultHeader3);
+                        rowResult3.appendChild(colresult3);
+                    } else {
+                        rowResult = document.createElement("ons-row")
+                        colresultHeader = document.createElement("ons-col")
+                        colresult = document.createElement("ons-col")
+                        colresultHeader.innerHTML = ("Ergebnis")
+                        colresult.innerHTML  = results.rows.item(i).result
+                        rowResult.appendChild(colresultHeader);
+                        rowResult.appendChild(colresult);
+                    }
                     /*we have to add a new line if action farraw is selected --> positiv, negativ...*/
-                    str = results.rows.item(i).result
-                    console.log(str)
-                    var res = str.replace("+", "<br>");
-                    var res = res.replace("+", "<br>");
-                    console.log(res)
-                    colresult.innerHTML = res
-                    rowResult.appendChild(colresultHeader);
-                    rowResult.appendChild(colresult);
+                    // str = results.rows.item(i).result
+                    // console.log(str)
+                    // var res = str.replace("+", "<br>");
+                    // var res = res.replace("+", "<br>");
+                    // console.log(res)
+                    // colresult.innerHTML = res
+                    // rowResult.appendChild(colresultHeader);
+                    // rowResult.appendChild(colresult);
                     /*textfield*/
                     rowText = document.createElement("ons-row")
                     colTextHeader = document.createElement("ons-col")
@@ -135,7 +163,9 @@ function setActionDetailView() {
                     rowDate.appendChild(colDate);
                     content.appendChild(rowDate);
                     if (results.rows.item(i).type == 'Abgeferkelt') {
-                        content.appendChild(rowResult);
+                        content.appendChild(rowResult1);
+                        content.appendChild(rowResult2);
+                        content.appendChild(rowResult3);
                     } else if (results.rows.item(i).type == 'Trächtigkeitsuntersuchung') {
                         content.appendChild(rowResult);
                     } else if (results.rows.item(i).type == 'Rauschekontrolle') {
@@ -343,6 +373,8 @@ function newDrugDelivery() {
     // tag livestock for new drug delivery
     var color = String(localStorage.LivestockColor)
     var number = String(localStorage.LivestockNumber)
+    console.log(color)
+    console.log(number)
     db.transaction(function (tx) {
         tx.executeSql("UPDATE livestock SET tagged=? where Color = ? AND Number = ?", ['true', color,
             number
@@ -350,6 +382,6 @@ function newDrugDelivery() {
     }, function (error) {
         alert('Error: ' + error.message + ' code: ' + error.code);
     }, function () {
-        nextPage('drug_delivery.html');
+        document.querySelector('#nav1').pushPage('drug_delivery.html');
     });
 }

@@ -21,10 +21,12 @@
                 tx.executeSql('DROP TABLE IF EXISTS livestock');
                 tx.executeSql('DROP TABLE IF EXISTS drug_delivery');
                 tx.executeSql('DROP TABLE IF EXISTS livestock_action');
+                tx.executeSql('DROP TABLE IF EXISTS drugs');
                 tx.executeSql('CREATE TABLE IF NOT EXISTS user (bearerToken, refreshToken, email, password)');
                 tx.executeSql('CREATE TABLE IF NOT EXISTS livestock (born, color, number, place , created, user, tagged, sync)')
                 tx.executeSql('CREATE TABLE IF NOT EXISTS drug_delivery (color, number, drug, approval_number, delay, amount, created, DBSyncServer)')
                 tx.executeSql('CREATE TABLE IF NOT EXISTS livestock_action (color, number, type, date, time, result, text, sync)')
+                tx.executeSql('CREATE TABLE IF NOT EXISTS drugs (name, number, delay, tagged)')
             }, function(error) {
                 alert('Error: ' + error.message + ' code: ' + error.code);
             }, function() {
@@ -35,7 +37,7 @@
                         if (results.rows.length > 0) {
                             window.location = "menu.html";
                         } else {
-                            window.location = "login.html";
+                            window.location = "menu.html";
                         }
                     }, null);
                 });

@@ -73,7 +73,7 @@ var saveDialog = function (id, type, CreatedOnDateID, CreatedOnTimeID, textareaI
         var BornAlive = document.getElementById("BornAlive");
         var BornDead = document.getElementById("BornDead");
         var BornMummified = document.getElementById("BornMummified");
-        var result = "Lebendgeboren: " + BornAlive.value + "+" + "Totgeboren: " +BornDead.value + "+" + "Mumien: "+ BornMummified.value;
+        var result = BornAlive.value + "+" + BornDead.value + "+" + BornMummified.value;
         console.log(result)
         if (BornAlive.value.length == 0) {
             ons.notification.alert({

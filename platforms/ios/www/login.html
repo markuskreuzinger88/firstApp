@@ -191,7 +191,7 @@
         }
       } else {
         if (DEBUGswitchState == 'true') {
-          loginServer()
+          RESTLogin()
         } else {
           write2DB("dummy_token1", "dummy_token2")
         }
@@ -204,31 +204,31 @@
       })
     }
 
-    //request Data to Servser
-    function loginServer() {
-      var DEBUGIP = localStorage.getItem("settings_ipAdress")
-      var DEBUGCredentials = localStorage.getItem("settings_credentials")
-      var email = document.getElementById("email").value;
-      var psw = document.getElementById("psw").value;
-      var endpoint = 'http://' + DEBUGIP + '/AniCare/api/token'
-      var data = "grant_type=password&username=" + email + "&password=" + psw + "&client_id=app";
-      alert("Endpoint: " + endpoint + "\n" + "Data: " + data)
-      $.ajax({
-        url: endpoint,
-        contentType: "application/x-www-form-urlencoded",
-        type: "POST",
-        data: data,
-        success: function (response) {
-          var bearerToken = "Bearer " + response.access_token
-          var refreshToken = response.refresh_token
-          write2DB(bearerToken, refreshToken)
-        },
-        error: function (xhr, status, error) {
-          var errorMessage = xhr.status + ': ' + xhr.statusText
-          alert('Login failed! Error - ' + errorMessage);
-        }
-      });
-    }
+    // //request Data to Servser
+    // function loginServer() {
+    //   var DEBUGIP = localStorage.getItem("settings_ipAdress")
+    //   var DEBUGCredentials = localStorage.getItem("settings_credentials")
+    //   var email = document.getElementById("email").value;
+    //   var psw = document.getElementById("psw").value;
+    //   var endpoint = 'http://' + DEBUGIP + '/AniCare/api/token'
+    //   var data = "grant_type=password&username=" + email + "&password=" + psw + "&client_id=app";
+    //   alert("Endpoint: " + endpoint + "\n" + "Data: " + data)
+    //   $.ajax({
+    //     url: endpoint,
+    //     contentType: "application/x-www-form-urlencoded",
+    //     type: "POST",
+    //     data: data,
+    //     success: function (response) {
+    //       var bearerToken = "Bearer " + response.access_token
+    //       var refreshToken = response.refresh_token
+    //       write2DB(bearerToken, refreshToken)
+    //     },
+    //     error: function (xhr, status, error) {
+    //       var errorMessage = xhr.status + ': ' + xhr.statusText
+    //       alert('Login failed! Error - ' + errorMessage);
+    //     }
+    //   });
+    // }
 
     //Write to database
     function write2DB(bearerToken, refreshToken) {

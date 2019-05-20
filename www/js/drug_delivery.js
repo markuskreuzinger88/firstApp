@@ -51,12 +51,24 @@ function GetDBTaggedResult() {
     while (list.hasChildNodes()) {
         list.removeChild(list.firstChild);
     }
+    var list = document.getElementById("drugContainer");
+    while (list.hasChildNodes()) {
+        list.removeChild(list.firstChild);
+    }
     db.transaction(function (transaction) {
         transaction.executeSql(
             'SELECT * FROM livestock WHERE tagged = ? ORDER BY Number DESC', ['true'],
             function (tx, results) {
                 console.log(results)
                 DisplayResultDrugDelivery(results)
+            }, null);
+    });
+    db.transaction(function (transaction) {
+        transaction.executeSql(
+            'SELECT * FROM drugs WHERE tagged = ? ORDER BY Number DESC', ['true'],
+            function (tx, results) {
+                console.log(results)
+                DisplayTaggedDrug(results)
             }, null);
     });
 }
@@ -122,6 +134,67 @@ function DisplayResultDrugDelivery(results) {
         document.getElementById("drugDeliveryContainer").appendChild(list);
         document.getElementById("removeLivestocks").innerHTML = "";
         document.getElementById("removeLivestocks").disabled = true;
+    }
+}
+
+function DisplayTaggedDrug(results) {
+    if (results.rows.length > 0) {
+        for (i = 0; i < results.rows.length; i++) {
+            list = document.createElement("ons-list-item")
+            list.setAttribute("onclick", "removeListItemDrug(" + i + ")");
+            //create text center
+            div_center = document.createElement("div")
+            div_center.setAttribute("id", i);
+            div_center.setAttribute("class", "center");
+            div_center.setAttribute("style", "margin-left: 10px");
+            //create icon right
+            div_right = document.createElement("div")
+            div_right.setAttribute("class", "right");
+            icon_right = document.createElement("ons-icon")
+            icon_right.setAttribute("icon", "fa-trash");
+            icon_right.setAttribute("style", "color: red");
+            icon_right.setAttribute("size", "20px");
+            icon_right.setAttribute("onclick", "removeListItemDrug(" + i + ")");
+            //add text center
+            span_center1 = document.createElement("span")
+            span_center1.setAttribute("id", "livestockIDDrug" + i);
+            span_center2 = document.createElement("span")
+            span_center1.setAttribute("class", "list-item__title");
+            span_center2.setAttribute("class", "list-item__subtitle");
+            span_center1.innerHTML = LiveStockNbr + results.rows.item(i).number;
+            span_center2.innerHTML = results.rows.item(i).place + "<br>" + results.rows.item(i).born;
+            div_left = document.createElement("div")
+            div_left.setAttribute("class", "left");
+            //create color mark right
+            input = document.createElement("input")
+            input.setAttribute("id", "livestockColorDrug" + i);
+            input.setAttribute("style",
+                "width: 40px; height :40px;margin-right: 5px;border-color : black; border: 2px solid black; border-radius: 10px; background-color:" + results.rows
+                .item(i).color);
+            input.setAttribute("size", "3");
+            input.setAttribute("disabled", "true");
+            list.setAttribute("tappable", true);
+            //append childs
+            div_left.appendChild(input);
+            div_right.appendChild(icon_right);
+            list.appendChild(div_left);
+            list.appendChild(div_right);
+            div_center.appendChild(span_center1);
+            div_center.appendChild(span_center2);
+            list.appendChild(div_center);
+            document.getElementById("drugDeliveryContainer").appendChild(list);
+            arrColor.push(results.rows.item(i).color);
+            arrNumber.push(results.rows.item(i).number);
+            console.log(arrColor)
+        }
+    } else {
+        list = document.createElement("ons-list-item")
+        div = document.createElement("div")
+        div.innerHTML = "Kein Arzneimittel ausgewählt"
+        list.appendChild(div);
+        document.getElementById("drugContainer").appendChild(list);
+        document.getElementById("removeDrugs").innerHTML = "";
+        document.getElementById("removeDrugs").disabled = true;
     }
 }
 
