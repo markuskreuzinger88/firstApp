@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Wurfindex</title>
+    <script src="js/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="onsenui/css/onsenui.css" />
+    <link rel="stylesheet" type="text/css" href="onsenui/css/onsen-css-components.min.css" />
+    <ons-icon size="30px" style="margin-left: 10px; margin-top: 10px;" icon="md-arrow-back" onclick="BackButton()">
+    </ons-icon>
+    <ons-page>
+        <ons-toolbar>
+            <div class="left">
+                <ons-icon size="30px" style="margin-left: 10px" icon="md-arrow-back" onclick="BackButton()"></ons-icon>
+            </div>
+            <div class="center">Wurfindex</div>
+            <div class="right"></div>
+        </ons-toolbar>
+        <ons-list ng-controller="DialogController">
+            <ons-list-item
+                onclick="showTemplateDialog('occupancy', 'occupancy.html', '#CreatedOnOccupancyDate', '#CreatedOnOccupancyTime')"
+                modifier="chevron" tappable>
+                Belegung
+            </ons-list-item>
+            <ons-list-item
+                onclick="showTemplateDialog('farrow', 'farrow.html', '#CreatedOnFarrowDate', '#CreatedOnFarrowTime')"
+                modifier="chevron" tappable>
+                Abferkeln
+            </ons-list-item>
+            <ons-list-item
+                onclick="showTemplateDialog('stripOff', 'stripOff.html', '#CreatedOnStripOffDate', '#CreatedOnStripOffTime')"
+                modifier="chevron" tappable>
+                Absetzen
+            </ons-list-item>
+            <ons-list-item
+                onclick="showTemplateDialog('pregnancy', 'pregnancy.html', '#CreatedOnPregnancyDate', '#CreatedOnPregnancyTime')"
+                modifier="chevron" tappable>
+                Trächtigkeitsuntersuchung
+            </ons-list-item>
+            <ons-list-item
+                onclick="showTemplateDialog('estrusControl', 'estrusControl.html', '#CreatedOnEstrusControlDate', '#CreatedOnEstrusControlTime')"
+                modifier="chevron" tappable>
+                Rauschekontrolle
+            </ons-list-item>
+            <ons-list-item onclick="showTemplateDialog('bcs', 'bcs.html', '#CreatedOnBCSDate', '#CreatedOnBCSTime')"
+                modifier="chevron" tappable>
+                BCS Analyse
+            </ons-list-item>
+        </ons-list>
+    </ons-page>
+</head>
+
+<template id="occupancy.html">
+    <ons-dialog id="occupancy" cancelable>
+        <div style="text-align: center; padding: 5px;">
+            <p>
+                <b>
+                    Belegung
+                </b>
+            </p>
+        </div>
+        <ons-row>
+            <ons-col style="margin-left: 5%; margin-top: 5px">Uhrzeit</ons-col>
+            <ons-col>
+                <ons-input id="CreatedOnOccupancyTime" style="margin-left: 5%; width:80px;"></ons-input><br><br>
+            </ons-col>
+        </ons-row>
+        <ons-row>
+            <ons-col style="margin-left: 5%; margin-top: -10px">Datum</ons-col>
+            <ons-col style="margin-top: -15px">
+                <ons-input id="CreatedOnOccupancyDate" type="date" value="tt.mm.jjjj " name="CreatedOn"
+                    style="margin-left: 5%; width:120px;"></ons-input><br><br>
+            </ons-col>
+        </ons-row>
+        <textarea id="occupancy-textarea" style="background-color: transparent;" class="textarea" rows="3"
+            placeholder="Anmerkungen"></textarea>
+        <div style="text-align: center; padding: 5px;">
+            <p>
+                <ons-button style="background-color: green; width: 70px;"
+                    onclick="saveDialog('occupancy', 'Belegung', 'CreatedOnOccupancyDate', 'CreatedOnOccupancyTime', 'occupancy-textarea')">
+                    <ons-icon icon="fa-check"></ons-icon>
+                </ons-button>
+                <ons-button style="background-color: red; width: 70px;" onclick="hideDialog('occupancy')">
+                    <ons-icon icon="fa-trash"></ons-icon>
+                </ons-button>
+            </p>
+        </div>
+    </ons-dialog>
+</template>
+
+<template id="farrow.html">
+    <ons-dialog id="farrow" cancelable>
+        <div style="text-align: center; padding: 5px;">
+            <p>
+                <b>
+                    Abferkeln
+                </b>
+            </p>
+        </div>
+        <ons-row>
+            <ons-col style="margin-left: 5%; margin-top: 5px">Uhrzeit</ons-col>
+            <ons-col>
+                <ons-input id="CreatedOnFarrowTime" style="margin-left: 5%; width:80px;"></ons-input><br><br>
+            </ons-col>
+        </ons-row>
+        <ons-row>
+            <ons-col style="margin-left: 5%; margin-top: -10px">Datum</ons-col>
+            <ons-col style="margin-top: -15px">
+                <ons-input id="CreatedOnFarrowDate" type="date" value="tt.mm.jjjj " name="CreatedOn"
+                    style="margin-left: 5%; width:120px;"></ons-input><br><br>
+            </ons-col>
+        </ons-row>
+        <ons-list modifier="inset" style="background-color: transparent;">
+            <ons-row style="margin-top: 5px">
+                <ons-col style="margin-left: 5%; margin-top: 5px">Lebend geboren</ons-col>
+                <ons-col>
+                    <ons-input id="BornAlive" placeholder="0" type="number" style="margin-left: 5%; width:80px;">
+                    </ons-input><br><br>
+                </ons-col>
+            </ons-row>
+            <ons-row>
+                <ons-col style="margin-left: 5%; margin-top: -10px">Tot geboren</ons-col>
+                <ons-col style="margin-top: -15px">
+                    <ons-input id="BornDead" placeholder="0" type="number" style="margin-left: 5%; width:80px;">
+                    </ons-input>
+                </ons-col>
+            </ons-row>
+            <ons-row>
+                <ons-col style="margin-left: 5%; margin-top: 5px">Mumien</ons-col>
+                <ons-col>
+                    <ons-input id="BornMummified" placeholder="0" type="number" style="margin-left: 5%; width:80px;">
+                    </ons-input>
+                </ons-col>
+            </ons-row>
+        </ons-list>
+        <textarea id="farrow-textarea" style="background-color: transparent;" class="textarea" rows="3"
+            placeholder="Anmerkungen"></textarea>
+        <div style="text-align: center; padding: 10px;">
+            <p>
+                <ons-button style="background-color: green; width: 70px;"
+                    onclick="saveDialog('farrow', 'Abgeferkelt', 'CreatedOnFarrowDate', 'CreatedOnFarrowTime', 'farrow-textarea')">
+                    <ons-icon icon="fa-check"></ons-icon>
+                </ons-button>
+                <ons-button style="background-color: red; width: 70px;" onclick="hideDialog('farrow')">
+                    <ons-icon icon="fa-trash"></ons-icon>
+                </ons-button>
+            </p>
+        </div>
+    </ons-dialog>
+</template>
+
+<template id="stripOff.html">
+    <ons-dialog id="stripOff" cancelable>
+        <div style="text-align: center; padding: 5px;">
+            <p>
+                <b>
+                    Absetzen am
+                </b>
+            </p>
+        </div>
+        <ons-row>
+            <ons-col style="margin-left: 5%; margin-top: 5px">Uhrzeit</ons-col>
+            <ons-col>
+                <ons-input id="CreatedOnStripOffTime" style="margin-left: 5%; width:80px;"></ons-input><br><br>
+            </ons-col>
+        </ons-row>
+        <ons-row>
+            <ons-col sstyle="margin-left: 5%; margin-top: -10px">Datum</ons-col>
+            <ons-col style="margin-top: -15px">
+                <ons-input id="CreatedOnStripOffDate" type="date" value="tt.mm.jjjj " name="CreatedOn"
+                    style="margin-left: 5%; width:120px;"></ons-input><br><br>
+            </ons-col>
+        </ons-row>
+        <textarea id="stripOff-textarea" style="background-color: transparent;" class="textarea" rows="3"
+            placeholder="Anmerkungen"></textarea>
+        <div style="text-align: center; padding: 5px;">
+            <p>
+                <ons-button style="background-color: green; width: 70px;"
+                    onclick="saveDialog('stripOff', 'Absetzen', 'CreatedOnStripOffDate', 'CreatedOnStripOffTime', 'stripOff-textarea')">
+                    <ons-icon icon="fa-check"></ons-icon>
+                </ons-button>
+                <ons-button style="background-color: red; width: 70px;" onclick="hideDialog('stripOff')">
+                    <ons-icon icon="fa-trash"></ons-icon>
+                </ons-button>
+            </p>
+        </div>
+    </ons-dialog>
+</template>
+
+<template id="pregnancy.html">
+    <ons-dialog id="pregnancy" cancelable>
+        <div style="text-align: center; padding: 5px;">
+            <p>
+                <b>
+                    Trächtigkeitsuntersuchung
+                </b>
+            </p>
+        </div>
+        <ons-row>
+            <ons-col style="margin-left: 5%; margin-top: 5px">Uhrzeit</ons-col>
+            <ons-col>
+                <ons-input id="CreatedOnPregnancyTime" style="margin-left: 5%; width:80px;"></ons-input><br><br>
+            </ons-col>
+        </ons-row>
+        <ons-row>
+            <ons-col style="margin-left: 5%; margin-top: -10px">Datum</ons-col>
+            <ons-col style="margin-top: -15px">
+                <ons-input id="CreatedOnPregnancyDate" type="date" value="tt.mm.jjjj " name="CreatedOn"
+                    style="margin-left: 5%; width:120px;"></ons-input><br><br>
+            </ons-col>
+        </ons-row>
+        <ons-list modifier="inset" style="background-color: transparent;">
+            <ons-list-item modifier="nodivider" onclick="DialogCheckboxPregnancy('pregnancy-check-1')" tappable>
+                <label class="left">
+                    <ons-checkbox input-id="pregnancy-check-1" checked></ons-checkbox>
+                </label>
+                <label for="pregnancy-check-1" class="center">
+                    Positiv
+                </label>
+            </ons-list-item>
+            <ons-list-item modifier="nodivider" onclick="DialogCheckboxPregnancy('pregnancy-check-2')" tappable>
+                <label class="left">
+                    <ons-checkbox input-id="pregnancy-check-2"></ons-checkbox>
+                </label>
+                <label for="pregnancy-check-2" class="center">
+                    Fraglich
+                </label>
+            </ons-list-item>
+            <ons-list-item modifier="nodivider" onclick="DialogCheckboxPregnancy('pregnancy-check-3')" tappable>
+                <label class="left">
+                    <ons-checkbox input-id="pregnancy-check-3"></ons-checkbox>
+                </label>
+                <label for="pregnancy-check-3" class="center">
+                    Negativ
+                </label>
+            </ons-list-item>
+        </ons-list>
+        <textarea id="pregnancy-textarea" style="background-color: transparent;" class="textarea" rows="3"
+            placeholder="Anmerkungen"></textarea>
+        <div style="text-align: center; padding: 5px;">
+            <p>
+                <ons-button style="background-color: green; width: 70px;"
+                    onclick="saveDialog('pregnancy', 'Trächtigkeitsuntersuchung', 'CreatedOnPregnancyDate', 'CreatedOnPregnancyTime', 'pregnancy-textarea')">
+                    <ons-icon icon="fa-check"></ons-icon>
+                </ons-button>
+                <ons-button style="background-color: red; width: 70px;" onclick="hideDialog('pregnancy')">
+                    <ons-icon icon="fa-trash"></ons-icon>
+                </ons-button>
+            </p>
+        </div>
+    </ons-dialog>
+</template>
+
+<template id="estrusControl.html">
+    <ons-dialog id="estrusControl" cancelable>
+        <div style="text-align: center; padding: 5px;">
+            <p>
+                <b>
+                    Rauschekontrolle
+                </b>
+            </p>
+        </div>
+        <ons-row>
+            <ons-col style="margin-left: 5%; margin-top: 5px">Uhrzeit</ons-col>
+            <ons-col>
+                <ons-input id="CreatedOnEstrusControlTime" style="margin-left: 5%; width:80px;"></ons-input><br><br>
+            </ons-col>
+        </ons-row>
+        <ons-row>
+            <ons-col style="margin-left: 5%; margin-top: -10px">Datum</ons-col>
+            <ons-col style="margin-top: -15px">
+                <ons-input id="CreatedOnEstrusControlDate" type="date" value="tt.mm.jjjj " name="CreatedOn"
+                    style="margin-left: 5%; width:120px;"></ons-input><br><br>
+            </ons-col>
+        </ons-row>
+        <ons-list modifier="inset" style="background-color: transparent;">
+            <ons-list-item modifier="nodivider" onclick="DialogCheckbox('check-1')" tappable>
+                <label class="left">
+                    <ons-checkbox input-id="check-1" checked></ons-checkbox>
+                </label>
+                <label for="check-1" class="center">
+                    keine Symptome
+                </label>
+            </ons-list-item>
+            <ons-list-item modifier="nodivider" onclick="DialogCheckbox('check-2')" tappable>
+                <label class="left">
+                    <ons-checkbox input-id="check-2"></ons-checkbox>
+                </label>
+                <label for="check-2" class="center">
+                    Duldung
+                </label>
+            </ons-list-item>
+            <ons-list-item modifier="nodivider" onclick="DialogCheckbox('check-3')" tappable>
+                <label class="left">
+                    <ons-checkbox input-id="check-3"></ons-checkbox>
+                </label>
+                <label for="check-3" class="center">
+                    Rötung
+                </label>
+            </ons-list-item>
+            <ons-list-item modifier="nodivider" onclick="DialogCheckbox('check-4')" tappable>
+                <label class="left">
+                    <ons-checkbox input-id="check-4"></ons-checkbox>
+                </label>
+                <label for="check-4" class="center">
+                    Belegaktion
+                </label>
+            </ons-list-item>
+        </ons-list>
+        <textarea id="estrusControl-textarea" style="background-color: transparent;" class="textarea" rows="3"
+            placeholder="Anmerkungen"></textarea>
+        <div style="text-align: center; padding: 10px;">
+            <p>
+                <ons-button style="background-color: green; width: 70px;"
+                    onclick="saveDialog('estrusControl', 'Rauschekontrolle', 'CreatedOnEstrusControlDate', 'CreatedOnEstrusControlTime', 'estrusControl-textarea')">
+                    <ons-icon icon="fa-check"></ons-icon>
+                </ons-button>
+                <ons-button style="background-color: red; width: 70px;" onclick="hideDialog('estrusControl')">
+                    <ons-icon icon="fa-trash"></ons-icon>
+                </ons-button>
+            </p>
+        </div>
+    </ons-dialog>
+</template>
+
+<template id="bcs.html">
+    <ons-dialog id="bcs" cancelable>
+        <div style="text-align: center; padding: 5px;">
+            <p>
+                <b>
+                    Body Condition Score
+                </b>
+            </p>
+        </div>
+        <ons-row>
+            <ons-col style="margin-left: 5%; margin-top: 5px">Uhrzeit</ons-col>
+            <ons-col>
+                <ons-input id="CreatedOnBCSTime" style="margin-left: 5%; width:80px;"></ons-input><br><br>
+            </ons-col>
+        </ons-row>
+        <ons-row>
+            <ons-col style="margin-left: 5%; margin-top: -10px">Datum</ons-col>
+            <ons-col style="margin-top: -15px">
+                <ons-input id="CreatedOnBCSDate" type="date" value="tt.mm.jjjj " name="CreatedOn"
+                    style="margin-left: 5%; width:120px;"></ons-input><br><br>
+            </ons-col>
+        </ons-row>
+        <ons-list modifier="inset" style="background-color: transparent;">
+            <ons-list-item modifier="nodivider" onclick="DialogCheckboxBCS('bcs-check-1')" tappable>
+                <label class="left">
+                    <ons-checkbox input-id="bcs-check-1" checked></ons-checkbox>
+                </label>
+                <!-- <label for="check-1" class="center" onclick="showPopover(this)"> -->
+                <label for="check-1" class="center">
+                    1 Zu mager
+                </label>
+            </ons-list-item>
+            <ons-list-item modifier="nodivider" onclick="DialogCheckboxBCS('bcs-check-2')" tappable>
+                <label class="left">
+                    <ons-checkbox input-id="bcs-check-2"></ons-checkbox>
+                </label>
+                <label for="check-2" class="center">
+                    2 Mager
+                </label>
+            </ons-list-item>
+            <ons-list-item modifier="nodivider" onclick="DialogCheckboxBCS('bcs-check-3')" tappable>
+                <label class="left">
+                    <ons-checkbox input-id="bcs-check-3"></ons-checkbox>
+                </label>
+                <label for="check-3" class="center">
+                    3 Gut
+                </label>
+            </ons-list-item>
+            <ons-list-item modifier="nodivider" onclick="DialogCheckboxBCS('bcs-check-4')" tappable>
+                <label class="left">
+                    <ons-checkbox input-id="bcs-check-4"></ons-checkbox>
+                </label>
+                <label for="check-4" class="center">
+                    4 Fett
+                </label>
+            </ons-list-item>
+            <ons-list-item modifier="nodivider" onclick="DialogCheckboxBCS('bcs-check-5')" tappable>
+                <label class="left">
+                    <ons-checkbox input-id="bcs-check-5"></ons-checkbox>
+                </label>
+                <label for="check-4" class="center">
+                    5 Zu Fett
+                </label>
+            </ons-list-item>
+        </ons-list>
+        <textarea id="bcs-textarea" style="background-color: transparent;" class="textarea" rows="3"
+            placeholder="Anmerkungen"></textarea>
+        <div style="text-align: center; padding: 10px;">
+            <p>
+                <ons-button style="background-color: green; width: 70px;"
+                    onclick="saveDialog('bcs', 'Body Condition Score', 'CreatedOnBCSTime', 'CreatedOnBCSDate', 'bcs-textarea')">
+                    <ons-icon icon="fa-check"></ons-icon>
+                </ons-button>
+                <ons-button style="background-color: red; width: 70px;" onclick="hideDialog('bcs')">
+                    <ons-icon icon="fa-trash"></ons-icon>
+                </ons-button>
+            </p>
+        </div>
+    </ons-dialog>
+</template>
+
+<ons-popover style="width: 300px" direction="down" id="popover" cancelable>
+    <div style="padding: 10px; text-align: center;">
+        <textarea id="textarea" style="background-color: transparent; width: 200px" class="textarea" rows="4"
+            placeholder="Anmerkungen"> - Sitzbein und Hüfthöcker stehen deutlich hervor.
+         - Schwanzansatz und Flanken sind eingefallen.
+            - Dornfortsätze der Wirbel stehen über den gesamten Rücken deutlich hervor.
+            - Einzelne Rippen sind klar zu erkennen.
+    </textarea>
+    </div>
+</ons-popover>
+
+<style>
+    .textarea {
+        margin: 10px;
+        width: 93%;
+    }
+</style>
+
+<body>
+
+    <script type="text/javascript">
+        db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //create 20MB Database
+        var born_alive = "";
+        var born_dead = "";
+
+        var showPopover = function (target) {
+            document
+                .getElementById('popover')
+                .show(target);
+        };
+
+        var hidePopover = function () {
+            document
+                .getElementById('popover')
+                .hide();
+        };
+
+        var showTemplateDialog = function (my_dialog, my_dialog_html, CreatedOnDate, CreatedOnTime) {
+
+            var dialog = document.getElementById(my_dialog);
+
+            if (dialog) {
+                dialog.show();
+            } else {
+                ons.createElement(my_dialog_html, {
+                        append: true
+                    })
+                    .then(function (dialog) {
+                        dialog.show();
+                        let date = new Date().toISOString().substr(0, 10);
+                        var time = new Date().toLocaleTimeString()
+                        document.querySelector(CreatedOnDate).value = date;
+                        document.querySelector(CreatedOnTime).value = time.substr(0, 5);
+                    });
+            }
+        };
+
+        var hideDialog = function (id) {
+            document.getElementById(id).hide();
+        };
+
+        //function handle checkbox
+        var DialogCheckboxBCS = function (checkbox) {
+            document.getElementById("bcs-check-1").checked = false;
+            document.getElementById("bcs-check-2").checked = false;
+            document.getElementById("bcs-check-3").checked = false;
+            document.getElementById("bcs-check-4").checked = false;
+            document.getElementById("bcs-check-5").checked = false;
+            document.getElementById(checkbox).checked = true;
+        };
+
+        //function handle checkbox
+        var DialogCheckboxPregnancy = function (checkbox) {
+            document.getElementById("pregnancy-check-1").checked = false;
+            document.getElementById("pregnancy-check-2").checked = false;
+            document.getElementById("pregnancy-check-3").checked = false;
+            document.getElementById(checkbox).checked = true;
+        };
+
+        //function handle checkbox
+        var DialogCheckbox = function (checkbox) {
+            document.getElementById("check-1").checked = false;
+            document.getElementById("check-2").checked = false;
+            document.getElementById("check-3").checked = false;
+            document.getElementById("check-4").checked = false;
+            document.getElementById(checkbox).checked = true;
+        };
+
+        var saveDialog = function (id, type, CreatedOnDateID, CreatedOnTimeID, textareaID) {
+            if (id == 'occupancy') {
+                var result = "";
+            } else if (id == 'farrow') {
+                var BornAlive = document.getElementById("BornAlive");
+                var BornDead = document.getElementById("BornDead");
+                var BornMummified = document.getElementById("BornMummified");
+                var result = "Lebendgeboren: " + BornAlive.value + "+" + "Totgeboren: " +BornDead.value + "+" + "Mumien: "+ BornMummified.value;
+                console.log(result)
+                if (BornAlive.value.length == 0) {
+                    ons.notification.alert({
+                        message: 'Bitte überprüfe das Eingabefeld "Lebend geboren"!',
+                        title: 'Eingabefelder Fehler',
+                    });
+                    return
+                }
+                if (BornDead.value.length == 0) {
+                    ons.notification.alert({
+                        message: 'Bitte überprüfe das Eingabefeld "Tot geboren"!',
+                        title: 'Eingabefelder Fehler',
+                    });
+                    return
+                }
+                if (BornMummified.value.length == 0) {
+                    ons.notification.alert({
+                        message: 'Bitte überprüfe das Eingabefeld "Mumien"!',
+                        title: 'Eingabefelder Fehler',
+                    });
+                    return
+                }
+            } else if (id == 'stripOff') {
+                var result = "";
+            } else if (id == 'pregnancy') {
+                var check1 = document.getElementById("pregnancy-check-1");
+                var check2 = document.getElementById("pregnancy-check-2");
+                var check3 = document.getElementById("pregnancy-check-3");
+                if (check1.checked == true) {
+                    var result = 'positiv';
+                } else if (check2.checked == true) {
+                    var result = 'fraglich';
+                } else if (check3.checked == true) {
+                    var result = 'negativ';
+                }
+            } else if (id == 'estrusControl') {
+                var check1 = document.getElementById("check-1");
+                var check2 = document.getElementById("check-2");
+                var check3 = document.getElementById("check-3");
+                var check4 = document.getElementById("check-4");
+                if (check1.checked == true) {
+                    var result = 'keine Symptome';
+                } else if (check2.checked == true) {
+                    var result = 'Duldung';
+                } else if (check3.checked == true) {
+                    var result = 'Rötung';
+                } else if (check4.checked == true) {
+                    var result = 'Belegaktion';
+                }
+            } else if (id == 'bcs') {
+                var check1 = document.getElementById("bcs-check-1");
+                var check2 = document.getElementById("bcs-check-2");
+                var check3 = document.getElementById("bcs-check-3");
+                var check4 = document.getElementById("bcs-check-4");
+                var check5 = document.getElementById("bcs-check-5");
+                if (check1.checked == true) {
+                    var result = 'Zu mager';
+                } else if (check2.checked == true) {
+                    var result = 'Mager';
+                } else if (check3.checked == true) {
+                    var result = 'Gut';
+                } else if (check4.checked == true) {
+                    var result = 'Fett';
+                } else if (check5.checked == true) {
+                    var result = 'Zu Fett';
+                }
+            }
+            write2DB(type, CreatedOnDateID, CreatedOnTimeID, textareaID, result)
+        };
+
+        function write2DB(type, CreatedOnDateID, CreatedOnTimeID, textareaID, result) {
+            var color = String(localStorage.LivestockColor)
+            var number = String(localStorage.LivestockNumber)
+            var date = document.getElementById(CreatedOnDateID).value;
+            var time = document.getElementById(CreatedOnTimeID).value;
+            var text = document.getElementById(textareaID).value;
+            db.transaction(function (transaction) {
+                var executeQuery =
+                    "INSERT INTO livestock_action (color, number, type, date, time, result, text, sync) VALUES (?,?,?,?,?,?,?,?)";
+                transaction.executeSql(executeQuery, [color, number, type, date, time, result, text, "true"],
+                    function (tx, result) {
+                        window.location = "livestock_detail.html";
+                    },
+                    function (error) {
+                        alert('Error: ' + error.message + ' code: ' + error.code);
+                    });
+            });
+        }
+
+        function BackButton() {
+            window.location = "livestock_detail.html ";
+        }
+    </script>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script src="onsenui/js/onsenui.min.js"></script>
+
+</body>
+
+</html>

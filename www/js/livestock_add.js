@@ -161,7 +161,7 @@ function checkInputs() {
         if (switchState == 'true') {
             RESTAddLivestock()
         } else {
-            write2DBLivestock()
+            write2DBLivestock(born, color, number, place, created, email)
         }
     } else {
         ons.notification.alert({

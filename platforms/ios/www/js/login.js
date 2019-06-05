@@ -2,15 +2,25 @@ db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //
 
 //ONLY FOR DEBUGGING
 document.addEventListener("init", function () {
-    $("#login .page__background").css("background", "#ffffff");
-    if ("settings_credentials" in localStorage) {
-        switchStateCredentials = localStorage.getItem("settings_credentials")
-        if (switchStateCredentials == 'true') {
-            document.getElementById("email").value = "AniCareAdmin";
-            document.getElementById("psw").value = "anicare";
+
+    startPage = document.querySelector('#nav1').getAttribute('page')
+    //set page depending if user is already logged in or not
+    if (startPage == "login.html") {
+        if (localStorage.getItem("login") == 'true') {
+            document.querySelector('#nav1').replacePage('home_splitter.html');
         } else {
-            document.getElementById("email").value = "";
-            document.getElementById("psw").value = "";
+            document.querySelector('#nav1').replacePage('login.html');
+            $("#login .page__background").css("background", "#ffffff");
+            if ("settings_credentials" in localStorage) {
+                switchStateCredentials = localStorage.getItem("settings_credentials")
+                if (switchStateCredentials == 'true') {
+                    document.getElementById("email").value = "AniCareAdmin";
+                    document.getElementById("psw").value = "anicare";
+                } else {
+                    document.getElementById("email").value = "";
+                    document.getElementById("psw").value = "";
+                }
+            }
         }
     }
 });
@@ -72,4 +82,26 @@ pushMsg = function (title, msg) {
         timeout: 3000,
         animation: 'fall'
     })
+}
+
+logout = function () {
+    ons.notification.confirm({
+        message: 'Möchtest du dich Abmelden?',
+        title: 'Abmelden',
+        buttonLabels: ['Ja', 'Nein'],
+        animation: 'default',
+        primaryButtonIndex: 1,
+        cancelable: true,
+        callback: function (index) {
+            if (index == 0) {
+                db.transaction(function (tx) {
+                    tx.executeSql('DROP TABLE IF EXISTS user');
+                }, function (error) {
+                    alert('Error: ' + error.message + ' code: ' + error.code);
+                }, function () {
+                    navigator.app.exitApp();
+                });
+            }
+        }
+    });
 }

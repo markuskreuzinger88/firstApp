@@ -13,13 +13,14 @@
     $(document).on('postpush', '#nav1', function (event) {
         var event = event.originalEvent;
         leavePage = event.leavePage.id;
+        console.log(leavePage)
         if (event.enterPage.id === 'livestock') {
             readDBLivestock()
         }
     });
 
     function readDBLivestock() {
-        var list = document.getElementById("container");
+        var list = document.getElementById("containerLivestock");
         while (list.hasChildNodes()) {
             list.removeChild(list.firstChild);
         }
@@ -80,8 +81,6 @@
             //modify selection depending on last site --> when last page drug delivery
             //use tag icon else use chevron
             if (leavePage == "drug_delivery") {
-                console.log(leavePage)
-                console.log('GAHAGAHGAHGAHAG')
                 list.setAttribute("onclick", "livestockTag(" + i + ")");
                 div_right = document.createElement("ons-checkbox")
                 div_right.setAttribute("class", "right");
@@ -93,6 +92,7 @@
                     div_right.checked = false;
                 }
                 list.appendChild(div_right);
+                document.getElementById('livestockFab').style.visibility = 'visible';
             } else {
                 list.setAttribute("modifier", "chevron");
                 list.setAttribute("onclick", "livestockDetail(" + i + ")");
@@ -102,7 +102,7 @@
             div_center.appendChild(span_center1);
             div_center.appendChild(span_center2);
             list.appendChild(div_center);
-            document.getElementById("container").appendChild(list);
+            document.getElementById("containerLivestock").appendChild(list);
         }
     }
 
@@ -165,7 +165,7 @@
     //Command for Database sort or filter or search
     function CommandDB() {
         //delete actual container
-        var list = document.getElementById("container");
+        var list = document.getElementById("containerLivestock");
         while (list.hasChildNodes()) {
             list.removeChild(list.firstChild);
         }
@@ -318,7 +318,7 @@
         numberSearch = '%' + number + '%'
         console.log(number)
         //delete actual container
-        var list = document.getElementById("container");
+        var list = document.getElementById("containerLivestock");
         while (list.hasChildNodes()) {
             list.removeChild(list.firstChild);
         }

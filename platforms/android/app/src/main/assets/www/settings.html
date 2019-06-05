@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="onsenui/css/onsen-css-components.min.css" />
     <script src="onsenui/js/onsenui.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" src="js/database_handler.js"></script>
     <div class="left">
         <ons-back-button onclick="window.history.back()"></ons-back-button>
     </div>
@@ -45,6 +46,12 @@
             PWD: anicare
         </div>
     </ons-list-item>
+    <ons-button style="margin-top: 20px; border-radius: 10px;background-color: #2BA1E1" modifier="large"
+    onclick="sampleDrugs()"> Load Drug Sample to DB
+</ons-button>
+<ons-button style="margin-top: 20px; border-radius: 10px;background-color: #2BA1E1" modifier="large"
+onclick="sampleLivestocks()"> Load Livestock Sample to DB
+</ons-button>
 </head>
 
 <body>

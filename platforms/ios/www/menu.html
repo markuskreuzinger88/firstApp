@@ -21,6 +21,7 @@
     <script type="text/javascript" src="js/drug_delivery.js"></script>
     <script type="text/javascript" src="js/database_handler.js"></script>
     <script type="text/javascript" src="js/general.js"></script>
+    <script type="text/javascript" src="js/drug.js"></script>
     <link rel="stylesheet" type="text/css" href="css/livestock_add.css" />
     <link rel="stylesheet" type="text/css" href="css/livestock_action.css" />
     <script type="text/javascript" src="js/jquery.qrcode.js"></script>
@@ -29,15 +30,17 @@
 
     <ons-navigator id="nav1" page="login.html"> </ons-navigator>
 
+
     <!--  The Login Page -->
 
     <template id="login.html">
         <ons-page id="login">
             <div class="left">
-                <ons-icon size="20px" style="margin-left: 10px; margin-top: 10px; color: #008F97;" icon="fa-bug" onclick="window.location.href='settings.html'">
+                <ons-icon size="20px" style="margin-left: 10px; margin-top: 10px; color: #008F97;" icon="fa-bug"
+                    onclick="window.location.href='settings.html'">
                 </ons-icon>
             </div>
-            <img src=" img/logo22.png" style="width: 80%; margin-left: 10%; margin-top: 10%" />
+            <img src="img/logo_new.jpg" style="width: 80%; margin-left: 10%; margin-top: 10%" />
             <p class="header">Willkommen</p>
             <div class="container">
                 <form action="/menu.html">
@@ -46,10 +49,12 @@
                     <input type="email" id="email" name="login" placeholder="Email" required>
                     <input type="password" id="psw" name="login" placeholder="Passwort" required>
                     <p class="link" style="text-align: right">Passwort vergessen?</p>
-                    <ons-button modifier="large" style="background-color: #008F97; text-align: center" onclick="checkInputsLogin()">
+                    <ons-button modifier="large" style="background-color: #008F97; text-align: center"
+                        onclick="checkInputsLogin()">
                         Anmelden
                     </ons-button>
-                    <p class="link" style="text-align: center; margin-top: 10%" onclick="window.location.href='register.html'">
+                    <p class="link" style="text-align: center; margin-top: 10%"
+                        onclick="window.location.href='register.html'">
                         Noch
                         nicht angemeldet?<br />Registrieren</p>
                 </form>
@@ -99,7 +104,6 @@
                     margin: 0;
                     text-align: center;
                 }
-
             </style>
         </ons-page>
     </template>
@@ -109,7 +113,8 @@
     <template id="home_splitter.html">
         <ons-page id="home_splitter">
             <ons-splitter>
-                <ons-splitter-side id="menu-splitter" page="menu-splitter.html" side="left" width="220px" collapse swipeable></ons-splitter-side>
+                <ons-splitter-side id="menu-splitter" page="menu-splitter.html" side="left" width="220px" collapse
+                    swipeable></ons-splitter-side>
                 <ons-splitter-content id="content" page="menu.html"></ons-splitter-content>
             </ons-splitter>
         </ons-page>
@@ -120,17 +125,17 @@
 
     <template id="menu-splitter.html">
         <ons-page id="menu-splitter">
-            <ons-list style="background-color: transparent;">
-                <ons-list-header class="menu_header">View by Category</ons-list-header>
+            <ons-list id="menu-splitter-list">
                 <ons-list-item style="margin-top: 20px">
                     <div class="left">
-                        <img class="list-item__thumbnail" src="img/logo_v2.0.png">
+                        <img class="list-item__thumbnail" src="img/logo_new.jpg">
                     </div>
                     <div class="center">
-                        <span class="list-item__title">LogContract</span><span class="list-item__subtitle">www.logcontract.com</span>
+                        <span class="list-item__title">Stablex</span><span
+                            class="list-item__subtitle">www.stablex.at</span>
                     </div>
                 </ons-list-item>
-                <ons-list-item modifier="nodivider" style="margin-top: 30px" onclick="fn.load('home.html')" tappable>
+                <ons-list-item modifier="nodivider" style="margin-top: 30px" onclick="fn.load('menu.html')" tappable>
                     <div class="left">
                         <ons-icon icon="ion-home" class="list-item__icon"></ons-icon>
                     </div>
@@ -139,7 +144,7 @@
                     </div>
                 </ons-list-item>
                 <!--                    <ons-list-item modifier="nodivider" onclick="fn.load('profil.html')" tappable>-->
-                <ons-list-item modifier="nodivider" tappable>
+                <ons-list-item modifier="nodivider" onclick="fn.load('profil.html')" tappable>
                     <div class="left">
                         <ons-icon icon="ion-person" class="list-item__icon"></ons-icon>
                     </div>
@@ -147,17 +152,8 @@
                         Profil
                     </div>
                 </ons-list-item>
-                <!--                    <ons-list-item modifier="nodivider" onclick="fn.load('log.html')" tappable>-->
-                <ons-list-item modifier="nodivider" tappable>
-                    <div class="left">
-                        <ons-icon icon="fa-database" class="list-item__icon"></ons-icon>
-                    </div>
-                    <div class="center">
-                        Lieferscheine
-                    </div>
-                </ons-list-item>
                 <!--                    <ons-list-item modifier="nodivider" onclick="fn.load('settings.html')" tappable>-->
-                <ons-list-item modifier="nodivider" tappable>
+                <ons-list-item modifier="nodivider" onclick="fn.load('settings.html')" tappable>
                     <div class="left">
                         <ons-icon icon="fa-cog" class="list-item__icon"></ons-icon>
                     </div>
@@ -166,7 +162,7 @@
                     </div>
                 </ons-list-item>
                 <!--                    <ons-list-item modifier="nodivider" onclick="fn.load('about.html')" tappable>-->
-                <ons-list-item modifier="nodivider" tappable>
+                <ons-list-item modifier="nodivider" onclick="fn.load('about.html')" tappable>
                     <div class="left">
                         <ons-icon icon="fa-info" class="list-item__icon"></ons-icon>
                     </div>
@@ -187,7 +183,7 @@
                 </ons-list-item>
                 <ons-list-item modifier="nodivider">
                 </ons-list-item>
-                <ons-list-item modifier="nodivider" onclick="showConfirm()" tappable>
+                <ons-list-item modifier="nodivider" onclick="logout()" tappable>
                     <div class="left">
                         <ons-icon icon="ion-log-out" class="list-item__icon"></ons-icon>
                     </div>
@@ -195,10 +191,6 @@
                         Abmelden
                     </div>
                 </ons-list-item>
-                <ons-list-header class="menu_header">Options</ons-list-header>
-                <ons-list-item tappable>Account Settings</ons-list-item>
-                <ons-list-item tappable>Global Settings</ons-list-item>
-                <ons-list-item onclick="goBack()" tappable>Logout</ons-list-item>
             </ons-list>
 
             <style type="text/css">
@@ -210,7 +202,6 @@
                     font-size: 10px;
                     padding: 0 0 0 16px !important;
                 }
-
             </style>
         </ons-page>
     </template>
@@ -224,18 +215,20 @@
                     </ons-toolbar-button>
                 </div>
                 <div class="right">
-                    <ons-toolbar-button onclick="syncDataServer()">
+                    <!-- <ons-toolbar-button onclick="syncDataServer()">
                         <ons-icon icon="fa-sync" style="font-size: 20px; width: 1em;"></ons-icon>
-                    </ons-toolbar-button>
+                    </ons-toolbar-button> -->
                 </div>
                 <div class="center" style="text-align: center; font-family: Calibri; font-size: 20px;">Start</div>
                 <div class="right">
                 </div>
             </ons-toolbar>
             <ons-card>
-                <div style="margin-top: 30px; margin-left: 50px; text-align: left; font-family: Calibri; font-size: 30px; font-weight: 700">
-                    Stallox</div>
-                <div style="margin-top: 8px; margin-left: 50px; text-align: left; font-family: Calibri; font-size: 15px; font-weight: 700">
+                <div
+                    style="margin-top: 30px; margin-left: 50px; text-align: left; font-family: Calibri; font-size: 30px; font-weight: 700">
+                    Stablex</div>
+                <div
+                    style="margin-top: 8px; margin-left: 50px; text-align: left; font-family: Calibri; font-size: 15px; font-weight: 700">
                     Next Digital Farming</div>
                 <ons-row class="user_cover" style="margin-top: 30px">
                     <ons-col onclick="pushNextPage('livestock_add')">
@@ -331,11 +324,10 @@
                     font-family: Calibri;
                     font-size: 18px;
                 }
-
             </style>
         </ons-page>
     </template>
-    <!-- 
+ 
     <template id="profil.html">
         <ons-page>
             <ons-toolbar>
@@ -388,7 +380,7 @@
                 <ons-row>
                     <ons-col
                         style="margin-left: 20px; margin-top: 30px; font-family: Calibri; font-size: 16px; color: darkgray">
-                        Firma</ons-col>
+                        LFBIS Nummer</ons-col>
                 </ons-row>
                 <ons-row>
                     <ons-col style="margin-left: 20px; margin-top: 10px; font-family: Calibri; font-size: 18px"
@@ -483,7 +475,7 @@
                         <ons-icon icon="md-menu" style="font-size: 32px; width: 1em;"></ons-icon>
                     </ons-toolbar-button>
                 </div>
-                <div class="center" style="text-align: center; font-family: Calibri; font-size: 20px;">Über LogC</div>
+                <div class="center" style="text-align: center; font-family: Calibri; font-size: 20px;">Über Stablex</div>
                 <div class="right">
                 </div>
             </ons-toolbar>
@@ -504,12 +496,14 @@
                 <div class="center">Tierkartei</div>
                 <div class="right"></div>
             </ons-toolbar>
-            <ons-list>
+            <ons-list style="position: sticky; top: 0; background-color: white; z-index: 1;">
                 <ons-list-item>
                     <ons-row style="margin-top: 5px; text-align: center">
                         <ons-col style="border-right: thick solid black">
                             <ons-icon style="margin-right: 3px" icon="fa-search"></ons-icon>
-                            <input id="SearchInput" style="width: 30px; border-right: none; border-left: none; border-top: none" onkeyup="UpdateDBResult()">
+                            <input id="SearchInput"
+                                style="width: 100px; border-right: none; border-left: none; border-top: none"
+                                onkeyup="UpdateDBResult()">
                         </ons-col>
                         <ons-col id="actionCol" onclick="nav1.pushPage('livestock_add.html')">Hinzufügen
                             <ons-icon id="actionIcon" style="margin-left: 3px" icon="fa-plus"></ons-icon>
@@ -518,7 +512,8 @@
                 </ons-list-item>
                 <ons-list-item>
                     <ons-row style="margin-top: 5px; text-align: center">
-                        <ons-col style="border-right: thick solid black" onclick="showTemplateDialog('sort', 'sort.html')">
+                        <ons-col style="border-right: thick solid black"
+                            onclick="showTemplateDialog('sort', 'sort.html')">
                             <ons-icon id="SortIcon" style="margin-left: 3px" icon="fa-sort-numeric-up"></ons-icon>
                             Ordnen nach
                         </ons-col>
@@ -529,8 +524,11 @@
                     </ons-row>
                 </ons-list-item>
             </ons-list>
-            <ons-list style="margin-top: 5px" id="container">
+            <ons-list style="margin-top: 5px" id="containerLivestock">
             </ons-list>
+            <ons-fab id="livestockFab" onclick="nav1.popPage()" position="bottom right" style="visibility:hidden;">
+                <ons-icon size="30px" icon="fa-arrow-right"></ons-icon>
+            </ons-fab>
         </ons-page>
     </template>
 
@@ -671,7 +669,8 @@
                 </p>
             </div>
             <ons-list>
-                <ons-list-item onchange="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-1', 'Dekzentrum')" tappable>
+                <ons-list-item onchange="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-1', 'Dekzentrum')"
+                    tappable>
                     <label class="left">
                         <ons-checkbox input-id="checkFilterPlace-1"></ons-checkbox>
                     </label>
@@ -680,7 +679,8 @@
                         Dekzentrum
                     </label>
                 </ons-list-item>
-                <ons-list-item onchange="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-2', 'Wartestall')" tappable>
+                <ons-list-item onchange="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-2', 'Wartestall')"
+                    tappable>
                     <label class="left">
                         <ons-checkbox input-id="checkFilterPlace-2"></ons-checkbox>
                     </label>
@@ -689,7 +689,8 @@
                         Wartestall
                     </label>
                 </ons-list-item>
-                <ons-list-item onchange="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-3', 'Abferkelbox')" tappable>
+                <ons-list-item onchange="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-3', 'Abferkelbox')"
+                    tappable>
                     <label class="left">
                         <ons-checkbox input-id="checkFilterPlace-3"></ons-checkbox>
                     </label>
@@ -698,7 +699,8 @@
                         Abferkelbox
                     </label>
                 </ons-list-item>
-                <ons-list-item onchange="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-4', 'Quarantäne Stall')" tappable>
+                <ons-list-item onchange="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-4', 'Quarantäne Stall')"
+                    tappable>
                     <label class="left">
                         <ons-checkbox input-id="checkFilterPlace-4"></ons-checkbox>
                     </label>
@@ -707,7 +709,8 @@
                         Quarantäne Stall
                     </label>
                 </ons-list-item>
-                <ons-list-item onchange="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-5', 'Futterventil')" tappable>
+                <ons-list-item onchange="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-5', 'Futterventil')"
+                    tappable>
                     <label class="left">
                         <ons-checkbox input-id="checkFilterPlace-5"></ons-checkbox>
                     </label>
@@ -751,32 +754,47 @@
                             <rect x="0" y="0" width="500" height="100" />
                         </clipPath>
 
-                        <rect id="rect1" x="50" y="100" rx="20" ry="20" width="250" stroke="black" stroke-width="2" height="150" style="fill:red" />
-                        <circle id="circle1" cx="180" cy="100" r="70" clip-path="url(#cut-off-bottom)" stroke="black" stroke-width="2" style="fill:red" />
+                        <rect id="rect1" x="50" y="100" rx="20" ry="20" width="250" stroke="black" stroke-width="2"
+                            height="150" style="fill:red" />
+                        <circle id="circle1" cx="180" cy="100" r="70" clip-path="url(#cut-off-bottom)" stroke="black"
+                            stroke-width="2" style="fill:red" />
                         <rect id="rect2" x="111" y="98" width="138" height="5" style="fill:red" />
                         <circle id="circle2" cx="180" cy="90" r="20" fill="white" stroke="black" stroke-width="2" />
 
-                        <text id="Svgtext1" onclick="showInfo('countryCode')" fill="black" font-size="30" font-family="Verdana" x="90" y="140">AT</text>
-                        <text id="Svgtext2" onclick="showInfo('stateCode')" fill="black" font-size="30" font-family="Verdana" x="240" y="140">3</text>
-                        <text id="Svgtext3" onclick="showInfo('LFBISCode')" fill="black" font-size="30" font-family="Verdana" x="120" y="230">4321056</text>
+                        <text id="Svgtext1" onclick="showInfo('countryCode')" fill="black" font-size="30"
+                            font-family="Verdana" x="90" y="140">AT</text>
+                        <text id="Svgtext2" onclick="showInfo('stateCode')" fill="black" font-size="30"
+                            font-family="Verdana" x="240" y="140">3</text>
+                        <text id="Svgtext3" onclick="showInfo('LFBISCode')" fill="black" font-size="30"
+                            font-family="Verdana" x="120" y="230">4321056</text>
                         <foreignObject id="CodeDigit0Obj" width="40" height="50" x="105" y="155">
-                            <input id="CodeDigit0" class="input-real" type="number" placeholder="X" maxlength="0" style="text-align: center;border-color : black; border-width: medium;" onfocus="this.value=''" />
+                            <input id="CodeDigit0" class="input-real" type="number" placeholder="X" maxlength="0"
+                                style="text-align: center;border-color : black; border-width: medium;"
+                                onfocus="this.value=''" />
                         </foreignObject>
                         <foreignObject id="CodeDigit1Obj" width="40" height="50" x="105" y="155">
-                            <input id="CodeDigit1" class="input-real" type="number" placeholder="X" maxlength="1" style="text-align: center;border-color : black; border-width: medium;" onfocus="this.value=''" />
+                            <input id="CodeDigit1" class="input-real" type="number" placeholder="X" maxlength="1"
+                                style="text-align: center;border-color : black; border-width: medium;"
+                                onfocus="this.value=''" />
                         </foreignObject>
                         <foreignObject id="CodeDigit2Obj" width="40" height="50" x="105" y="155">
-                            <input id="CodeDigit2" class="input-real" type="number" placeholder="X" maxlength="1" style="text-align: center;border-color : black; border-width: medium;" onfocus="this.value=''" />
+                            <input id="CodeDigit2" class="input-real" type="number" placeholder="X" maxlength="1"
+                                style="text-align: center;border-color : black; border-width: medium;"
+                                onfocus="this.value=''" />
                         </foreignObject>
                         <foreignObject id="CodeDigit3Obj" width="40" height="50" x="105" y="155">
-                            <input id="CodeDigit3" class="input-real" type="number" placeholder="X" maxlength="1" style="text-align: center;border-color : black; border-width: medium;" onfocus="this.value=''" />
+                            <input id="CodeDigit3" class="input-real" type="number" placeholder="X" maxlength="1"
+                                style="text-align: center;border-color : black; border-width: medium;"
+                                onfocus="this.value=''" />
                         </foreignObject>
                     </svg>
                     <hr>
                     <ons-row id="RowColor">
                         <ons-col id="Col1Color" style="margin-left: 10%; margin-top: 30px">Farbe</ons-col>
                         <ons-col id="Col2Color">
-                            <ons-button id="Color" style="margin-top: 20px; padding: 19px; border-radius: 10px; background-color: red; border-color : black; border-width: medium; width: 140px" onclick="showTemplateDialog('color', 'color.html')"></ons-button>
+                            <ons-button id="Color"
+                                style="margin-top: 20px; padding: 19px; border-radius: 10px; background-color: red; border-color : black; border-width: medium; width: 140px"
+                                onclick="showTemplateDialog('color', 'color.html')"></ons-button>
                         </ons-col>
                     </ons-row>
                     <ons-row>
@@ -795,7 +813,8 @@
                     <ons-row>
                         <ons-col style="margin-left: 10%; margin-top: 30px">Geboren am</ons-col>
                         <ons-col>
-                            <input id="BornOn" type="date" value="tt.mm.jjjj " style="width:140px; margin-top: 20px"><br><br>
+                            <input id="BornOn" type="date" value="tt.mm.jjjj "
+                                style="width:140px; margin-top: 20px"><br><br>
                         </ons-col>
                     </ons-row>
                     <ons-row>
@@ -806,7 +825,8 @@
                         </ons-col>
                     </ons-row>
                     <section style="margin-left: 10%; margin-right: 10%; margin-top: 10%;  margin-bottom: 10%">
-                        <ons-button style=" border-radius: 10px;background-color: #2BA1E1" modifier="large" onclick="checkInputs()"> Erledigt
+                        <ons-button style=" border-radius: 10px;background-color: #2BA1E1" modifier="large"
+                            onclick="checkInputs()"> Erledigt
                             <ons-icon size="15px" style="margin-left: 5px" icon="fa-check"></ons-icon>
                         </ons-button>
                     </section>
@@ -893,7 +913,7 @@
                 <div class="left">
                     <ons-back-button></ons-back-button>
                 </div>
-                <div class="center">ID</div>
+                <div class="center">Nutztier</div>
                 <div class="right"></div>
             </ons-toolbar>
             <!-- <ons-tabbar swipeable position="bottom"> -->
@@ -1016,7 +1036,6 @@
                 .sidenav {
                     width: 40px;
                     position: fixed;
-                    z-index: 1;
                     top: 45%;
                     left: 10px;
                     background: #eee;
@@ -1086,7 +1105,7 @@
                     border: 4px solid #3399ff;
                     top: 15px;
                     border-radius: 50%;
-                    z-index: 1;
+                    z-index: -1;
                 }
 
                 /* Place the container to the left */
@@ -1101,12 +1120,12 @@
 
                 /* Add arrows to the right container (pointing left) */
                 .right::before {
+                    z-index: -1;
                     content: " ";
                     height: 0;
                     position: absolute;
                     top: 22px;
                     width: 0;
-                    z-index: 1;
                     left: 30px;
                     border: medium solid white;
                     border-width: 10px 10px 10px 0;
@@ -1132,6 +1151,7 @@
                     /* Place the timelime to the left */
                     .timeline::after {
                         left: 31px;
+                        z-index: -2;
                     }
 
                     /* Full-width containers */
@@ -1166,14 +1186,13 @@
                     width: 93%;
                     background-color: transparent;
                 }
-
             </style>
         </ons-page>
     </template>
 
     <template id="tab1.html">
         <ons-page id="Bestandsliste ID">
-            <ons-list>
+            <ons-list style="position: sticky; top: 0; background-color: white; z-index: 1;">
                 <ons-list-item>
                     <ons-row style="margin-top: 5px; text-align: center">
                         <ons-col style="border-right: thick solid black" onclick="modifyInputs()">
@@ -1188,7 +1207,8 @@
                 </ons-list-item>
                 <ons-list-item>
                     <ons-row style="margin-top: 5px; text-align: center">
-                        <ons-col style="border-right: thick solid black" onclick="showTemplateDialog('QRCode', 'QRCode.html')">
+                        <ons-col style="border-right: thick solid black"
+                            onclick="showTemplateDialog('QRCode', 'QRCode.html')">
                             <ons-icon id="SortIcon" style="margin-left: 3px" icon="fa-qrcode"></ons-icon>
                             QR-Code
                         </ons-col>
@@ -1206,32 +1226,48 @@
                             <rect x="0" y="0" width="500" height="100" />
                         </clipPath>
 
-                        <rect id="rect1Detail" x="50" y="100" rx="20" ry="20" width="250" stroke="black" stroke-width="2" height="150" style="fill:red" />
-                        <circle id="circle1Detail" cx="180" cy="100" r="70" clip-path="url(#cut-off-bottom)" stroke="black" stroke-width="2" style="fill:red" />
+                        <rect id="rect1Detail" x="50" y="100" rx="20" ry="20" width="250" stroke="black"
+                            stroke-width="2" height="150" style="fill:red" />
+                        <circle id="circle1Detail" cx="180" cy="100" r="70" clip-path="url(#cut-off-bottom)"
+                            stroke="black" stroke-width="2" style="fill:red" />
                         <rect id="rect2Detail" x="111" y="98" width="138" height="5" style="fill:red" />
-                        <circle id="circle2Detail" cx="180" cy="90" r="20" fill="white" stroke="black" stroke-width="2" />
+                        <circle id="circle2Detail" cx="180" cy="90" r="20" fill="white" stroke="black"
+                            stroke-width="2" />
 
-                        <text id="Svgtext1Detail" onclick="showInfo('countryCode')" fill="black" font-size="30" font-family="Verdana" x="90" y="140">AT</text>
-                        <text id="Svgtext2Detail" onclick="showInfo('stateCode')" fill="black" font-size="30" font-family="Verdana" x="240" y="140">3</text>
-                        <text id="Svgtext3Detail" onclick="showInfo('LFBISCode')" fill="black" font-size="30" font-family="Verdana" x="120" y="230">4321056</text>
+                        <text id="Svgtext1Detail" onclick="showInfo('countryCode')" fill="black" font-size="30"
+                            font-family="Verdana" x="90" y="140">AT</text>
+                        <text id="Svgtext2Detail" onclick="showInfo('stateCode')" fill="black" font-size="30"
+                            font-family="Verdana" x="240" y="140">3</text>
+                        <text id="Svgtext3Detail" onclick="showInfo('LFBISCode')" fill="black" font-size="30"
+                            font-family="Verdana" x="120" y="230">4321056</text>
                         <foreignObject id="CodeDigit0ObjDetail" width="40" height="50" x="105" y="155">
-                            <input id="CodeDigit0Detail" class="input-real" type="number" placeholder="X" maxlength="0" style="text-align: center;border-color : black; border-width: medium;" onfocus="this.value=''" disabled />
+                            <input id="CodeDigit0Detail" class="input-real" type="number" placeholder="X" maxlength="0"
+                                style="text-align: center;border-color : black; border-width: medium;"
+                                onfocus="this.value=''" disabled />
                         </foreignObject>
                         <foreignObject id="CodeDigit1ObjDetail" width="40" height="50" x="105" y="155">
-                            <input id="CodeDigit1Detail" class="input-real" type="number" placeholder="X" maxlength="1" style="text-align: center;border-color : black; border-width: medium;" onfocus="this.value=''" disabled />
+                            <input id="CodeDigit1Detail" class="input-real" type="number" placeholder="X" maxlength="1"
+                                style="text-align: center;border-color : black; border-width: medium;"
+                                onfocus="this.value=''" disabled />
                         </foreignObject>
                         <foreignObject id="CodeDigit2ObjDetail" width="40" height="50" x="105" y="155">
-                            <input id="CodeDigit2Detail" class="input-real" type="number" placeholder="X" maxlength="1" style="text-align: center;border-color : black; border-width: medium;" onfocus="this.value=''" disabled />
+                            <input id="CodeDigit2Detail" class="input-real" type="number" placeholder="X" maxlength="1"
+                                style="text-align: center;border-color : black; border-width: medium;"
+                                onfocus="this.value=''" disabled />
                         </foreignObject>
                         <foreignObject id="CodeDigit3ObjDetail" width="40" height="50" x="105" y="155">
-                            <input id="CodeDigit3Detail" class="input-real" type="number" placeholder="X" maxlength="1" style="text-align: center;border-color : black; border-width: medium;" onfocus="this.value=''" disabled />
+                            <input id="CodeDigit3Detail" class="input-real" type="number" placeholder="X" maxlength="1"
+                                style="text-align: center;border-color : black; border-width: medium;"
+                                onfocus="this.value=''" disabled />
                         </foreignObject>
                     </svg>
                     <hr>
                     <ons-row>
                         <ons-col style="margin-left: 10%; margin-top: 30px">Farbe</ons-col>
                         <ons-col>
-                            <ons-button id="ColorDetail" style="margin-top: 20px; padding: 19px; border-radius: 10px; background-color: yellow; border-color : black; border-width: medium; width: 140px" onclick="showTemplateDialog('color', 'color.html')" disabled></ons-button>
+                            <ons-button id="ColorDetail"
+                                style="margin-top: 20px; padding: 19px; border-radius: 10px; background-color: yellow; border-color : black; border-width: medium; width: 140px"
+                                onclick="showTemplateDialog('color', 'color.html')" disabled></ons-button>
                         </ons-col>
                     </ons-row>
                     <ons-row>
@@ -1251,7 +1287,8 @@
                     <ons-row>
                         <ons-col style="margin-left: 10%; margin-top: 30px">Geboren am</ons-col>
                         <ons-col>
-                            <input id="BornOnDetail" type="date" value="tt.mm.jjjj " name="BornOn" style="width:140px; margin-top: 20px" disabled><br><br>
+                            <input id="BornOnDetail" type="date" value="tt.mm.jjjj " name="BornOn"
+                                style="width:140px; margin-top: 20px" disabled><br><br>
                         </ons-col>
                     </ons-row>
                     <!-- <ons-fab style="margin-bottom: 20px; background-color: lightgreen; visibility: hidden" type="submit"
@@ -1265,10 +1302,11 @@
 
     <template id="tab2.html">
         <ons-page id="Bestandsliste Belegung">
-            <ons-list>
+            <ons-list style="position: sticky; top: 0; background-color: white; z-index: 1;">
                 <ons-list-item>
                     <ons-row style="margin-top: 5px; text-align: center">
-                        <ons-col style="border-right: thick solid black" onclick="nav1.pushPage('livestock_action.html')">
+                        <ons-col style="border-right: thick solid black"
+                            onclick="nav1.pushPage('livestock_action.html')">
                             Hinzufügen
                             <ons-icon style="margin-left: 3px" icon="fa-plus"></ons-icon>
                         </ons-col>
@@ -1284,7 +1322,7 @@
 
     <template id="tab3.html">
         <ons-page id="Bestandsliste Arzneimittel">
-            <ons-list>
+            <ons-list style="position: sticky; top: 0; background-color: white; z-index: 1;">
                 <ons-list-item>
                     <ons-row style="margin-top: 5px; text-align: center">
                         <ons-col style="border-right: thick solid black" onclick="newDrugDelivery()">
@@ -1404,22 +1442,33 @@
                 <div class="right"></div>
             </ons-toolbar>
             <ons-list ng-controller="DialogController">
-                <ons-list-item onclick="showTemplateDialog('occupancy', 'occupancy.html', '#CreatedOnOccupancyDate', '#CreatedOnOccupancyTime')" modifier="chevron" tappable>
+                <ons-list-item
+                    onclick="showTemplateDialog('occupancy', 'occupancy.html', '#CreatedOnOccupancyDate', '#CreatedOnOccupancyTime')"
+                    modifier="chevron" tappable>
                     Belegung
                 </ons-list-item>
-                <ons-list-item onclick="showTemplateDialog('farrow', 'farrow.html', '#CreatedOnFarrowDate', '#CreatedOnFarrowTime')" modifier="chevron" tappable>
+                <ons-list-item
+                    onclick="showTemplateDialog('farrow', 'farrow.html', '#CreatedOnFarrowDate', '#CreatedOnFarrowTime')"
+                    modifier="chevron" tappable>
                     Abferkeln
                 </ons-list-item>
-                <ons-list-item onclick="showTemplateDialog('stripOff', 'stripOff.html', '#CreatedOnStripOffDate', '#CreatedOnStripOffTime')" modifier="chevron" tappable>
+                <ons-list-item
+                    onclick="showTemplateDialog('stripOff', 'stripOff.html', '#CreatedOnStripOffDate', '#CreatedOnStripOffTime')"
+                    modifier="chevron" tappable>
                     Absetzen
                 </ons-list-item>
-                <ons-list-item onclick="showTemplateDialog('pregnancy', 'pregnancy.html', '#CreatedOnPregnancyDate', '#CreatedOnPregnancyTime')" modifier="chevron" tappable>
+                <ons-list-item
+                    onclick="showTemplateDialog('pregnancy', 'pregnancy.html', '#CreatedOnPregnancyDate', '#CreatedOnPregnancyTime')"
+                    modifier="chevron" tappable>
                     Trächtigkeitsuntersuchung
                 </ons-list-item>
-                <ons-list-item onclick="showTemplateDialog('estrusControl', 'estrusControl.html', '#CreatedOnEstrusControlDate', '#CreatedOnEstrusControlTime')" modifier="chevron" tappable>
+                <ons-list-item
+                    onclick="showTemplateDialog('estrusControl', 'estrusControl.html', '#CreatedOnEstrusControlDate', '#CreatedOnEstrusControlTime')"
+                    modifier="chevron" tappable>
                     Rauschekontrolle
                 </ons-list-item>
-                <ons-list-item onclick="showTemplateDialog('bcs', 'bcs.html', '#CreatedOnBCSDate', '#CreatedOnBCSTime')" modifier="chevron" tappable>
+                <ons-list-item onclick="showTemplateDialog('bcs', 'bcs.html', '#CreatedOnBCSDate', '#CreatedOnBCSTime')"
+                    modifier="chevron" tappable>
                     BCS Analyse
                 </ons-list-item>
             </ons-list>
@@ -1449,10 +1498,12 @@
                         style="margin-left: -20px; width:130px;"><br><br>
                 </ons-col>
             </ons-row>
-            <textarea id="occupancy-textarea" style="background-color: transparent;" class="textarea" rows="3" placeholder="Anmerkungen"></textarea>
+            <textarea id="occupancy-textarea" style="background-color: transparent;" class="textarea" rows="3"
+                placeholder="Anmerkungen"></textarea>
             <div style="text-align: center; padding: 5px;">
                 <p>
-                    <ons-button style="background-color: green; width: 70px;" onclick="saveDialog('occupancy', 'Belegung', 'CreatedOnOccupancyDate', 'CreatedOnOccupancyTime', 'occupancy-textarea')">
+                    <ons-button style="background-color: green; width: 70px;"
+                        onclick="saveDialog('occupancy', 'Belegung', 'CreatedOnOccupancyDate', 'CreatedOnOccupancyTime', 'occupancy-textarea')">
                         <ons-icon icon="fa-check"></ons-icon>
                     </ons-button>
                     <ons-button style="background-color: red; width: 70px;" onclick="hideDialog('occupancy')">
@@ -1510,10 +1561,12 @@
                     </ons-col>
                 </ons-row>
             </ons-list>
-            <textarea id="farrow-textarea" style="background-color: transparent;" class="textarea" rows="3" placeholder="Anmerkungen"></textarea>
+            <textarea id="farrow-textarea" style="background-color: transparent;" class="textarea" rows="3"
+                placeholder="Anmerkungen"></textarea>
             <div style="text-align: center; padding: 10px;">
                 <p>
-                    <ons-button style="background-color: green; width: 70px;" onclick="saveDialog('farrow', 'Abgeferkelt', 'CreatedOnFarrowDate', 'CreatedOnFarrowTime', 'farrow-textarea')">
+                    <ons-button style="background-color: green; width: 70px;"
+                        onclick="saveDialog('farrow', 'Abgeferkelt', 'CreatedOnFarrowDate', 'CreatedOnFarrowTime', 'farrow-textarea')">
                         <ons-icon icon="fa-check"></ons-icon>
                     </ons-button>
                     <ons-button style="background-color: red; width: 70px;" onclick="hideDialog('farrow')">
@@ -1547,10 +1600,12 @@
                         style="margin-left: -20px; width:130px;"><br><br>
                 </ons-col>
             </ons-row>
-            <textarea id="stripOff-textarea" style="background-color: transparent;" class="textarea" rows="3" placeholder="Anmerkungen"></textarea>
+            <textarea id="stripOff-textarea" style="background-color: transparent;" class="textarea" rows="3"
+                placeholder="Anmerkungen"></textarea>
             <div style="text-align: center; padding: 5px;">
                 <p>
-                    <ons-button style="background-color: green; width: 70px;" onclick="saveDialog('stripOff', 'Absetzen', 'CreatedOnStripOffDate', 'CreatedOnStripOffTime', 'stripOff-textarea')">
+                    <ons-button style="background-color: green; width: 70px;"
+                        onclick="saveDialog('stripOff', 'Absetzen', 'CreatedOnStripOffDate', 'CreatedOnStripOffTime', 'stripOff-textarea')">
                         <ons-icon icon="fa-check"></ons-icon>
                     </ons-button>
                     <ons-button style="background-color: red; width: 70px;" onclick="hideDialog('stripOff')">
@@ -1610,10 +1665,12 @@
                     </label>
                 </ons-list-item>
             </ons-list>
-            <textarea id="pregnancy-textarea" style="background-color: transparent;" class="textarea" rows="3" placeholder="Anmerkungen"></textarea>
+            <textarea id="pregnancy-textarea" style="background-color: transparent;" class="textarea" rows="3"
+                placeholder="Anmerkungen"></textarea>
             <div style="text-align: center; padding: 5px;">
                 <p>
-                    <ons-button style="background-color: green; width: 70px;" onclick="saveDialog('pregnancy', 'Trächtigkeitsuntersuchung', 'CreatedOnPregnancyDate', 'CreatedOnPregnancyTime', 'pregnancy-textarea')">
+                    <ons-button style="background-color: green; width: 70px;"
+                        onclick="saveDialog('pregnancy', 'Trächtigkeitsuntersuchung', 'CreatedOnPregnancyDate', 'CreatedOnPregnancyTime', 'pregnancy-textarea')">
                         <ons-icon icon="fa-check"></ons-icon>
                     </ons-button>
                     <ons-button style="background-color: red; width: 70px;" onclick="hideDialog('pregnancy')">
@@ -1681,10 +1738,12 @@
                     </label>
                 </ons-list-item>
             </ons-list>
-            <textarea id="estrusControl-textarea" style="background-color: transparent;" class="textarea" rows="3" placeholder="Anmerkungen"></textarea>
+            <textarea id="estrusControl-textarea" style="background-color: transparent;" class="textarea" rows="3"
+                placeholder="Anmerkungen"></textarea>
             <div style="text-align: center; padding: 10px;">
                 <p>
-                    <ons-button style="background-color: green; width: 70px;" onclick="saveDialog('estrusControl', 'Rauschekontrolle', 'CreatedOnEstrusControlDate', 'CreatedOnEstrusControlTime', 'estrusControl-textarea')">
+                    <ons-button style="background-color: green; width: 70px;"
+                        onclick="saveDialog('estrusControl', 'Rauschekontrolle', 'CreatedOnEstrusControlDate', 'CreatedOnEstrusControlTime', 'estrusControl-textarea')">
                         <ons-icon icon="fa-check"></ons-icon>
                     </ons-button>
                     <ons-button style="background-color: red; width: 70px;" onclick="hideDialog('estrusControl')">
@@ -1761,10 +1820,12 @@
                     </label>
                 </ons-list-item>
             </ons-list>
-            <textarea id="bcs-textarea" style="background-color: transparent;" class="textarea" rows="3" placeholder="Anmerkungen"></textarea>
+            <textarea id="bcs-textarea" style="background-color: transparent;" class="textarea" rows="3"
+                placeholder="Anmerkungen"></textarea>
             <div style="text-align: center; padding: 10px;">
                 <p>
-                    <ons-button style="background-color: green; width: 70px;" onclick="saveDialog('bcs', 'Body Condition Score', 'CreatedOnBCSTime', 'CreatedOnBCSDate', 'bcs-textarea')">
+                    <ons-button style="background-color: green; width: 70px;"
+                        onclick="saveDialog('bcs', 'Body Condition Score', 'CreatedOnBCSTime', 'CreatedOnBCSDate', 'bcs-textarea')">
                         <ons-icon icon="fa-check"></ons-icon>
                     </ons-button>
                     <ons-button style="background-color: red; width: 70px;" onclick="hideDialog('bcs')">
@@ -1777,7 +1838,8 @@
 
     <ons-popover style="width: 300px" direction="down" id="popover" cancelable>
         <div style="padding: 10px; text-align: center;">
-            <textarea id="textarea" style="background-color: transparent; width: 200px" class="textarea" rows="4" placeholder="Anmerkungen"> - Sitzbein und Hüfthöcker stehen deutlich hervor.
+            <textarea id="textarea" style="background-color: transparent; width: 200px" class="textarea" rows="4"
+                placeholder="Anmerkungen"> - Sitzbein und Hüfthöcker stehen deutlich hervor.
              - Schwanzansatz und Flanken sind eingefallen.
                 - Dornfortsätze der Wirbel stehen über den gesamten Rücken deutlich hervor.
                 - Einzelne Rippen sind klar zu erkennen.
@@ -1799,7 +1861,7 @@
                 <div class="right"></div>
             </ons-toolbar>
             <ons-card>
-                <p style="margin-top: 20px; margin-bottom: 30px; margin-left: 10%; font-weight: 1000;">Nutztier
+                <p style="margin-top: 20px; margin-bottom: 30px; margin-left: 5%; font-weight: 1000;">Nutztier
                     auswählen
                     <ons-icon size="20px" style="color: black; margin-left: 5px" rotate="90" icon="fa-search">
                     </ons-icon>
@@ -1808,62 +1870,48 @@
                 </ons-list>
                 <ons-row style="margin-top: 5%; margin-left: 5%; margin-bottom: 10%">
                     <ons-col>
-                        <p onclick="removetag()" id="removeLivestocks" style="margin-top: -5px">
+                        <p onclick="removeTagLivestock()" id="removeLivestocks" style="margin-top: -5px">
                             <ons-icon style="margin-left: 3px" icon="fa-trash"></ons-icon>
                             Alle löschen
                         </p>
                     </ons-col>
                     <ons-col style="text-align: center;">
-                        <p onclick="nav1.pushPage('livestock.html')" style="margin-top: -5px"> Hinzufügen
+                        <!-- <p onclick="nav1.pushPage('livestock.html')" style="margin-top: -5px"> Hinzufügen -->
+                                <p onclick="nextPage()" style="margin-top: -5px"> Hinzufügen
                             <ons-icon style="margin-left: 3px" icon="fa-plus"></ons-icon>
                         </p>
                     </ons-col>
                 </ons-row>
                 <!-- <hr> -->
-                <p style="margin-top: 20px; margin-bottom: 30px; margin-left: 10%; font-weight: 1000;">
-                        Medikament
+                <p style="margin-top: 20px; margin-bottom: 30px; margin-left: 5%; font-weight: 1000;">
+                    Arzneimittel
                     <ons-icon size="20px" style="color: black; margin-left: 3%;" icon="fa-syringe"></ons-icon>
                 </p>
                 <ons-list id="drugContainer" modifier="inset">
                 </ons-list>
                 <ons-row style="margin-top: 5%; margin-left: 5%; margin-bottom: 10%">
                     <ons-col>
-                        <p onclick="removetag()" id="removeDrugs" style="margin-top: -5px">
+                        <p onclick="removeTagDrugs()" id="removeDrugs" style="margin-top: -5px">
                             <ons-icon style="margin-left: 3px" icon="fa-trash"></ons-icon>
                             Alle löschen
                         </p>
                     </ons-col>
                     <ons-col style="text-align: center;">
-                        <p onclick="nav1.pushPage('livestock.html')" style="margin-top: -5px"> Hinzufügen
+                        <p onclick="nav1.pushPage('drug.html')" style="margin-top: -5px"> Hinzufügen
                             <ons-icon style="margin-left: 3px" icon="fa-plus"></ons-icon>
                         </p>
                     </ons-col>
                 </ons-row>
-                <!-- <hr> -->
-                <p style="margin-top: 20px; margin-bottom: 30px; margin-left: 10%; font-weight: 1000;">
-                    Datum
-                    <ons-icon size="20px" style="color: black; margin-left: 3%;" icon="fa-calendar-alt"></ons-icon>
-                </p>
                 <ons-row>
-                    <!-- <ons-col style="margin-left: 10%; margin-top: 10px">Erstellt am</ons-col> -->
-                    <ons-col class="Input">
-                        <input id="CreatedOn" type="date" value="tt.mm.jjjj " style="width:140px;"><br><br>
+                    <ons-col style="margin-top: 20px; margin-bottom: 30px; margin-left: 5%;">
+                        <p style="font-weight: 1000;">
+                            Erstellt am
+                            <ons-icon size="20px" style="color: black; margin-left: 3%;" icon="fa-calendar-alt">
+                            </ons-icon>
+                        </p>
                     </ons-col>
-                </ons-row>
-                <!-- <hr> -->
-                <p style="margin-top: 20px; margin-bottom: 30px; margin-left: 10%; font-weight: 1000;">
-                    Abgabemenge
-                    <ons-icon size="20px" style="color: black; margin-left: 3%;" icon="fa-vial"></ons-icon>
-                </p>
-                <ons-row style="margin-top: 20px">
-                    <!-- <ons-col style="margin-left: 10%; margin-top: 10px">Abgabemenge</ons-col> -->
-                    <ons-col class="Input">
-                        <input id="abgabemenge" type="number" placeholder="10" size="500"
-                            style="text-align: right; width:140px">
-                        <ons-select id="choose-sel" onchange="editSelects(event)">
-                            <option value="ml">ml</option>
-                            <option value="mg">mg</option>
-                        </ons-select>
+                    <ons-col class="Input" style="margin-top: 20px; margin-bottom: 30px;">
+                        <input id="CreatedOn" type="date" value="tt.mm.jjjj " style="width:170px;"><br><br>
                     </ons-col>
                 </ons-row>
                 <section style="margin-left: 10%; margin-right: 10%; margin-top: 30px; margin-bottom: 30px;">
@@ -1872,75 +1920,6 @@
                         <ons-icon size="15px" style="margin-left: 5px" icon="fa-check"></ons-icon>
                     </ons-button>
                 </section>
-            </ons-card>
-                    <p style="margin-top: 20px; margin-bottom: 30px; margin-left: 10%; font-weight: 1000;">Nutztier
-                        auswählen
-                        <ons-icon size="20px" style="color: black; margin-left: 5px" rotate="90" icon="fa-search">
-                        </ons-icon>
-                    </p>
-                    <ons-list id="drugDeliveryContainer" modifier="inset">
-                    </ons-list>
-                    <ons-row style="margin-top: 5%; margin-left: 5%; margin-bottom: 10%">
-                        <ons-col>
-                            <p onclick="removetag()" id="removeLivestocks" style="margin-top: -5px">
-                                <ons-icon style="margin-left: 3px" icon="fa-trash"></ons-icon>
-                                Alle löschen
-                            </p>
-                        </ons-col>
-                        <ons-col style="text-align: center;">
-                            <p onclick="nav1.pushPage('livestock.html')" style="margin-top: -5px"> Hinzufügen
-                                <ons-icon style="margin-left: 3px" icon="fa-plus"></ons-icon>
-                            </p>
-                        </ons-col>
-                    </ons-row>
-                    <hr>
-                    <p style="margin-top: 20px; margin-bottom: 30px; margin-left: 10%; font-weight: 1000;">
-                        Arzneimittelvergabe
-                        <ons-icon size="20px" style="color: black; margin-left: 3%;" icon="fa-syringe"></ons-icon>
-                    </p>
-                    <ons-row>
-                        <ons-col style="margin-left: 10%; margin-top: 10px">Arzneimittel</ons-col>
-                        <ons-col>
-                            <div class="autocomplete" style="width:140px">
-                                <input id="arzneimittel" type="text" placeholder="Arzneimittel" style="text-align: right;" required>
-                            </div>
-                        </ons-col>
-                    </ons-row>
-                    <ons-row style="margin-top: 20px">
-                        <ons-col style="margin-left: 10%; margin-top: 10px">Zul. Nr.</ons-col>
-                        <ons-col>
-                            <div class="autocomplete" style="width:140px">
-                                <input id="zulassungsnummer" type="text" placeholder="123456" style="text-align: right;" readonly>
-                            </div>
-                        </ons-col>
-                    </ons-row>
-                    <ons-row style="margin-top: 20px">
-                        <ons-col style="margin-left: 10%; margin-top: 10px">Wartezeit</ons-col>
-                        <ons-col>
-                            <input type="text" placeholder="0" style="text-align: right; width:80px" min="0" id="wartezeit" readonly> Tag(e)
-                        </ons-col>
-                    </ons-row>
-                    <ons-row>
-                        <ons-col style="margin-left: 10%; margin-top: 30px">Erstellt am</ons-col>
-                        <ons-col>
-                            <input id="CreatedOn" type="date" value="tt.mm.jjjj " style="width:140px; margin-top: 20px"><br><br>
-                        </ons-col>
-                    </ons-row>
-                    <ons-row style="margin-top: 20px">
-                        <ons-col style="margin-left: 10%; margin-top: 10px">Abgabemenge</ons-col>
-                        <ons-col>
-                            <input id="abgabemenge" type="number" placeholder="10" size="500" style="text-align: right; width:80px">
-                            <ons-select id="choose-sel" onchange="editSelects(event)">
-                                <option value="ml">ml</option>
-                                <option value="mg">mg</option>
-                            </ons-select>
-                        </ons-col>
-                    </ons-row>
-                    <section style="margin-left: 10%; margin-right: 10%; margin-top: 30px; margin-bottom: 30px;">
-                        <ons-button style=" border-radius: 10px;background-color: #2BA1E1" modifier="large" onclick="DoneButton()"> Erledigt
-                            <ons-icon size="15px" style="margin-left: 5px" icon="fa-check"></ons-icon>
-                        </ons-button>
-                    </section>
             </ons-card>
             <style type="text/css">
                 * {
@@ -2034,6 +2013,191 @@
             </style>
         </ons-page>
     </template>
+
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+    <!-- ------------------------------- DRUG PAGE------------------------------- -->
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+
+    <template id="drug.html">
+        <ons-page id="drug">
+            <ons-toolbar>
+                <div class="left">
+                    <ons-back-button></ons-back-button>
+                    <!-- <ons-back-button onclick="clickBackButtonDrugs()"></ons-back-button> -->
+                </div>
+                <div class="center">Arzneimittel</div>
+                <div class="right"></div>
+            </ons-toolbar>
+            <ons-list style="position: sticky; top: 0; background-color: white; z-index: 1;">
+                <ons-list-item>
+                    <ons-row style="margin-top: 5px; text-align: center">
+                        <ons-col style="border-right: thick solid black">
+                            <ons-icon style="margin-right: 3px" icon="fa-search"></ons-icon>
+                            <input id="SearchInputDrug"
+                                style="width: 100px; border-right: none; border-left: none; border-top: none"
+                                onkeyup="SearchDBDrug()">
+                        </ons-col>
+                        <ons-col id="actionCol">Scannen
+                            <ons-icon id="actionIcon" style="margin-left: 3px" icon="fa-qrcode"></ons-icon>
+                        </ons-col>
+                    </ons-row>
+                </ons-list-item>
+                <ons-list-item>
+                    <ons-row style="margin-top: 5px; text-align: center">
+                        <ons-col style="border-right: thick solid black"
+                            onclick="showTemplateDialogDrug('sortDrug', 'sortDrug.html')">
+                            <ons-icon id="SortIconDrug" style="margin-left: 3px" icon="fa-sort-numeric-up"></ons-icon>
+                            Ordnen nach
+                        </ons-col>
+                        <ons-col onclick="showTemplateDialogDrug('filterDrug', 'filterDrug.html')">
+                            Filtern nach
+                            <ons-icon id="FilterIcon" style="margin-left: 3px" icon="fa-filter"></ons-icon>
+                        </ons-col>
+                    </ons-row>
+                </ons-list-item>
+            </ons-list>
+            <ons-list style="margin-top: 5px" id="ContainerDrugs">
+            </ons-list>
+            <ons-fab onclick="nav1.popPage()" position="bottom right">
+                <ons-icon size="30px" icon="fa-arrow-right"></ons-icon>
+            </ons-fab>
+        </ons-page>
+    </template>
+
+    <template id="sortDrug.html">
+        <ons-dialog id="sortDrug" cancelable>
+            <div style="text-align: center; padding: 5px;">
+                <p>
+                    <b>
+                        Ordnen nach
+                    </b>
+                </p>
+            </div>
+            <ons-list>
+                <ons-list-item
+                    onchange="hideDialogSortDrug('sortDrug', 'checkSortDrug-1', 'fa-sort-numeric-up', 'name_asc')"
+                    tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkSortDrug-1" checked></ons-checkbox>
+                    </label>
+                    <label for="check-1" class="center">
+                        <ons-icon style="margin-right: 10px" icon="fa-sort-numeric-up"></ons-icon>
+                        Name
+                    </label>
+                </ons-list-item>
+                <ons-list-item
+                    onchange="hideDialogSortDrug('sortDrug', 'checkSortDrug-2', 'fa-sort-numeric-down', 'name_desc')"
+                    tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkSortDrug-2"></ons-checkbox>
+                    </label>
+                    <label for="check-2" class="center">
+                        <ons-icon style="margin-right: 10px" icon="fa-sort-numeric-down"></ons-icon>
+                        Name
+                    </label>
+                </ons-list-item>
+                <ons-list-item
+                    onchange="hideDialogSortDrug('sortDrug', 'checkSortDrug-3', 'fa-sort-numeric-up', 'number_asc')"
+                    tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkSortDrug-3"></ons-checkbox>
+                    </label>
+                    <label for="check-1" class="center">
+                        <ons-icon style="margin-right: 10px" icon="fa-sort-numeric-up"></ons-icon>
+                        Zulassungsnummer
+                    </label>
+                </ons-list-item>
+                <ons-list-item
+                    onchange="hideDialogSortDrug('sortDrug', 'checkSortDrug-4', 'fa-sort-numeric-down', 'number_desc')"
+                    tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkSortDrug-4"></ons-checkbox>
+                    </label>
+                    <label for="check-2" class="center">
+                        <ons-icon style="margin-right: 10px" icon="fa-sort-numeric-down"></ons-icon>
+                        Zulassungsnummer
+                    </label>
+                </ons-list-item>
+            </ons-list>
+        </ons-dialog>
+    </template>
+
+    <template id="filterDrug.html">
+        <ons-dialog id="filterDrug" cancelable>
+            <div style="text-align: center; padding: 5px;">
+                <p>
+                    <b>
+                        Filtern nach Kategorie
+                    </b>
+                </p>
+            </div>
+            <ons-list>
+                <ons-list-item
+                    onchange="hideDialogFilterDrug('filterDrug', 'checkFilterDrug-1', 'Standardarzneimittel')" tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkFilterDrug-1"></ons-checkbox>
+                    </label>
+                    <label for="check-1" class="center">
+                        Standardarzneimittel
+                    </label>
+                </ons-list-item>
+                <ons-list-item onchange="hideDialogFilterDrug('filterDrug', 'checkFilterDrug-2', 'Homöopathika')"
+                    tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkFilterDrug-2"></ons-checkbox>
+                    </label>
+                    <label for="check-2" class="center">
+                        Homöopathika
+                    </label>
+                </ons-list-item>
+                <ons-list-item
+                    onchange="hideDialogFilterDrug('filterDrug', 'checkFilterDrug-3', 'Fütterungsarzneimittel')"
+                    tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkFilterDrug-3"></ons-checkbox>
+                    </label>
+                    <label for="check-2" class="center">
+                        Fütterungsarzneimittel
+                    </label>
+                </ons-list-item>
+                <ons-list-item onchange="hideDialogFilterDrug('filterDrug', 'checkFilterDrug-4', 'Biologika')" tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkFilterDrug-4"></ons-checkbox>
+                    </label>
+                    <label for="check-2" class="center">
+                        Biologika
+                    </label>
+                </ons-list-item>
+            </ons-list>
+            <div style="text-align: center; padding: 5px;">
+                <p>
+                    <b>
+                        Filtern nach Ausgewählt
+                    </b>
+                </p>
+            </div>
+            <ons-list>
+                <ons-list-item onchange="hideDialogFilterDrug('filterDrug', 'checkFilterDrug-5', 'tagged')" tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkFilterDrug-5"></ons-checkbox>
+                    </label>
+                    <label for="check-2" class="center">
+                        Ausgewählt
+                    </label>
+                </ons-list-item>
+                <ons-list-item onchange="hideDialogFilterDrug('filterDrug', 'checkFilterDrug-6', 'none')" tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkFilterDrug-6" checked></ons-checkbox>
+                    </label>
+                    <label for="check-2" class="center">
+                        <ons-icon style="margin-right: 10px;" icon="fa-ban"></ons-icon>
+                        Kein Filter
+                    </label>
+                </ons-list-item>
+            </ons-list>
+        </ons-dialog>
+    </template>
+
 </head>
 
 <body>
