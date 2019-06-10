@@ -19,12 +19,12 @@
         <param name="ios-package" value="CDVGestureHandler" />
         <param name="onload" value="true" />
     </feature>
-    <name>StallOX</name>
+    <name>Stablex</name>
     <description>
         An application to increase farmer productivity and record relevant data
     </description>
     <author email="dev@cordova.apache.org" href="http://cordova.io">
-        StallOX Team
+        Stablex Team
     </author>
     <content src="index.html" />
     <access origin="*" />
