@@ -17,7 +17,7 @@
             db.transaction(function(tx) {
                 tx.executeSql('DROP TABLE IF EXISTS Nutztiere');
                 tx.executeSql('DROP TABLE IF EXISTS Arzneimittelvergabe');
-                // tx.executeSql('DROP TABLE IF EXISTS user');
+                tx.executeSql('DROP TABLE IF EXISTS user');
                 tx.executeSql('DROP TABLE IF EXISTS livestock');
                 tx.executeSql('DROP TABLE IF EXISTS drug_delivery');
                 tx.executeSql('DROP TABLE IF EXISTS livestock_action');
