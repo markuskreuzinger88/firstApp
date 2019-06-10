@@ -1,27 +1,19 @@
 db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //create 20MB Database
 
-//ONLY FOR DEBUGGING
-document.addEventListener("init", function () {
+//set first ons page
+ons.ready(function() {
+    if (localStorage.getItem("login") == 'true') {
+        document.querySelector('#nav1').pushPage('home_splitter.html');
+    } else {
+        document.querySelector('#nav1').pushPage('login.html');
+    }
+});
 
-    startPage = document.querySelector('#nav1').getAttribute('page')
-    //set page depending if user is already logged in or not
-    if (startPage == "login.html") {
-        if (localStorage.getItem("login") == 'true') {
-            document.querySelector('#nav1').replacePage('home_splitter.html');
-        } else {
-            document.querySelector('#nav1').replacePage('login.html');
-            $("#login .page__background").css("background", "#ffffff");
-            if ("settings_credentials" in localStorage) {
-                switchStateCredentials = localStorage.getItem("settings_credentials")
-                if (switchStateCredentials == 'true') {
-                    document.getElementById("email").value = "AniCareAdmin";
-                    document.getElementById("psw").value = "anicare";
-                } else {
-                    document.getElementById("email").value = "";
-                    document.getElementById("psw").value = "";
-                }
-            }
-        }
+$(document).on('postpush', '#nav1', function (event) {
+    var event = event.originalEvent;
+    enterPage = event.enterPage.id;
+    if (event.enterPage.id === 'login') {
+        $("#login .page__background").css("background", "#ffffff");
     }
 });
 

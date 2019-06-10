@@ -12,7 +12,7 @@
         // device APIs are available 
         function onDeviceReady() {
             //only for debugging!!!!!
-            localStorage.setItem("settings_request", 'true');
+            localStorage.setItem("settings_request", 'false');
             localStorage.setItem("settings_credentials", 'false');
             db.transaction(function(tx) {
                 tx.executeSql('DROP TABLE IF EXISTS Nutztiere');

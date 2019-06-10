@@ -180,9 +180,9 @@ function DisplayTaggedDrug(results) {
             div_rightInput = document.createElement("div")
             div_rightInput.setAttribute("class", "right");
             in_rightInput = document.createElement("input")
+            in_rightInput.setAttribute("type", "number");
             in_rightInput.setAttribute("id", "drugAmountInputID" + i);
-            in_rightInput.setAttribute("size", "5");
-            in_rightInput.setAttribute("style", "text-align: right; margin-right: 10px; border: 1px solid transparent; background-color: #f1f1f1; border-radius: 5px; font-size: 16px;");
+            in_rightInput.setAttribute("style", "text-align: right; margin-right: 10px; margin-left: 25px;");
             p_rightInput = document.createElement("div")
             p_rightInput.innerHTML = results.rows.item(i).drug_unit;
             //create icon right

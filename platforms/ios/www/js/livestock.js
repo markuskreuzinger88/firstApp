@@ -13,7 +13,6 @@
     $(document).on('postpush', '#nav1', function (event) {
         var event = event.originalEvent;
         leavePage = event.leavePage.id;
-        console.log(leavePage)
         if (event.enterPage.id === 'livestock') {
             readDBLivestock()
         }

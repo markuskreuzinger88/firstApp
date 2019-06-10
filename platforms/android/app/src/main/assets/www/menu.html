@@ -22,14 +22,15 @@
     <script type="text/javascript" src="js/database_handler.js"></script>
     <script type="text/javascript" src="js/general.js"></script>
     <script type="text/javascript" src="js/drug.js"></script>
+    <script type="text/javascript" src="js/debug_settings.js"></script>
     <link rel="stylesheet" type="text/css" href="css/livestock_add.css" />
     <link rel="stylesheet" type="text/css" href="css/livestock_action.css" />
     <script type="text/javascript" src="js/jquery.qrcode.js"></script>
     <script type="text/javascript" src="js/qrcode2.js"></script>
     <script type="text/javascript" src="js/rest_api.js"></script>
 
-    <ons-navigator id="nav1" page="login.html"> </ons-navigator>
-
+    <!-- <ons-navigator id="nav1" page="login.html"> </ons-navigator> -->
+    <ons-navigator id="nav1"> </ons-navigator>
 
     <!--  The Login Page -->
 
@@ -37,7 +38,7 @@
         <ons-page id="login">
             <div class="left">
                 <ons-icon size="20px" style="margin-left: 10px; margin-top: 10px; color: #008F97;" icon="fa-bug"
-                    onclick="window.location.href='settings.html'">
+                    onclick="nav1.pushPage('debug-settings.html')">
                 </ons-icon>
             </div>
             <img src="img/logo_new.jpg" style="width: 80%; margin-left: 10%; margin-top: 10%" />
@@ -46,8 +47,8 @@
                 <form action="/menu.html">
                     <input id="firstname" name="loginName" placeholder="Vorname">
                     <input id="lastname" name="loginName" placeholder="Nachname">
-                    <input type="email" id="email" name="login" placeholder="Email" required>
-                    <input type="password" id="psw" name="login" placeholder="Passwort" required>
+                    <input type="email" id="email" name="login" placeholder="Email">
+                    <input type="password" id="psw" name="login" placeholder="Passwort">
                     <p class="link" style="text-align: right">Passwort vergessen?</p>
                     <ons-button modifier="large" style="background-color: #008F97; text-align: center"
                         onclick="checkInputsLogin()">
@@ -125,7 +126,7 @@
 
     <template id="menu-splitter.html">
         <ons-page id="menu-splitter">
-            <ons-list id="menu-splitter-list">
+            <ons-list id="menu-splitter-list" style="background-color: white">
                 <ons-list-item style="margin-top: 20px">
                     <div class="left">
                         <img class="list-item__thumbnail" src="img/logo_new.jpg">
@@ -205,6 +206,64 @@
             </style>
         </ons-page>
     </template>
+
+
+    <!--  Debug Settings -->
+    <template id="debug-settings.html">
+        <ons-page id="debug-settings">
+            <ons-toolbar>
+                <div class="left">
+                    <ons-back-button></ons-back-button>
+                </div>
+                <div class="center">Debug Settings</div>
+                <div class="right"></div>
+            </ons-toolbar>
+            <ons-card>
+                <ons-list-header>request</ons-list-header>
+                <ons-list-item>
+                    <div class="center">
+                        switch on
+                    </div>
+                    <div class="right" onchange="switchFunc()">
+                        <ons-switch id="switch"></ons-switch>
+                    </div>
+                </ons-list-item>
+                <ons-list-header>Server IP Adresse</ons-list-header>
+                <ons-list-item>
+                    <div class="center">
+                        <input onchange="inputFunc()" style="border: none" id="ipAdress" type="text" maxlength="50"
+                            size="50" value="192.168.1.8">
+                    </div>
+                </ons-list-item>
+                <ons-list-header>Default credentials</ons-list-header>
+                <ons-list-item>
+                    <div class="center">
+                        switch on
+                    </div>
+                    <div class="right" onchange="switchFuncCredentials()">
+                        <ons-switch id="switchCredentials"></ons-switch>
+                    </div>
+                </ons-list-item>
+                <ons-list-item>
+                    <div class="center">
+                        User: AniCareAdmin
+                    </div>
+                </ons-list-item>
+                <ons-list-item>
+                    <div class="center">
+                        PWD: anicare
+                    </div>
+                </ons-list-item>
+                <ons-button style="margin-top: 20px; border-radius: 10px;background-color: #2BA1E1" modifier="large"
+                    onclick="sampleDrugs()"> Load Drug Sample to DB
+                </ons-button>
+                <ons-button style="margin-top: 20px; border-radius: 10px;background-color: #2BA1E1" modifier="large"
+                    onclick="sampleLivestocks()"> Load Livestock Sample to DB
+                </ons-button>
+            </ons-card>
+        </ons-page>
+    </template>
+
 
     <template id="menu.html">
         <ons-page id="menu">
@@ -327,7 +386,7 @@
             </style>
         </ons-page>
     </template>
- 
+
     <template id="profil.html">
         <ons-page>
             <ons-toolbar>
@@ -475,7 +534,8 @@
                         <ons-icon icon="md-menu" style="font-size: 32px; width: 1em;"></ons-icon>
                     </ons-toolbar-button>
                 </div>
-                <div class="center" style="text-align: center; font-family: Calibri; font-size: 20px;">Über Stablex</div>
+                <div class="center" style="text-align: center; font-family: Calibri; font-size: 20px;">Über Stablex
+                </div>
                 <div class="right">
                 </div>
             </ons-toolbar>
@@ -921,7 +981,7 @@
                 <!--        <ons-tabbar>-->
                 <ons-tab page="tab1.html" label="ID" icon="fa-qrcode" active>
                 </ons-tab>
-                <ons-tab page="tab2.html" label="Wurfindex" icon="fa-calendar-alt">
+                <ons-tab page="tab2.html" label="Ereignisse" icon="fa-calendar-alt">
                 </ons-tab>
                 <ons-tab page="tab3.html" label="Arzneimittel" icon="fa-syringe">
                 </ons-tab>
@@ -1208,7 +1268,7 @@
                 <ons-list-item>
                     <ons-row style="margin-top: 5px; text-align: center">
                         <ons-col style="border-right: thick solid black"
-                            onclick="showTemplateDialog('QRCode', 'QRCode.html')">
+                            onclick="showTemplateDialogQRCode('QRCode', 'QRCode.html')">
                             <ons-icon id="SortIcon" style="margin-left: 3px" icon="fa-qrcode"></ons-icon>
                             QR-Code
                         </ons-col>
@@ -1877,7 +1937,7 @@
                     </ons-col>
                     <ons-col style="text-align: center;">
                         <!-- <p onclick="nav1.pushPage('livestock.html')" style="margin-top: -5px"> Hinzufügen -->
-                                <p onclick="nextPage()" style="margin-top: -5px"> Hinzufügen
+                        <p onclick="nextPage()" style="margin-top: -5px"> Hinzufügen
                             <ons-icon style="margin-left: 3px" icon="fa-plus"></ons-icon>
                         </p>
                     </ons-col>
@@ -1952,7 +2012,7 @@
                     border-radius: 10px;
                     padding: 10px;
                     font-size: 16px;
-                    width: 20%;
+                    width: 40%;
                 }
 
                 input[type=color] {

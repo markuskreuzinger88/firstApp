@@ -133,15 +133,6 @@ function setActionDetailView() {
                         rowResult.appendChild(colresultHeader);
                         rowResult.appendChild(colresult);
                     }
-                    /*we have to add a new line if action farraw is selected --> positiv, negativ...*/
-                    // str = results.rows.item(i).result
-                    // console.log(str)
-                    // var res = str.replace("+", "<br>");
-                    // var res = res.replace("+", "<br>");
-                    // console.log(res)
-                    // colresult.innerHTML = res
-                    // rowResult.appendChild(colresultHeader);
-                    // rowResult.appendChild(colresult);
                     /*textfield*/
                     rowText = document.createElement("ons-row")
                     colTextHeader = document.createElement("ons-col")
@@ -187,7 +178,6 @@ function setActionDetailView() {
 };
 
 function setDrugDetailView() {
-    console.log('jep3')
     var list = document.getElementById("containerMedical");
     while (list.hasChildNodes()) {
         list.removeChild(list.firstChild);
@@ -213,18 +203,21 @@ function setDrugDetailView() {
                 colDate = document.createElement("ons-col")
                 colDateHeader.innerHTML = ("Datum")
                 colDate.innerHTML = results.rows.item(i).created
+                colDate.setAttribute("style", "margin-left: 20px;");
                 /*generate Amount*/
                 rowAmount = document.createElement("ons-row")
                 colAmountHeader = document.createElement("ons-col")
                 colAmount = document.createElement("ons-col")
                 colAmountHeader.innerHTML = ("Abgabemenge")
                 colAmount.innerHTML = results.rows.item(i).amount + " ml";
+                colAmount.setAttribute("style", "margin-left: 10px;");
                 /*generate Delay*/
                 rowDelay = document.createElement("ons-row")
                 colDelayHeader = document.createElement("ons-col")
                 colDelay = document.createElement("ons-col")
                 colDelayHeader.innerHTML = ("Wartefrist")
                 colDelay.innerHTML = results.rows.item(i).delay + " Tage";
+                colDelay.setAttribute("style", "margin-left: 20px;");
                 /*append rows to container*/
                 rowMedical.appendChild(colMedical);
                 content.appendChild(rowMedical);
@@ -244,7 +237,7 @@ function setDrugDetailView() {
     });
 };
 
-var showTemplateDialog = function (my_dialog, my_dialog_html) {
+var showTemplateDialogQRCode = function (my_dialog, my_dialog_html) {
 
     var dialog = document.getElementById(my_dialog);
 
@@ -350,14 +343,14 @@ function deleteDB() {
 
 function createQR() {
     document.getElementById("qrcodeTable").innerHTML = "";
-    var CodeDigit0 = document.getElementById("CodeDigit0").value;
-    var CodeDigit1 = document.getElementById("CodeDigit1").value;
-    var CodeDigit2 = document.getElementById("CodeDigit2").value;
-    var CodeDigit3 = document.getElementById("CodeDigit3").value;
+    var CodeDigit0 = document.getElementById("CodeDigit0Detail").value;
+    var CodeDigit1 = document.getElementById("CodeDigit1Detail").value;
+    var CodeDigit2 = document.getElementById("CodeDigit2Detail").value;
+    var CodeDigit3 = document.getElementById("CodeDigit3Detail").value;
     var Number = CodeDigit0 + CodeDigit1 + CodeDigit2 + CodeDigit3
-    var Color = document.getElementById("Color").style.backgroundColor;
-    var Place = document.getElementById("Place").value;
-    var CreatedOn = document.getElementById("BornOn").value;
+    var Color = document.getElementById("ColorDetail").style.backgroundColor;
+    var Place = document.getElementById("PlaceDetail").value;
+    var CreatedOn = document.getElementById("BornOnDetail").value;
     var QRData = Color + "+" + Number + "+" + Place + "+" + CreatedOn;
     // Clear Previous QR Code
     $('#qrcode').empty();
