@@ -143,6 +143,7 @@ function DisplayResultDrugDelivery(results) {
             arrNumber.push(results.rows.item(i).number);
             document.getElementById("removeLivestocks").style.visibility = "visible";
             document.getElementById("removeLivestocks").disabled = false;
+            document.getElementById("livestockDrugDeliveryText").innerHTML = "Ausgewählte Nutztiere";
         }
     } else {
         list = document.createElement("ons-list-item")
@@ -151,6 +152,8 @@ function DisplayResultDrugDelivery(results) {
         div.setAttribute("id", "livestockEmpty");
         list.appendChild(div);
         document.getElementById("drugDeliveryContainer").appendChild(list);
+        document.getElementById("drugDeliveryContainer").setAttribute("onclick", "onclick=nav1.pushPage('livestock.html')");
+        document.getElementById("livestockDrugDeliveryText").innerHTML = "Nutztier auswählen";
         document.getElementById("removeLivestocks").style.visibility = "hidden";
         document.getElementById("removeLivestocks").disabled = true;
     }
@@ -225,6 +228,7 @@ function DisplayTaggedDrug(results) {
             arrDrugDelay.push(results.rows.item(i).delay);
             document.getElementById("removeDrugs").style.visibility = "visible";
             document.getElementById("removeDrugs").disabled = false;
+            document.getElementById("drugDrugDeliveryText").innerHTML = "Ausgewählte Arzneimittel";
         }
     } else {
         list = document.createElement("ons-list-item")
@@ -233,6 +237,8 @@ function DisplayTaggedDrug(results) {
         div.innerHTML = "Kein Arzneimittel ausgewählt"
         list.appendChild(div);
         document.getElementById("drugContainer").appendChild(list);
+        document.getElementById("drugContainer").setAttribute("onclick", "onclick=nav1.pushPage('drug.html')");
+        document.getElementById("drugDrugDeliveryText").innerHTML = "Arzneimittel auswählen";
         document.getElementById("removeDrugs").style.visibility = "hidden";
         document.getElementById("removeDrugs").disabled = true;
     }
@@ -352,11 +358,7 @@ function DoneButton() {
             var fields = checkAmoutInputFields();
             console.log(fields)
             if (fields == true) {
-                if (switchState == 'true') {
-                    requestData()
-                } else {
-                    write2DBDrugDelivery();
-                }
+                userTakeOverDrugs();
             } else {
                 ons.notification.alert({
                     message: 'Bitte die Abgabemenge eingeben',
@@ -375,6 +377,33 @@ function DoneButton() {
             title: 'Nutztier auswählen',
         });
     }
+}
+
+function userTakeOverDrugs() {
+    ons.notification.confirm({
+        message: 'Arzneimittelabgabe übernehmen',
+        title: 'Arzneimittelabgabe',
+        buttonLabels: ['Ja', 'Nein'],
+        animation: 'default',
+        primaryButtonIndex: 1,
+        cancelable: true,
+        callback: function (index) {
+            db.transaction(function (tx) {
+                tx.executeSql(
+                    "UPDATE drugs SET tagged=?", ['false']);
+                tx.executeSql(
+                    "UPDATE livestock SET tagged=?", ['false']);
+            }, function (error) {
+                alert('Error: ' + error.message + ' code: ' + error.code);
+            }, function () {
+                if (switchState == 'true') {
+                    requestData()
+                } else {
+                    write2DBDrugDelivery();
+                }
+            });
+        }
+    });
 }
 
 function checkAmoutInputFields() {

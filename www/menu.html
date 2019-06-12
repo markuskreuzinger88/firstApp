@@ -584,7 +584,7 @@
                     </ons-row>
                 </ons-list-item>
             </ons-list>
-            <ons-list style="margin-top: 5px" id="containerLivestock">
+            <ons-list style="margin-top: 5px; margin-bottom: 20%" id="containerLivestock">
             </ons-list>
             <ons-fab id="livestockFab" onclick="nav1.popPage()" position="bottom right" style="visibility:hidden;">
                 <ons-icon size="30px" icon="fa-arrow-right"></ons-icon>
@@ -1351,10 +1351,10 @@
                                 style="width:140px; margin-top: 20px" disabled><br><br>
                         </ons-col>
                     </ons-row>
-                    <!-- <ons-fab style="margin-bottom: 20px; background-color: lightgreen; visibility: hidden" type="submit"
-                        position="bottom right" onclick="BackButton()" id="ChangeFab">
+                    <ons-fab style="background-color: lightgreen; visibility: hidden" position="bottom right"
+                        onclick="updateLivestock()" id="ChangeFabDetail">
                         <ons-icon icon="ion-checkmark"></ons-icon>
-                    </ons-fab> -->
+                    </ons-fab>
                 </form>
             </ons-card>
         </ons-page>
@@ -1370,7 +1370,9 @@
                             Hinzufügen
                             <ons-icon style="margin-left: 3px" icon="fa-plus"></ons-icon>
                         </ons-col>
-                        <ons-col>
+                        <ons-col onclick="livestockDetailActionRemove()">
+                            Bearbeiten
+                            <ons-icon style="margin-left: 3px" icon="fa-edit"></ons-icon>
                         </ons-col>
                     </ons-row>
                 </ons-list-item>
@@ -1389,7 +1391,9 @@
                             Hinzufügen
                             <ons-icon style="margin-left: 3px" icon="fa-plus"></ons-icon>
                         </ons-col>
-                        <ons-col>
+                        <ons-col onclick="livestockDetailDrugRemove()">
+                            Bearbeiten
+                            <ons-icon style="margin-left: 3px" icon="fa-edit"></ons-icon>
                         </ons-col>
                     </ons-row>
                 </ons-list-item>
@@ -1498,7 +1502,7 @@
                 <div class="left">
                     <ons-back-button></ons-back-button>
                 </div>
-                <div class="center">Wurfindex</div>
+                <div class="center">Ereignisse</div>
                 <div class="right"></div>
             </ons-toolbar>
             <ons-list ng-controller="DialogController">
@@ -1896,17 +1900,6 @@
         </ons-dialog>
     </template>
 
-    <ons-popover style="width: 300px" direction="down" id="popover" cancelable>
-        <div style="padding: 10px; text-align: center;">
-            <textarea id="textarea" style="background-color: transparent; width: 200px" class="textarea" rows="4"
-                placeholder="Anmerkungen"> - Sitzbein und Hüfthöcker stehen deutlich hervor.
-             - Schwanzansatz und Flanken sind eingefallen.
-                - Dornfortsätze der Wirbel stehen über den gesamten Rücken deutlich hervor.
-                - Einzelne Rippen sind klar zu erkennen.
-        </textarea>
-        </div>
-    </ons-popover>
-
     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
     <!-- ----------------------------- DRUG DELIVERY PAGE ---------------------------- -->
     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
@@ -1921,7 +1914,8 @@
                 <div class="right"></div>
             </ons-toolbar>
             <ons-card>
-                <p style="margin-top: 20px; margin-bottom: 30px; margin-left: 5%; font-weight: 1000;">Nutztier
+                <p id="livestockDrugDeliveryText"
+                    style="margin-top: 20px; margin-bottom: 30px; margin-left: 5%; font-weight: 1000;">Nutztier
                     auswählen
                     <ons-icon size="20px" style="color: black; margin-left: 5px" rotate="90" icon="fa-search">
                     </ons-icon>
@@ -1943,7 +1937,8 @@
                     </ons-col>
                 </ons-row>
                 <!-- <hr> -->
-                <p style="margin-top: 20px; margin-bottom: 30px; margin-left: 5%; font-weight: 1000;">
+                <p id="drugDrugDeliveryText"
+                    style="margin-top: 20px; margin-bottom: 30px; margin-left: 5%; font-weight: 1000;">
                     Arzneimittel
                     <ons-icon size="20px" style="color: black; margin-left: 3%;" icon="fa-syringe"></ons-icon>
                 </p>
@@ -2116,7 +2111,7 @@
                     </ons-row>
                 </ons-list-item>
             </ons-list>
-            <ons-list style="margin-top: 5px" id="ContainerDrugs">
+            <ons-list style="margin-top: 5px; margin-bottom: 20%" id="ContainerDrugs">
             </ons-list>
             <ons-fab onclick="nav1.popPage()" position="bottom right">
                 <ons-icon size="30px" icon="fa-arrow-right"></ons-icon>

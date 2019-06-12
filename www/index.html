@@ -25,7 +25,7 @@
                 tx.executeSql('CREATE TABLE IF NOT EXISTS user (bearerToken, refreshToken, email, password)');
                 tx.executeSql('CREATE TABLE IF NOT EXISTS livestock (born, color, number, place , created, user, tagged, sync)')
                 tx.executeSql('CREATE TABLE IF NOT EXISTS drug_delivery (color, number, drug, approval_number, delay, amount, created, DBSyncServer)')
-                tx.executeSql('CREATE TABLE IF NOT EXISTS livestock_action (color, number, type, date, time, result, text, sync)')
+                tx.executeSql('CREATE TABLE IF NOT EXISTS livestock_action (id int AUTO_INCREMENT,color, number, type, date, time, result, text, sync)')
                 tx.executeSql('CREATE TABLE IF NOT EXISTS drugs (name, number, delay, category, drug_unit, tagged)')
             }, function(error) {
                 alert('Error: ' + error.message + ' code: ' + error.code);
@@ -33,7 +33,7 @@
                 db.transaction(function(tx) {
                     tx.executeSql('SELECT * FROM user', [], function(tx, results) {
                         //check if user table is not empty
-                        //otherwise go to notifying page
+                        //otherwise go to login page
                         if (results.rows.length > 0) {
                             localStorage.setItem("login", 'true');
                             window.location = "menu.html";

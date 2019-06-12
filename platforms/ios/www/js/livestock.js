@@ -153,6 +153,7 @@
 
     //Function for sort Database
     function ShowResultDBSort(Command) {
+        console.log("READ DATABASE")
         db.transaction(function (transaction) {
             transaction.executeSql(Command, [], function (tx, results) {
                 console.log(results)

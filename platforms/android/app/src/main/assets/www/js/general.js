@@ -21,3 +21,16 @@
     //                           }
     // });
 // });
+
+//close keyboard if user press enter (öffnen)
+window.addEventListener("keydown", function (event) {
+    if (event.defaultPrevented) {
+      return; // Do nothing if the event was already processed
+    }
+    if (event.key == "Enter")
+    {
+        $(document.activeElement).filter(':input:focus').blur();
+    }
+    // Cancel the default action to avoid it being handled twice
+    // event.preventDefault();
+  }, true);

@@ -6,7 +6,7 @@ $(document).on('prepop', '#nav1', function (event) {
     if (event.enterPage.id === 'livestock_detail') {
         setMarkDetailView()
         setDrugDetailView()
-        setActionDetailView()
+        setActionDetailView('false')
     }
 });
 
@@ -21,7 +21,7 @@ document.addEventListener("init", function (event) {
         setDrugDetailView()
     }
     if (page.id === 'Bestandsliste Belegung') {
-        setActionDetailView()
+        setActionDetailView('false')
     }
 });
 
@@ -67,7 +67,7 @@ function setMarkDetailView() {
     });
 };
 
-function setActionDetailView() {
+function setActionDetailView(trashActive) {
     var list = document.getElementById("containerIndex");
     while (list.hasChildNodes()) {
         list.removeChild(list.firstChild);
@@ -84,6 +84,17 @@ function setActionDetailView() {
                     /*generate Type*/
                     rowType = document.createElement("ons-row")
                     colType = document.createElement("ons-col")
+                    if (trashActive == "true") {
+                        colTypeTrash = document.createElement("ons-col")
+                        iconTrash = document.createElement("ons-icon")
+                        iconTrash.setAttribute("icon", "fa-trash");
+                        iconTrash.setAttribute("style", "color: red; margin-left : 50px");
+                        rowType.appendChild(colType);
+                        colTypeTrash.appendChild(iconTrash);
+                        rowType.appendChild(colTypeTrash);
+                    } else {
+                        rowType.appendChild(colType);
+                    }
                     colType.innerHTML = results.rows.item(i).type
                     colType.style.fontWeight = "700";
                     colType.style.marginBottom = "10px";
@@ -129,7 +140,7 @@ function setActionDetailView() {
                         colresultHeader = document.createElement("ons-col")
                         colresult = document.createElement("ons-col")
                         colresultHeader.innerHTML = ("Ergebnis")
-                        colresult.innerHTML  = results.rows.item(i).result
+                        colresult.innerHTML = results.rows.item(i).result
                         rowResult.appendChild(colresultHeader);
                         rowResult.appendChild(colresult);
                     }
@@ -145,7 +156,6 @@ function setActionDetailView() {
                     rowText.appendChild(colTextHeader);
                     rowText.appendChild(colText);
                     /*append rows to container*/
-                    rowType.appendChild(colType);
                     content.appendChild(rowType);
                     rowTime.appendChild(colTimeHeader);
                     rowTime.appendChild(colTime);
@@ -171,6 +181,10 @@ function setActionDetailView() {
                         content.appendChild(colTextArea);
                     }
                     card.appendChild(content);
+                    console.log(results.rows.item(i).id)
+                    if (trashActive == "true") {
+                        card.setAttribute("onclick", "deleteActionItem(" + results.rows.item(i).id + ")");
+                    }
                     document.getElementById("containerIndex").appendChild(card);
                 }
             }, null);
@@ -264,11 +278,11 @@ var hideDialogColor = function (id, checkbox, color) {
     document.getElementById("checkColor-5").checked = false;
     document.getElementById("checkColor-6").checked = false;
     document.getElementById(checkbox).checked = true;
-    document.getElementById("Color").style.backgroundColor = color;
-    document.getElementById("rect1").style.fill = color;
-    document.getElementById("rect2").style.fill = color;
-    document.getElementById("circle1").style.fill = color;
-    localStorage.setItem("MarkColor", color);
+    document.getElementById("ColorDetail").style.backgroundColor = color;
+    document.getElementById("rect1Detail").style.fill = color;
+    document.getElementById("rect2Detail").style.fill = color;
+    document.getElementById("circle2Detail").style.fill = color;
+    localStorage.setItem("LivestockColor", color);
     document.getElementById(id).hide();
 };
 
@@ -303,15 +317,14 @@ function setColor(color) {
 }
 
 function modifyInputs() {
-    document.getElementById("CodeDigit0").removeAttribute("disabled");
-    document.getElementById("CodeDigit1").removeAttribute("disabled");
-    document.getElementById("CodeDigit2").removeAttribute("disabled");
-    document.getElementById("CodeDigit3").removeAttribute("disabled");
-    document.getElementById("Color").removeAttribute("disabled");
-    document.getElementById("Number").removeAttribute("disabled");
-    document.getElementById("Place").removeAttribute("disabled");
-    document.getElementById("BornOn").removeAttribute("disabled");
-    document.getElementById('ChangeFab').style.visibility = "visible";
+    document.getElementById("CodeDigit0ObjDetail").removeAttribute("disabled");
+    document.getElementById("CodeDigit1ObjDetail").removeAttribute("disabled");
+    document.getElementById("CodeDigit2ObjDetail").removeAttribute("disabled");
+    document.getElementById("CodeDigit3ObjDetail").removeAttribute("disabled");
+    document.getElementById("ColorDetail").removeAttribute("disabled");
+    document.getElementById("PlaceDetail").removeAttribute("disabled");
+    document.getElementById("BornOnDetail").removeAttribute("disabled");
+    document.getElementById('ChangeFabDetail').style.visibility = "visible";
 }
 
 function deleteDB() {
@@ -324,17 +337,17 @@ function deleteDB() {
         cancelable: true,
         callback: function (index) {
             if (index == 0) {
-                var color = String(localStorage.LivestockColor)
-                var number = String(localStorage.LivestockNumber)
-                db1.transaction(function (tx, results) {
-                        tx.executeSql('SELECT * FROM livestock WHERE Color = ? AND Number = ?',
+                var color = (localStorage.LivestockColor)
+                var number = (localStorage.LivestockNumber)
+                db.transaction(function (tx) {
+                        tx.executeSql('DELETE FROM livestock WHERE color = ? AND number = ?',
                             [color, number]);
                     },
                     function (error) {
                         alert('Error: ' + error.message + ' code: ' + error.code);
                     },
-                    function (success) {
-                        window.location = "livestock.html ";
+                    function () {
+                        document.querySelector('#nav1').popPage();
                     });
             }
         }
@@ -362,6 +375,28 @@ function createQR() {
     });
 }
 
+function updateLivestock() {
+    // tag livestock for new drug delivery
+    var CodeDigit0 = document.getElementById("CodeDigit0Detail").value;
+    var CodeDigit1 = document.getElementById("CodeDigit1Detail").value;
+    var CodeDigit2 = document.getElementById("CodeDigit2Detail").value;
+    var CodeDigit3 = document.getElementById("CodeDigit3Detail").value;
+    number = CodeDigit0 + CodeDigit1 + CodeDigit2 + CodeDigit3
+    color = document.getElementById("ColorDetail").style.backgroundColor;
+    place = document.getElementById("PlaceDetail").value;
+    createdOn = document.getElementById("BornOnDetail").value;
+
+    db.transaction(function (tx) {
+        tx.executeSql("UPDATE livestock SET tagged=? where ID = ? AND Number = ?", ['true', color,
+            number
+        ]);
+    }, function (error) {
+        alert('Error: ' + error.message + ' code: ' + error.code);
+    }, function () {
+        document.querySelector('#nav1').popPage();
+    });
+}
+
 function newDrugDelivery() {
     // tag livestock for new drug delivery
     var color = String(localStorage.LivestockColor)
@@ -377,4 +412,15 @@ function newDrugDelivery() {
     }, function () {
         document.querySelector('#nav1').pushPage('drug_delivery.html');
     });
+}
+
+function livestockDetailActionRemove() {
+    setActionDetailView('true')
+}
+
+function deleteActionItem(id) {
+    console.log(id)
+}
+
+function livestockDetailDrugRemove() {
 }
