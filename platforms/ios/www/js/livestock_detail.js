@@ -7,6 +7,7 @@ $(document).on('prepop', '#nav1', function (event) {
         setMarkDetailView()
         setDrugDetailView()
         setActionDetailView('false')
+        resetlivestockDetailActionColText()
     }
 });
 
@@ -26,7 +27,6 @@ document.addEventListener("init", function (event) {
 });
 
 function setMarkDetailView() {
-    console.log('jep1')
     //calc window size and adapte SVG Object
     var w = window.innerWidth;
     var h = window.innerHeight;
@@ -88,7 +88,7 @@ function setActionDetailView(trashActive) {
                         colTypeTrash = document.createElement("ons-col")
                         iconTrash = document.createElement("ons-icon")
                         iconTrash.setAttribute("icon", "fa-trash");
-                        iconTrash.setAttribute("style", "color: red; margin-left : 50px");
+                        iconTrash.setAttribute("style", "color: red; margin-left : 100%");
                         rowType.appendChild(colType);
                         colTypeTrash.appendChild(iconTrash);
                         rowType.appendChild(colTypeTrash);
@@ -181,17 +181,20 @@ function setActionDetailView(trashActive) {
                         content.appendChild(colTextArea);
                     }
                     card.appendChild(content);
-                    console.log(results.rows.item(i).id)
                     if (trashActive == "true") {
                         card.setAttribute("onclick", "deleteActionItem(" + results.rows.item(i).id + ")");
                     }
                     document.getElementById("containerIndex").appendChild(card);
+
+                }
+                if (results.rows.length == 0) {
+                    resetlivestockDetailActionColText();
                 }
             }, null);
     });
 };
 
-function setDrugDetailView() {
+function setDrugDetailView(trashActive) {
     var list = document.getElementById("containerMedical");
     while (list.hasChildNodes()) {
         list.removeChild(list.firstChild);
@@ -211,6 +214,17 @@ function setDrugDetailView() {
                 colMedical.innerHTML = results.rows.item(i).drug
                 colMedical.style.fontWeight = "700";
                 colMedical.style.marginBottom = "10px";
+                if (trashActive == "true") {
+                    colTypeTrash = document.createElement("ons-col")
+                    iconTrash = document.createElement("ons-icon")
+                    iconTrash.setAttribute("icon", "fa-trash");
+                    iconTrash.setAttribute("style", "color: red; margin-left : 100%");
+                    rowMedical.appendChild(colMedical);
+                    colTypeTrash.appendChild(iconTrash);
+                    rowMedical.appendChild(colTypeTrash);
+                } else {
+                    rowMedical.appendChild(colMedical);
+                }
                 /*generate Date*/
                 rowDate = document.createElement("ons-row")
                 colDateHeader = document.createElement("ons-col")
@@ -233,7 +247,7 @@ function setDrugDetailView() {
                 colDelay.innerHTML = results.rows.item(i).delay + " Tage";
                 colDelay.setAttribute("style", "margin-left: 20px;");
                 /*append rows to container*/
-                rowMedical.appendChild(colMedical);
+                // rowMedical.appendChild(colMedical);
                 content.appendChild(rowMedical);
                 rowDate.appendChild(colDateHeader);
                 rowDate.appendChild(colDate);
@@ -246,6 +260,12 @@ function setDrugDetailView() {
                 content.appendChild(rowDelay);
                 card.appendChild(content);
                 document.getElementById("containerMedical").appendChild(card);
+                if (trashActive == "true") {
+                    card.setAttribute("onclick", "deleteDrugItem(" + results.rows.item(i).id + ")");
+                }
+            }
+            if (results.rows.length == 0) {
+                resetlivestockDetailDrugColText();
             }
         }, null);
     });
@@ -414,13 +434,100 @@ function newDrugDelivery() {
     });
 }
 
-function livestockDetailActionRemove() {
-    setActionDetailView('true')
+function livestockDetailActionRemove(id, container) {
+    //check actual action button state
+    if (document.getElementById(id).innerHTML.includes("Bearbeiten")) {
+        //check if element has childs
+        if (document.getElementById(container).hasChildNodes()) {
+            document.getElementById(id).innerHTML = "Fertig";
+            icon = document.createElement("ons-icon")
+            icon.setAttribute("icon", "fa-check");
+            icon.setAttribute("style", "margin-left : 3px");
+            document.getElementById(id).appendChild(icon);
+            if (container == "containerIndex") {
+                setActionDetailView('true')
+            } else {
+                setDrugDetailView('true')
+            }
+        } else {
+            ons.notification.alert({
+                message: 'Es sind noch keine Einträge vorhanden',
+                title: 'Nutztier Eintrag bearbeiten',
+            });
+        }
+    } else {
+        if (container == "containerIndex") {
+            resetlivestockDetailActionColText()
+            setActionDetailView('false')
+        } else {
+            resetlivestockDetailDrugColText()
+            setDrugDetailView('false')
+        }
+    }
 }
 
 function deleteActionItem(id) {
-    console.log(id)
+    ons.notification.confirm({
+        message: 'Möchtest du den Eintrag löschen?',
+        title: 'Nutztier Eintrag bearbeiten',
+        buttonLabels: ['Ja', 'Nein'],
+        animation: 'default',
+        primaryButtonIndex: 1,
+        cancelable: true,
+        callback: function (index) {
+            if (index == 0) {
+                db.transaction(function (tx) {
+                        tx.executeSql('DELETE FROM livestock_action WHERE id = ?',
+                            [id]);
+                    },
+                    function (error) {
+                        alert('Error: ' + error.message + ' code: ' + error.code);
+                    },
+                    function () {
+                        setActionDetailView('true')
+                    });
+            }
+        }
+    });
 }
 
-function livestockDetailDrugRemove() {
+function deleteDrugItem(id) {
+    ons.notification.confirm({
+        message: 'Möchtest du den Eintrag löschen?',
+        title: 'Nutztier Eintrag bearbeiten',
+        buttonLabels: ['Ja', 'Nein'],
+        animation: 'default',
+        primaryButtonIndex: 1,
+        cancelable: true,
+        callback: function (index) {
+            if (index == 0) {
+                db.transaction(function (tx) {
+                        tx.executeSql('DELETE FROM drug_delivery WHERE id = ?',
+                            [id]);
+                    },
+                    function (error) {
+                        alert('Error: ' + error.message + ' code: ' + error.code);
+                    },
+                    function () {
+                        setDrugDetailView('true')
+                    });
+            }
+        }
+    });
+}
+
+function resetlivestockDetailActionColText() {
+    document.getElementById("livestockDetailActionCol").innerHTML = "Bearbeiten";
+    icon = document.createElement("ons-icon")
+    icon.setAttribute("icon", "fa-edit");
+    icon.setAttribute("style", "margin-left : 3px");
+    document.getElementById("livestockDetailActionCol").appendChild(icon);
+}
+
+function resetlivestockDetailDrugColText() {
+    document.getElementById("livestockDetailDrugCol").innerHTML = "Bearbeiten";
+    icon = document.createElement("ons-icon")
+    icon.setAttribute("icon", "fa-edit");
+    icon.setAttribute("style", "margin-left : 3px");
+    document.getElementById("livestockDetailDrugCol").appendChild(icon);
 }

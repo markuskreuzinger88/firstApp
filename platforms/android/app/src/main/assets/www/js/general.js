@@ -27,6 +27,7 @@ window.addEventListener("keydown", function (event) {
     if (event.defaultPrevented) {
       return; // Do nothing if the event was already processed
     }
+    this.console.log(event.key)
     if (event.key == "Enter")
     {
         $(document.activeElement).filter(':input:focus').blur();

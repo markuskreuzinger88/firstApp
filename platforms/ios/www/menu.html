@@ -1370,7 +1370,8 @@
                             Hinzufügen
                             <ons-icon style="margin-left: 3px" icon="fa-plus"></ons-icon>
                         </ons-col>
-                        <ons-col onclick="livestockDetailActionRemove()">
+                        <ons-col id="livestockDetailActionCol"
+                            onclick="livestockDetailActionRemove('livestockDetailActionCol', 'containerIndex')">
                             Bearbeiten
                             <ons-icon style="margin-left: 3px" icon="fa-edit"></ons-icon>
                         </ons-col>
@@ -1391,7 +1392,8 @@
                             Hinzufügen
                             <ons-icon style="margin-left: 3px" icon="fa-plus"></ons-icon>
                         </ons-col>
-                        <ons-col onclick="livestockDetailDrugRemove()">
+                        <ons-col id="livestockDetailDrugCol"
+                            onclick="livestockDetailActionRemove('livestockDetailDrugCol', 'containerMedical')">
                             Bearbeiten
                             <ons-icon style="margin-left: 3px" icon="fa-edit"></ons-icon>
                         </ons-col>
