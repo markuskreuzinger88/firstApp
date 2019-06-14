@@ -342,5 +342,18 @@
         //only select last four numbers
         localStorage.LivestockNumber = (document.getElementById("livestockID" + ID).innerHTML).slice(stringLen - 4,
             stringLen);
-        document.querySelector('#nav1').pushPage('livestock_detail.html');
+        getLivestockDBID()
+    }
+
+    function getLivestockDBID() {
+        var color = (localStorage.LivestockColor)
+        var number = (localStorage.LivestockNumber)
+        db.transaction(function (transaction) {
+            transaction.executeSql(
+                'SELECT * FROM livestock WHERE color = ? AND number = ?', [color, number],
+                function (tx, results) {
+                    localStorage.setItem("LivestockID", results.rows.item(0).id);
+                    document.querySelector('#nav1').pushPage('livestock_detail.html');
+                }, null);
+        });
     }

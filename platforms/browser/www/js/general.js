@@ -35,3 +35,12 @@ window.addEventListener("keydown", function (event) {
     // Cancel the default action to avoid it being handled twice
     // event.preventDefault();
   }, true);
+
+
+function underConstruction() {
+  ons.notification.alert({
+    message: 'Diese Funktion wurde noch nicht implementiert',
+    //title: 'Funktion',
+});
+
+}

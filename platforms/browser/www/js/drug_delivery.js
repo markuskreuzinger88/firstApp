@@ -62,8 +62,19 @@ function getDrugDeliveryView() {
     GetDBTaggedResult()
 }
 
-//get all livestocks which are tagged for drug delivery
+//get all livestocks and drugs which are tagged for drug delivery
 function GetDBTaggedResult() {
+    //check if element cointainer has onlick element for switch page to drug page
+    //remove attribute becuase otherwise we swicht page if we want to set drug amount
+    var checkAttr = document.getElementById("drugContainer").hasAttribute("onclick"); 
+    if (checkAttr){
+        $( "#drugContainer" ).removeAttr("onclick");
+    }
+    var checkAttr = document.getElementById("drugDeliveryContainer").hasAttribute("onclick"); 
+    if (checkAttr){
+        $( "#drugDeliveryContainer" ).removeAttr("onclick");
+    }
+    //remove childs from both containers
     var list = document.getElementById("drugDeliveryContainer");
     while (list.hasChildNodes()) {
         list.removeChild(list.firstChild);
@@ -72,11 +83,11 @@ function GetDBTaggedResult() {
     while (list.hasChildNodes()) {
         list.removeChild(list.firstChild);
     }
+    //read out Database
     db.transaction(function (transaction) {
         transaction.executeSql(
             'SELECT * FROM livestock WHERE tagged = ? ORDER BY Number DESC', ['true'],
             function (tx, results) {
-                console.log(results)
                 DisplayResultDrugDelivery(results)
             }, null);
     });
@@ -84,7 +95,6 @@ function GetDBTaggedResult() {
         transaction.executeSql(
             'SELECT * FROM drugs WHERE tagged = ? ORDER BY Number DESC', ['true'],
             function (tx, results) {
-                console.log(results)
                 DisplayTaggedDrug(results)
             }, null);
     });

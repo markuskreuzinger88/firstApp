@@ -51,7 +51,6 @@ var showTemplateDialogDrug = function (my_dialog, my_dialog_html) {
 
 //display sorted data
 function ShowResultDBDrug1(Command) {
-    console.log('hallo')
     db.transaction(function (transaction) {
         transaction.executeSql(Command, [], function (tx, results) {
             DisplayResultDrug(results)

@@ -311,7 +311,7 @@
                         </div>
                         <div class="title" id="user_2_name">Behandlung</div>
                     </ons-col>
-                    <ons-col>
+                    <ons-col onclick="underConstruction()">
                         <div class="user_thumbnail" id="drugs">
                             <ons-icon icon="fa-pills"></ons-icon>
                         </div>
@@ -319,13 +319,13 @@
                     </ons-col>
                 </ons-row>
                 <ons-row class="user_cover">
-                    <ons-col onclick="openHome()">
+                    <ons-col onclick="underConstruction()">
                         <div class="user_thumbnail">
                             <ons-icon icon="fa-qrcode"></ons-icon>
                         </div>
                         <div class="title" id="user_2_name">Scanner</div>
                     </ons-col>
-                    <ons-col onclick="changeSite('timeline.html')">
+                    <ons-col onclick="underConstruction()">
                         <div class="user_thumbnail">
                             <ons-icon icon="fa-chart-line"></ons-icon>
                         </div>
@@ -854,7 +854,7 @@
                         <ons-col id="Col2Color">
                             <ons-button id="Color"
                                 style="margin-top: 20px; padding: 19px; border-radius: 10px; background-color: red; border-color : black; border-width: medium; width: 140px"
-                                onclick="showTemplateDialog('color', 'color.html')"></ons-button>
+                                onclick="showTemplateDialogAdd('colorAdd', 'colorAdd.html')"></ons-button>
                         </ons-col>
                     </ons-row>
                     <ons-row>
@@ -895,8 +895,8 @@
         </ons-page>
     </template>
 
-    <template id="color.html">
-        <ons-dialog id="color" cancelable>
+    <template id="colorAdd.html">
+        <ons-dialog id="colorAdd" cancelable>
             <div style="text-align: center; padding: 5px;">
                 <p>
                     <b>
@@ -905,7 +905,7 @@
                 </p>
             </div>
             <ons-list>
-                <ons-list-item onchange="hideDialogColor('color', 'checkColor-1', 'yellow')" tappable>
+                <ons-list-item onchange="hideDialogColorAdd('colorAdd', 'checkColor-1', 'yellow')" tappable>
                     <label class="left">
                         <ons-checkbox input-id="checkColor-1"></ons-checkbox>
                     </label>
@@ -914,7 +914,7 @@
                         Gelb
                     </label>
                 </ons-list-item>
-                <ons-list-item onchange="hideDialogColor('color', 'checkColor-2', 'red')" tappable>
+                <ons-list-item onchange="hideDialogColorAdd('colorAdd', 'checkColor-2', 'red')" tappable>
                     <label class="left">
                         <ons-checkbox input-id="checkColor-2"></ons-checkbox>
                     </label>
@@ -923,7 +923,7 @@
                         Rot
                     </label>
                 </ons-list-item>
-                <ons-list-item onchange="hideDialogColor('color', 'checkColor-3', 'blue')" tappable>
+                <ons-list-item onchange="hideDialogColorAdd('colorAdd', 'checkColor-3', 'blue')" tappable>
                     <label class="left">
                         <ons-checkbox input-id="checkColor-3"></ons-checkbox>
                     </label>
@@ -932,7 +932,7 @@
                         Blau
                     </label>
                 </ons-list-item>
-                <ons-list-item onchange="hideDialogColor('color', 'checkColor-4', 'green')" tappable>
+                <ons-list-item onchange="hideDialogColorAdd('colorAdd', 'checkColor-4', 'green')" tappable>
                     <label class="left">
                         <ons-checkbox input-id="checkColor-4"></ons-checkbox>
                     </label>
@@ -941,7 +941,7 @@
                         Grün
                     </label>
                 </ons-list-item>
-                <ons-list-item onchange="hideDialogColor('color', 'checkColor-5', 'orange')" tappable>
+                <ons-list-item onchange="hideDialogColorAdd('colorAdd', 'checkColor-5', 'orange')" tappable>
                     <label class="left">
                         <ons-checkbox input-id="checkColor-5"></ons-checkbox>
                     </label>
@@ -950,7 +950,7 @@
                         Orange
                     </label>
                 </ons-list-item>
-                <ons-list-item onchange="hideDialogColor('color', 'checkColor-6', 'white')" tappable>
+                <ons-list-item onchange="hideDialogColorAdd('colorAdd', 'checkColor-6', 'white')" tappable>
                     <label class="left">
                         <ons-checkbox input-id="checkColor-6"></ons-checkbox>
                     </label>
@@ -1255,9 +1255,9 @@
             <ons-list style="position: sticky; top: 0; background-color: white; z-index: 1;">
                 <ons-list-item>
                     <ons-row style="margin-top: 5px; text-align: center">
-                        <ons-col style="border-right: thick solid black" onclick="modifyInputs()">
-                            <ons-icon id="SortIcon" style="margin-left: 3px" icon="fa-edit"></ons-icon>
+                        <ons-col id="livestockDetailCol" style="border-right: thick solid black" onclick="modifyInputs()">
                             Bearbeiten
+                            <ons-icon id="SortIcon" style="margin-left: 3px" icon="fa-edit"></ons-icon>
                         </ons-col>
                         <ons-col onclick="deleteDB()">
                             Löschen
@@ -1269,8 +1269,8 @@
                     <ons-row style="margin-top: 5px; text-align: center">
                         <ons-col style="border-right: thick solid black"
                             onclick="showTemplateDialogQRCode('QRCode', 'QRCode.html')">
-                            <ons-icon id="SortIcon" style="margin-left: 3px" icon="fa-qrcode"></ons-icon>
                             QR-Code
+                            <ons-icon id="SortIcon" style="margin-left: 3px" icon="fa-qrcode"></ons-icon>
                         </ons-col>
                         <ons-col>
                         </ons-col>
@@ -1327,7 +1327,7 @@
                         <ons-col>
                             <ons-button id="ColorDetail"
                                 style="margin-top: 20px; padding: 19px; border-radius: 10px; background-color: yellow; border-color : black; border-width: medium; width: 140px"
-                                onclick="showTemplateDialog('color', 'color.html')" disabled></ons-button>
+                                onclick="showTemplateDialogDetail('colorDetail', 'colorDetail.html')" disabled></ons-button>
                         </ons-col>
                     </ons-row>
                     <ons-row>
@@ -1351,10 +1351,6 @@
                                 style="width:140px; margin-top: 20px" disabled><br><br>
                         </ons-col>
                     </ons-row>
-                    <ons-fab style="background-color: lightgreen; visibility: hidden" position="bottom right"
-                        onclick="updateLivestock()" id="ChangeFabDetail">
-                        <ons-icon icon="ion-checkmark"></ons-icon>
-                    </ons-fab>
                 </form>
             </ons-card>
         </ons-page>
@@ -1372,8 +1368,8 @@
                         </ons-col>
                         <ons-col id="livestockDetailActionCol"
                             onclick="livestockDetailActionRemove('livestockDetailActionCol', 'containerIndex')">
-                            Bearbeiten
-                            <ons-icon style="margin-left: 3px" icon="fa-edit"></ons-icon>
+                            Löschen
+                            <ons-icon style="margin-left: 3px" icon="fa-trash"></ons-icon>
                         </ons-col>
                     </ons-row>
                 </ons-list-item>
@@ -1394,8 +1390,8 @@
                         </ons-col>
                         <ons-col id="livestockDetailDrugCol"
                             onclick="livestockDetailActionRemove('livestockDetailDrugCol', 'containerMedical')">
-                            Bearbeiten
-                            <ons-icon style="margin-left: 3px" icon="fa-edit"></ons-icon>
+                            Löschen
+                            <ons-icon style="margin-left: 3px" icon="fa-trash"></ons-icon>
                         </ons-col>
                     </ons-row>
                 </ons-list-item>
@@ -1425,8 +1421,8 @@
         </ons-dialog>
     </template>
 
-    <template id="color.html">
-        <ons-dialog id="color" cancelable>
+    <template id="colorDetail.html">
+        <ons-dialog id="colorDetail" cancelable>
             <div style="text-align: center; padding: 5px;">
                 <p>
                     <b>
@@ -1435,7 +1431,7 @@
                 </p>
             </div>
             <ons-list>
-                <ons-list-item onchange="hideDialogColor('color', 'checkColor-1', 'yellow')" tappable>
+                <ons-list-item onchange="hideDialogColorDetail('colorDetail', 'checkColor-1', 'yellow')" tappable>
                     <label class="left">
                         <ons-checkbox input-id="checkColor-1"></ons-checkbox>
                     </label>
@@ -1444,7 +1440,7 @@
                         Gelb
                     </label>
                 </ons-list-item>
-                <ons-list-item onchange="hideDialogColor('color', 'checkColor-2', 'red')" tappable>
+                <ons-list-item onchange="hideDialogColorDetail('colorDetail', 'checkColor-2', 'red')" tappable>
                     <label class="left">
                         <ons-checkbox input-id="checkColor-2"></ons-checkbox>
                     </label>
@@ -1453,7 +1449,7 @@
                         Rot
                     </label>
                 </ons-list-item>
-                <ons-list-item onchange="hideDialogColor('color', 'checkColor-3', 'blue')" tappable>
+                <ons-list-item onchange="hideDialogColorDetail('colorDetail', 'checkColor-3', 'blue')" tappable>
                     <label class="left">
                         <ons-checkbox input-id="checkColor-3"></ons-checkbox>
                     </label>
@@ -1462,7 +1458,7 @@
                         Blau
                     </label>
                 </ons-list-item>
-                <ons-list-item onchange="hideDialogColor('color', 'checkColor-4', 'green')" tappable>
+                <ons-list-item onchange="hideDialogColorDetail('colorDetail', 'checkColor-4', 'green')" tappable>
                     <label class="left">
                         <ons-checkbox input-id="checkColor-4"></ons-checkbox>
                     </label>
@@ -1471,7 +1467,7 @@
                         Grün
                     </label>
                 </ons-list-item>
-                <ons-list-item onchange="hideDialogColor('color', 'checkColor-5', 'orange')" tappable>
+                <ons-list-item onchange="hideDialogColorDetail('colorDetail', 'checkColor-5', 'orange')" tappable>
                     <label class="left">
                         <ons-checkbox input-id="checkColor-5"></ons-checkbox>
                     </label>
@@ -1480,7 +1476,7 @@
                         Orange
                     </label>
                 </ons-list-item>
-                <ons-list-item onchange="hideDialogColor('color', 'checkColor-6', 'white')" tappable>
+                <ons-list-item onchange="hideDialogColorDetail('colorDetail', 'checkColor-6', 'white')" tappable>
                     <label class="left">
                         <ons-checkbox input-id="checkColor-6"></ons-checkbox>
                     </label>

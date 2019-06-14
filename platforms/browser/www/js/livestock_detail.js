@@ -290,7 +290,7 @@ var showTemplateDialogQRCode = function (my_dialog, my_dialog_html) {
 };
 
 //select color
-var hideDialogColor = function (id, checkbox, color) {
+var hideDialogColorDetail = function (id, checkbox, color) {
     document.getElementById("checkColor-1").checked = false;
     document.getElementById("checkColor-2").checked = false;
     document.getElementById("checkColor-3").checked = false;
@@ -301,7 +301,7 @@ var hideDialogColor = function (id, checkbox, color) {
     document.getElementById("ColorDetail").style.backgroundColor = color;
     document.getElementById("rect1Detail").style.fill = color;
     document.getElementById("rect2Detail").style.fill = color;
-    document.getElementById("circle2Detail").style.fill = color;
+    document.getElementById("circle1Detail").style.fill = color;
     localStorage.setItem("LivestockColor", color);
     document.getElementById(id).hide();
 };
@@ -325,6 +325,22 @@ var showInfo = function (code) {
     }
 };
 
+var showTemplateDialogDetail = function (my_dialog, my_dialog_html) {
+
+    var dialog = document.getElementById(my_dialog);
+
+    if (dialog) {
+        dialog.show();
+    } else {
+        ons.createElement(my_dialog_html, {
+                append: true
+            })
+            .then(function (dialog) {
+                dialog.show();
+            });
+    }
+};
+
 var hideDialog = function (id) {
     document
         .getElementById(id)
@@ -337,14 +353,34 @@ function setColor(color) {
 }
 
 function modifyInputs() {
-    document.getElementById("CodeDigit0ObjDetail").removeAttribute("disabled");
-    document.getElementById("CodeDigit1ObjDetail").removeAttribute("disabled");
-    document.getElementById("CodeDigit2ObjDetail").removeAttribute("disabled");
-    document.getElementById("CodeDigit3ObjDetail").removeAttribute("disabled");
-    document.getElementById("ColorDetail").removeAttribute("disabled");
-    document.getElementById("PlaceDetail").removeAttribute("disabled");
-    document.getElementById("BornOnDetail").removeAttribute("disabled");
-    document.getElementById('ChangeFabDetail').style.visibility = "visible";
+    if (document.getElementById('livestockDetailCol').innerHTML.includes("Bearbeiten")) {
+        document.getElementById("CodeDigit0ObjDetail").removeAttribute("disabled");
+        document.getElementById("CodeDigit1ObjDetail").removeAttribute("disabled");
+        document.getElementById("CodeDigit2ObjDetail").removeAttribute("disabled");
+        document.getElementById("CodeDigit3ObjDetail").removeAttribute("disabled");
+        document.getElementById("ColorDetail").removeAttribute("disabled");
+        document.getElementById("PlaceDetail").removeAttribute("disabled");
+        document.getElementById("BornOnDetail").removeAttribute("disabled");
+        document.getElementById('livestockDetailCol').innerHTML = "Fertig";
+        icon = document.createElement("ons-icon")
+        icon.setAttribute("icon", "fa-check");
+        icon.setAttribute("style", "margin-left : 3px");
+        document.getElementById('livestockDetailCol').appendChild(icon);
+    } else {
+        document.getElementById("CodeDigit0ObjDetail").removeAttribute("enabled");
+        document.getElementById("CodeDigit1ObjDetail").removeAttribute("enabled");
+        document.getElementById("CodeDigit2ObjDetail").removeAttribute("enabled");
+        document.getElementById("CodeDigit3ObjDetail").removeAttribute("enabled");
+        document.getElementById("ColorDetail").removeAttribute("enabled");
+        document.getElementById("PlaceDetail").removeAttribute("enabled");
+        document.getElementById("BornOnDetail").removeAttribute("enabled");
+        document.getElementById('livestockDetailCol').innerHTML = "Bearbeiten";
+        icon = document.createElement("ons-icon")
+        icon.setAttribute("icon", "fa-edit");
+        icon.setAttribute("style", "margin-left : 3px");
+        document.getElementById('livestockDetailCol').appendChild(icon);
+        updateLivestock()
+    }
 }
 
 function deleteDB() {
@@ -397,6 +433,7 @@ function createQR() {
 
 function updateLivestock() {
     // tag livestock for new drug delivery
+    var id = (localStorage.LivestockID)
     var CodeDigit0 = document.getElementById("CodeDigit0Detail").value;
     var CodeDigit1 = document.getElementById("CodeDigit1Detail").value;
     var CodeDigit2 = document.getElementById("CodeDigit2Detail").value;
@@ -405,15 +442,15 @@ function updateLivestock() {
     color = document.getElementById("ColorDetail").style.backgroundColor;
     place = document.getElementById("PlaceDetail").value;
     createdOn = document.getElementById("BornOnDetail").value;
-
     db.transaction(function (tx) {
-        tx.executeSql("UPDATE livestock SET tagged=? where ID = ? AND Number = ?", ['true', color,
-            number
-        ]);
+        tx.executeSql("UPDATE livestock SET number=?, color = ?, place = ?, created = ? where id = ?", [number, color, place, createdOn, id]);
     }, function (error) {
         alert('Error: ' + error.message + ' code: ' + error.code);
     }, function () {
-        document.querySelector('#nav1').popPage();
+        ons.notification.alert({
+            message: 'Die Änderungen wurden übernommen',
+            title: 'Nutztier Änderungen',
+        });
     });
 }
 
@@ -436,7 +473,7 @@ function newDrugDelivery() {
 
 function livestockDetailActionRemove(id, container) {
     //check actual action button state
-    if (document.getElementById(id).innerHTML.includes("Bearbeiten")) {
+    if (document.getElementById(id).innerHTML.includes("Löschen")) {
         //check if element has childs
         if (document.getElementById(container).hasChildNodes()) {
             document.getElementById(id).innerHTML = "Fertig";
@@ -517,17 +554,17 @@ function deleteDrugItem(id) {
 }
 
 function resetlivestockDetailActionColText() {
-    document.getElementById("livestockDetailActionCol").innerHTML = "Bearbeiten";
+    document.getElementById("livestockDetailActionCol").innerHTML = "Löschen";
     icon = document.createElement("ons-icon")
-    icon.setAttribute("icon", "fa-edit");
+    icon.setAttribute("icon", "fa-trash");
     icon.setAttribute("style", "margin-left : 3px");
     document.getElementById("livestockDetailActionCol").appendChild(icon);
 }
 
 function resetlivestockDetailDrugColText() {
-    document.getElementById("livestockDetailDrugCol").innerHTML = "Bearbeiten";
+    document.getElementById("livestockDetailDrugCol").innerHTML = "Löschen";
     icon = document.createElement("ons-icon")
-    icon.setAttribute("icon", "fa-edit");
+    icon.setAttribute("icon", "fa-trash");
     icon.setAttribute("style", "margin-left : 3px");
     document.getElementById("livestockDetailDrugCol").appendChild(icon);
 }

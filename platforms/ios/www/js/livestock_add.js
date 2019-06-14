@@ -94,7 +94,7 @@ document.addEventListener("init", function (event) {
     }
 });
 
-var showTemplateDialog = function (my_dialog, my_dialog_html) {
+var showTemplateDialogAdd = function (my_dialog, my_dialog_html) {
 
     var dialog = document.getElementById(my_dialog);
 
@@ -130,7 +130,7 @@ var showInfo = function (code) {
 };
 
 //select color
-var hideDialogColor = function (id, checkbox, color) {
+var hideDialogColorAdd = function (id, checkbox, color) {
     document.getElementById("checkColor-1").checked = false;
     document.getElementById("checkColor-2").checked = false;
     document.getElementById("checkColor-3").checked = false;
@@ -158,16 +158,32 @@ function checkInputs() {
     localStorage.setItem("ChooseSelPlaceStorage", place);
     number = CodeDigit0 + CodeDigit1 + CodeDigit2 + CodeDigit3
     if (number.length == 4) {
-        if (switchState == 'true') {
-            RESTAddLivestock()
-        } else {
-            write2DBLivestock(born, color, number, place, created, email)
-        }
+        checkLivestockDB(born, color, number, place, created, email)
     } else {
         ons.notification.alert({
             message: 'Die Nummer muss aus 4 Ziffern bestehen',
             title: 'Ohrmarkennummer Fehler',
         });
     }
+}
 
+function checkLivestockDB(born, color, number, place, created, email) {
+    db.transaction(function (transaction) {
+        transaction.executeSql(
+            'SELECT * FROM livestock WHERE color = ? AND number = ?', [color, number],
+            function (tx, results) {
+                if (results.rows.length == 0) {
+                    if (switchState == 'true') {
+                        RESTAddLivestock()
+                    } else {
+                        write2DBLivestock(born, color, number, place, created, email)
+                    }
+                } else {
+                    ons.notification.alert({
+                        message: 'Nutztier ist bereits in der Datenbank hinterlegt',
+                        title: 'Nutztier vorhanden',
+                    });
+                }
+            }, null);
+    });
 }
