@@ -24,8 +24,8 @@
                 tx.executeSql('DROP TABLE IF EXISTS drugs');
                 tx.executeSql('CREATE TABLE IF NOT EXISTS user (bearerToken, refreshToken, email, password)');
                 tx.executeSql('CREATE TABLE IF NOT EXISTS livestock (id INTEGER PRIMARY KEY, born, color, number, place , created, user, tagged, sync)')
-                tx.executeSql('CREATE TABLE IF NOT EXISTS drug_delivery (id INTEGER PRIMARY KEY, color, number, drug, approval_number, delay, amount, created, DBSyncServer)')
-                tx.executeSql('CREATE TABLE IF NOT EXISTS livestock_action (id INTEGER PRIMARY KEY,color, number, type, date, time, result, text, sync)')
+                tx.executeSql('CREATE TABLE IF NOT EXISTS drug_delivery (id INTEGER PRIMARY KEY, livestock_id, drug, approval_number, delay, amount, created, DBSyncServer)')
+                tx.executeSql('CREATE TABLE IF NOT EXISTS livestock_action (id INTEGER PRIMARY KEY, livestock_id, type, date, time, result, text, sync)')
                 tx.executeSql('CREATE TABLE IF NOT EXISTS drugs (id INTEGER PRIMARY KEY, name, number, delay, category, drug_unit, tagged)')
             }, function(error) {
                 alert('Error: ' + error.message + ' code: ' + error.code);

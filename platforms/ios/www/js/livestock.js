@@ -5,6 +5,7 @@
     //detect if livestock add is popped, then update livestock view on page livestock
     $(document).on('prepop', '#nav1', function (event) {
         var event = event.originalEvent;
+        leavePage = "dummy";
         if (event.enterPage.id === 'livestock') {
             readDBLivestock()
         }

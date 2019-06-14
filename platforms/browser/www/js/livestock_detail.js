@@ -68,13 +68,14 @@ function setMarkDetailView() {
 };
 
 function setActionDetailView(trashActive) {
+    livestock_id = String(localStorage.LivestockID)
     var list = document.getElementById("containerIndex");
     while (list.hasChildNodes()) {
         list.removeChild(list.firstChild);
     }
     db.transaction(function (transaction) {
-        transaction.executeSql('SELECT * FROM livestock_action WHERE Color = ? AND Number = ?',
-            [color, number],
+        transaction.executeSql('SELECT * FROM livestock_action WHERE livestock_id = ?',
+            [livestock_id],
             function (tx, results) {
                 for (i = 0; i < results.rows.length; i++) {
                     card = document.createElement("div")
@@ -195,79 +196,80 @@ function setActionDetailView(trashActive) {
 };
 
 function setDrugDetailView(trashActive) {
+    livestock_id = (localStorage.LivestockID)
     var list = document.getElementById("containerMedical");
     while (list.hasChildNodes()) {
         list.removeChild(list.firstChild);
     }
     db.transaction(function (transaction) {
-        transaction.executeSql('SELECT * FROM drug_delivery WHERE Color = ? AND Number = ?', [
-            color, number
-        ], function (tx, results) {
-            for (i = 0; i < results.rows.length; i++) {
-                card = document.createElement("div")
-                card.setAttribute("class", "container right");
-                content = document.createElement("div")
-                content.setAttribute("class", "content");
-                /*generate Medical*/
-                rowMedical = document.createElement("ons-row")
-                colMedical = document.createElement("ons-col")
-                colMedical.innerHTML = results.rows.item(i).drug
-                colMedical.style.fontWeight = "700";
-                colMedical.style.marginBottom = "10px";
-                if (trashActive == "true") {
-                    colTypeTrash = document.createElement("ons-col")
-                    iconTrash = document.createElement("ons-icon")
-                    iconTrash.setAttribute("icon", "fa-trash");
-                    iconTrash.setAttribute("style", "color: red; margin-left : 100%");
-                    rowMedical.appendChild(colMedical);
-                    colTypeTrash.appendChild(iconTrash);
-                    rowMedical.appendChild(colTypeTrash);
-                } else {
-                    rowMedical.appendChild(colMedical);
+        transaction.executeSql('SELECT * FROM drug_delivery WHERE livestock_id = ?',
+            [livestock_id],
+            function (tx, results) {
+                for (i = 0; i < results.rows.length; i++) {
+                    card = document.createElement("div")
+                    card.setAttribute("class", "container right");
+                    content = document.createElement("div")
+                    content.setAttribute("class", "content");
+                    /*generate Medical*/
+                    rowMedical = document.createElement("ons-row")
+                    colMedical = document.createElement("ons-col")
+                    colMedical.innerHTML = results.rows.item(i).drug
+                    colMedical.style.fontWeight = "700";
+                    colMedical.style.marginBottom = "10px";
+                    if (trashActive == "true") {
+                        colTypeTrash = document.createElement("ons-col")
+                        iconTrash = document.createElement("ons-icon")
+                        iconTrash.setAttribute("icon", "fa-trash");
+                        iconTrash.setAttribute("style", "color: red; margin-left : 100%");
+                        rowMedical.appendChild(colMedical);
+                        colTypeTrash.appendChild(iconTrash);
+                        rowMedical.appendChild(colTypeTrash);
+                    } else {
+                        rowMedical.appendChild(colMedical);
+                    }
+                    /*generate Date*/
+                    rowDate = document.createElement("ons-row")
+                    colDateHeader = document.createElement("ons-col")
+                    colDate = document.createElement("ons-col")
+                    colDateHeader.innerHTML = ("Datum")
+                    colDate.innerHTML = results.rows.item(i).created
+                    colDate.setAttribute("style", "margin-left: 20px;");
+                    /*generate Amount*/
+                    rowAmount = document.createElement("ons-row")
+                    colAmountHeader = document.createElement("ons-col")
+                    colAmount = document.createElement("ons-col")
+                    colAmountHeader.innerHTML = ("Abgabemenge")
+                    colAmount.innerHTML = results.rows.item(i).amount + " ml";
+                    colAmount.setAttribute("style", "margin-left: 10px;");
+                    /*generate Delay*/
+                    rowDelay = document.createElement("ons-row")
+                    colDelayHeader = document.createElement("ons-col")
+                    colDelay = document.createElement("ons-col")
+                    colDelayHeader.innerHTML = ("Wartefrist")
+                    colDelay.innerHTML = results.rows.item(i).delay + " Tage";
+                    colDelay.setAttribute("style", "margin-left: 20px;");
+                    /*append rows to container*/
+                    // rowMedical.appendChild(colMedical);
+                    content.appendChild(rowMedical);
+                    rowDate.appendChild(colDateHeader);
+                    rowDate.appendChild(colDate);
+                    content.appendChild(rowDate);
+                    rowAmount.appendChild(colAmountHeader);
+                    rowAmount.appendChild(colAmount);
+                    content.appendChild(rowAmount);
+                    rowDelay.appendChild(colDelayHeader);
+                    rowDelay.appendChild(colDelay);
+                    content.appendChild(rowDelay);
+                    card.appendChild(content);
+                    document.getElementById("containerMedical").appendChild(card);
+                    if (trashActive == "true") {
+                        card.setAttribute("onclick", "deleteDrugItem(" + results.rows.item(i).id + ")");
+                    }
                 }
-                /*generate Date*/
-                rowDate = document.createElement("ons-row")
-                colDateHeader = document.createElement("ons-col")
-                colDate = document.createElement("ons-col")
-                colDateHeader.innerHTML = ("Datum")
-                colDate.innerHTML = results.rows.item(i).created
-                colDate.setAttribute("style", "margin-left: 20px;");
-                /*generate Amount*/
-                rowAmount = document.createElement("ons-row")
-                colAmountHeader = document.createElement("ons-col")
-                colAmount = document.createElement("ons-col")
-                colAmountHeader.innerHTML = ("Abgabemenge")
-                colAmount.innerHTML = results.rows.item(i).amount + " ml";
-                colAmount.setAttribute("style", "margin-left: 10px;");
-                /*generate Delay*/
-                rowDelay = document.createElement("ons-row")
-                colDelayHeader = document.createElement("ons-col")
-                colDelay = document.createElement("ons-col")
-                colDelayHeader.innerHTML = ("Wartefrist")
-                colDelay.innerHTML = results.rows.item(i).delay + " Tage";
-                colDelay.setAttribute("style", "margin-left: 20px;");
-                /*append rows to container*/
-                // rowMedical.appendChild(colMedical);
-                content.appendChild(rowMedical);
-                rowDate.appendChild(colDateHeader);
-                rowDate.appendChild(colDate);
-                content.appendChild(rowDate);
-                rowAmount.appendChild(colAmountHeader);
-                rowAmount.appendChild(colAmount);
-                content.appendChild(rowAmount);
-                rowDelay.appendChild(colDelayHeader);
-                rowDelay.appendChild(colDelay);
-                content.appendChild(rowDelay);
-                card.appendChild(content);
-                document.getElementById("containerMedical").appendChild(card);
-                if (trashActive == "true") {
-                    card.setAttribute("onclick", "deleteDrugItem(" + results.rows.item(i).id + ")");
+                if (results.rows.length == 0) {
+                    resetlivestockDetailDrugColText();
                 }
-            }
-            if (results.rows.length == 0) {
-                resetlivestockDetailDrugColText();
-            }
-        }, null);
+            }, null);
     });
 };
 

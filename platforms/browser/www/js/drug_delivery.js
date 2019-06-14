@@ -13,8 +13,7 @@ var createdOn = "";
 var drugResultsRowslLength = 0;
 var livestockResultsRowslLength = 0;
 var arrColor = [];
-var arrNumber = [];
-var arrDrug = [];
+var arrID = [];
 var arrDrugNumber = [];
 var arrDrugDelay = [];
 var arrDrugAmount = [];
@@ -101,8 +100,7 @@ function GetDBTaggedResult() {
 }
 
 function DisplayResultDrugDelivery(results) {
-    arrColor = [];
-    arrNumber = [];
+    arrID = [];
     livestockResultsRowslLength = results.rows.length;
     if (results.rows.length > 0) {
         for (i = 0; i < results.rows.length; i++) {
@@ -149,8 +147,7 @@ function DisplayResultDrugDelivery(results) {
             div_center.appendChild(span_center2);
             list.appendChild(div_center);
             document.getElementById("drugDeliveryContainer").appendChild(list);
-            arrColor.push(results.rows.item(i).color);
-            arrNumber.push(results.rows.item(i).number);
+            arrID.push(results.rows.item(i).id);
             document.getElementById("removeLivestocks").style.visibility = "visible";
             document.getElementById("removeLivestocks").disabled = false;
             document.getElementById("livestockDrugDeliveryText").innerHTML = "Ausgewählte Nutztiere";

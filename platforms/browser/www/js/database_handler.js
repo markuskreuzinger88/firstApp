@@ -2,15 +2,14 @@ db = window.openDatabase("Database", "1.0", "Nutztier db", 20 * 1024 * 1024); //
 
 //add livestock action to database
 function write2DBAction(type, CreatedOnDateID, CreatedOnTimeID, textareaID, result) {
-    var color = String(localStorage.LivestockColor)
-    var number = String(localStorage.LivestockNumber)
+    var livestock_id = String(localStorage.LivestockID)
     var date = document.getElementById(CreatedOnDateID).value;
     var time = document.getElementById(CreatedOnTimeID).value;
     var text = document.getElementById(textareaID).value;
     db.transaction(function (transaction) {
         var executeQuery =
-            "INSERT INTO livestock_action (color, number, type, date, time, result, text, sync) VALUES (?,?,?,?,?,?,?,?)";
-        transaction.executeSql(executeQuery, [color, number, type, date, time, result, text, "true"],
+            "INSERT INTO livestock_action (livestock_id, type, date, time, result, text, sync) VALUES (?,?,?,?,?,?,?)";
+        transaction.executeSql(executeQuery, [livestock_id, type, date, time, result, text, "true"],
             function (tx, result) {
                 console.log(result)
                 document.querySelector('#nav1').popPage();
@@ -38,11 +37,10 @@ function write2DBLivestock(born, color, number, place, created, email) {
 
 //add drug delivery to database
 async function write2DBDrugDelivery() {
-
-    for (i = 0; i < arrColor.length; i++) {
+    for (i = 0; i < arrID.length; i++) {
         ( function (i) {
             for (j = 0; j < arrDrug.length; j++) {
-                write2DBDrugDelivery2(arrColor[i], arrNumber[i], arrDrug[j], arrDrugNumber[j], arrDrugDelay[j],arrDrugAmount[j])
+                write2DBDrugDelivery2(String(arrID[i]), arrDrug[j], arrDrugNumber[j], arrDrugDelay[j],arrDrugAmount[j])
             };
         })(i);
         document.querySelector('#nav1').popPage();
@@ -61,11 +59,11 @@ async function write2DBDrugDelivery() {
     };
 }
 
-async function write2DBDrugDelivery2(color, number, drug, approval_number, delay, amount) {
+async function write2DBDrugDelivery2(id, drug, approval_number, delay, amount) {
     await db.transaction(async function (transaction) {
             var executeQuery =
-                "INSERT INTO drug_delivery (color, number, drug, approval_number, delay, amount, created, DBSyncServer) VALUES (?,?,?,?,?,?,?,?)";
-            transaction.executeSql(executeQuery, [color, number, drug,
+                "INSERT INTO drug_delivery (livestock_id, drug, approval_number, delay, amount, created, DBSyncServer) VALUES (?,?,?,?,?,?,?)";
+            transaction.executeSql(executeQuery, [id, drug,
                 approval_number, delay, amount, createdOn, "true"
             ]);
         },
