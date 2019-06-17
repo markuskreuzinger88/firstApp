@@ -66,9 +66,29 @@ var DialogCheckbox = function (checkbox) {
 };
 
 var saveDialog = function (id, type, CreatedOnDateID, CreatedOnTimeID, textareaID) {
+    var arrType = ["Belegung", "mögliches Abferkeln", "mögliches Absetzen"];
+    var arrCreatedOnDate = [];
+    var arrCreatedOnTime = [];
+    var arrTextarea = [];
     document.getElementById(id).hide();
     if (id == 'occupancy') {
+        startDate = Date.parse(document.getElementById(CreatedOnDateID).value);
+        var newDate1 = (document.getElementById("possibleFarrow").value * 24 * 60 * 60 * 1000) + startDate;
+        var possibleFarrowDate = new Date(newDate1).toISOString().substr(0, 10);
+        var newDate2 = (document.getElementById("possibleStripOff").value * 24 * 60 * 60 * 1000) + newDate1;
+        var possibleStripOff = new Date(newDate2).toISOString().substr(0, 10);
+
+        arrCreatedOnDate[0] = document.getElementById(CreatedOnDateID).value;
+        arrCreatedOnTime[0] = document.getElementById(CreatedOnTimeID).value;
+        arrTextarea[0] = document.getElementById(textareaID).value;
+        arrCreatedOnDate[1] = possibleFarrowDate;
+        arrCreatedOnTime[1] = document.getElementById(CreatedOnTimeID).value;
+        arrTextarea[1] = "";
+        arrCreatedOnDate[2] = possibleStripOff;
+        arrCreatedOnTime[2] = document.getElementById(CreatedOnTimeID).value;
+        arrTextarea[2] = "";
         var result = "";
+        write2DBActionArr(arrType, arrCreatedOnDate, arrCreatedOnTime, arrTextarea, result)
     } else if (id == 'farrow') {
         var BornAlive = document.getElementById("BornAlive");
         var BornDead = document.getElementById("BornDead");
@@ -96,8 +116,10 @@ var saveDialog = function (id, type, CreatedOnDateID, CreatedOnTimeID, textareaI
             });
             return
         }
+        write2DBAction(type, CreatedOnDateID, CreatedOnTimeID, textareaID, result)
     } else if (id == 'stripOff') {
         var result = "";
+        write2DBAction(type, CreatedOnDateID, CreatedOnTimeID, textareaID, result)
     } else if (id == 'pregnancy') {
         var check1 = document.getElementById("pregnancy-check-1");
         var check2 = document.getElementById("pregnancy-check-2");
@@ -109,6 +131,7 @@ var saveDialog = function (id, type, CreatedOnDateID, CreatedOnTimeID, textareaI
         } else if (check3.checked == true) {
             var result = 'negativ';
         }
+        write2DBAction(type, CreatedOnDateID, CreatedOnTimeID, textareaID, result)
     } else if (id == 'estrusControl') {
         var check1 = document.getElementById("check-1");
         var check2 = document.getElementById("check-2");
@@ -123,6 +146,7 @@ var saveDialog = function (id, type, CreatedOnDateID, CreatedOnTimeID, textareaI
         } else if (check4.checked == true) {
             var result = 'Belegaktion';
         }
+        write2DBAction(type, CreatedOnDateID, CreatedOnTimeID, textareaID, result)
     } else if (id == 'bcs') {
         var check1 = document.getElementById("bcs-check-1");
         var check2 = document.getElementById("bcs-check-2");
@@ -140,6 +164,6 @@ var saveDialog = function (id, type, CreatedOnDateID, CreatedOnTimeID, textareaI
         } else if (check5.checked == true) {
             var result = 'Zu Fett';
         }
+        write2DBAction(type, CreatedOnDateID, CreatedOnTimeID, textareaID, result)
     }
-    write2DBAction(type, CreatedOnDateID, CreatedOnTimeID, textareaID, result)
 };
