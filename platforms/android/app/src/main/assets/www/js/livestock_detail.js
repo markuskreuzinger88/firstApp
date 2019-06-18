@@ -73,8 +73,10 @@ function setActionDetailView(trashActive) {
     while (list.hasChildNodes()) {
         list.removeChild(list.firstChild);
     }
+    var actualDateNew = new Date();
+    var actualDate = actualDateNew.getTime();
     db.transaction(function (transaction) {
-        transaction.executeSql('SELECT * FROM livestock_action WHERE livestock_id = ?',
+        transaction.executeSql('SELECT * FROM livestock_action WHERE livestock_id = ? ORDER BY date DESC',
             [livestock_id],
             function (tx, results) {
                 for (i = 0; i < results.rows.length; i++) {
@@ -111,6 +113,18 @@ function setActionDetailView(trashActive) {
                     colDate = document.createElement("ons-col")
                     colDateHeader.innerHTML = ("Datum")
                     colDate.innerHTML = results.rows.item(i).date
+                    actionDate = Date.parse(results.rows.item(i).date);
+                    if (actionDate > actualDate) {
+                        rowDate2 = document.createElement("ons-row")
+                        colDateHeader2 = document.createElement("ons-col")
+                        colDate2 = document.createElement("ons-col")
+                        colDateHeader2.innerHTML = ("Noch");
+                        // convert from milleseconds to days
+                        var daysLeft = Math.ceil((actionDate - actualDate) / 24 / 60 / 60 / 1000);
+                        colDate2.innerHTML = daysLeft + " Tage";
+                        rowDate2.appendChild(colDateHeader2);
+                        rowDate2.appendChild(colDate2);
+                    }
                     /*result*/
                     if (results.rows.item(i).type == 'Abgeferkelt') {
                         rowResult1 = document.createElement("ons-row")
@@ -164,6 +178,10 @@ function setActionDetailView(trashActive) {
                     rowDate.appendChild(colDateHeader);
                     rowDate.appendChild(colDate);
                     content.appendChild(rowDate);
+                    //add element if ction is in future
+                    if (actionDate > actualDate) {
+                        content.appendChild(rowDate2);
+                    }
                     if (results.rows.item(i).type == 'Abgeferkelt') {
                         content.appendChild(rowResult1);
                         content.appendChild(rowResult2);
@@ -186,7 +204,14 @@ function setActionDetailView(trashActive) {
                         card.setAttribute("onclick", "deleteActionItem(" + results.rows.item(i).id + ")");
                     }
                     document.getElementById("containerIndex").appendChild(card);
-
+                    //current date between action in future and action in presence
+                    if (actionDate > actualDate) {
+                        if ((Date.parse(results.rows.item(i + 1).date)) <= actualDate) {
+                            actualDateElement = document.createElement("div")
+                            actualDateElement.innerHTML = ("Anmerkungen")
+                            document.getElementById("containerIndex").appendChild(actualDateElement);
+                        }
+                    }
                 }
                 if (results.rows.length == 0) {
                     resetlivestockDetailActionColText();

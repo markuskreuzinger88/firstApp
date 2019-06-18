@@ -66,7 +66,7 @@ var DialogCheckbox = function (checkbox) {
 };
 
 var saveDialog = function (id, type, CreatedOnDateID, CreatedOnTimeID, textareaID) {
-    var arrType = ["Belegung", "mögliches Abferkeln", "mögliches Absetzen"];
+    var arrType = ["Belegung", "Trächtigkeitsuntersuchung 1", "Trächtigkeitsuntersuchung 2", "mögliches Abferkeln", "mögliches Absetzen"];
     var arrCreatedOnDate = [];
     var arrCreatedOnTime = [];
     var arrTextarea = [];
@@ -77,16 +77,28 @@ var saveDialog = function (id, type, CreatedOnDateID, CreatedOnTimeID, textareaI
         var possibleFarrowDate = new Date(newDate1).toISOString().substr(0, 10);
         var newDate2 = (document.getElementById("possibleStripOff").value * 24 * 60 * 60 * 1000) + newDate1;
         var possibleStripOff = new Date(newDate2).toISOString().substr(0, 10);
+        var newDate3 = (document.getElementById("possibleCheck1").value * 24 * 60 * 60 * 1000) + startDate;
+        var possibleCheck1 = new Date(newDate3).toISOString().substr(0, 10);
+        var newDate4 = (document.getElementById("possibleCheck2").value * 24 * 60 * 60 * 1000) + startDate;
+        var possibleCheck2 = new Date(newDate4).toISOString().substr(0, 10);
 
         arrCreatedOnDate[0] = document.getElementById(CreatedOnDateID).value;
         arrCreatedOnTime[0] = document.getElementById(CreatedOnTimeID).value;
         arrTextarea[0] = document.getElementById(textareaID).value;
-        arrCreatedOnDate[1] = possibleFarrowDate;
+
+        arrCreatedOnDate[1] = possibleCheck1;
         arrCreatedOnTime[1] = document.getElementById(CreatedOnTimeID).value;
         arrTextarea[1] = "";
-        arrCreatedOnDate[2] = possibleStripOff;
+        arrCreatedOnDate[2] = possibleCheck2;
         arrCreatedOnTime[2] = document.getElementById(CreatedOnTimeID).value;
         arrTextarea[2] = "";
+
+        arrCreatedOnDate[3] = possibleFarrowDate;
+        arrCreatedOnTime[3] = document.getElementById(CreatedOnTimeID).value;
+        arrTextarea[3] = "";
+        arrCreatedOnDate[4] = possibleStripOff;
+        arrCreatedOnTime[4] = document.getElementById(CreatedOnTimeID).value;
+        arrTextarea[4] = "";
         var result = "";
         write2DBActionArr(arrType, arrCreatedOnDate, arrCreatedOnTime, arrTextarea, result)
     } else if (id == 'farrow') {
