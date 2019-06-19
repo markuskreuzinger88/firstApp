@@ -1,5 +1,6 @@
 var color = "";
 var number = "";
+var days = ["SO", "MO", "DI", "MI", "DO", "FR", "SA"];
 
 $(document).on('prepop', '#nav1', function (event) {
     var event = event.originalEvent;
@@ -69,12 +70,15 @@ function setMarkDetailView() {
 
 function setActionDetailView(trashActive) {
     livestock_id = String(localStorage.LivestockID)
+    localStorage.setItem("actionEdit", 'true');
     var list = document.getElementById("containerIndex");
     while (list.hasChildNodes()) {
         list.removeChild(list.firstChild);
     }
     var actualDateNew = new Date();
     var actualDate = actualDateNew.getTime();
+    var setTrashOnce = false;
+    var getActionDateOnce = false;
     db.transaction(function (transaction) {
         transaction.executeSql('SELECT * FROM livestock_action WHERE livestock_id = ? ORDER BY date DESC',
             [livestock_id],
@@ -84,17 +88,55 @@ function setActionDetailView(trashActive) {
                     card.setAttribute("class", "container right");
                     content = document.createElement("div")
                     content.setAttribute("class", "content");
+                    /*get action Date*/
+                    actionDate = Date.parse(results.rows.item(i).date);
+                    /*convert date difference from milleseconds to days*/
+                    var daysLeft = Math.ceil((actionDate - actualDate) / 24 / 60 / 60 / 1000);
                     /*generate Type*/
                     rowType = document.createElement("ons-row")
                     colType = document.createElement("ons-col")
-                    if (trashActive == "true") {
-                        colTypeTrash = document.createElement("ons-col")
-                        iconTrash = document.createElement("ons-icon")
-                        iconTrash.setAttribute("icon", "fa-trash");
-                        iconTrash.setAttribute("style", "color: red; margin-left : 100%");
+                    if ((trashActive == "true") && (results.rows.item(i).future == "false") && setTrashOnce == false) {
+                        colTypeIcon = document.createElement("ons-col")
+                        icon = document.createElement("ons-icon")
+                        icon.setAttribute("icon", "fa-trash");
+                        icon.setAttribute("style", "color: red; margin-left : 100%");
                         rowType.appendChild(colType);
-                        colTypeTrash.appendChild(iconTrash);
-                        rowType.appendChild(colTypeTrash);
+                        colTypeIcon.appendChild(icon);
+                        rowType.appendChild(colTypeIcon);
+                    } else if (results.rows.item(i).future == "true") {
+                        localStorage.setItem("actionEdit", 'false');
+                        //set Icon
+                        colTypeIcon = document.createElement("ons-col")
+                        icon = document.createElement("ons-icon")
+                        rowType.appendChild(colType);
+                        colTypeIcon.appendChild(icon);
+                        rowType.appendChild(colTypeIcon);
+                        //set days left
+                        rowDate2 = document.createElement("ons-row")
+                        colDateHeader2 = document.createElement("ons-col")
+                        colDate2 = document.createElement("ons-col")
+                        colDateHeader2.innerHTML = ("In");
+                        colDateHeader2.style.fontWeight = "700";
+                        colDate2.innerHTML = daysLeft + " Tage";
+                        colDate2.style.fontWeight = "700";
+                        rowDate2.appendChild(colDateHeader2);
+                        rowDate2.appendChild(colDate2);
+                        if (daysLeft > 7) {
+                            icon.setAttribute("icon", "fa-info-circle");
+                            icon.setAttribute("style", "color: #3399ff; margin-left : 100%");
+                        } else if ((daysLeft < 7) && (daysLeft > 0)) {
+                            localStorage.setItem("actionEdit", 'true');
+                            icon.setAttribute("icon", "fa-edit");
+                            icon.setAttribute("style", "color: green; margin-left : 100%");
+                            colDate2.style.color = "green";
+                            colDateHeader2.style.color = "green";
+                        } else {
+                            localStorage.setItem("actionEdit", 'true');
+                            icon.setAttribute("icon", "fa-edit");
+                            icon.setAttribute("style", "color: red; margin-left : 100%");
+                            colDate2.style.color = "red";
+                            colDateHeader2.style.color = "red";
+                        }
                     } else {
                         rowType.appendChild(colType);
                     }
@@ -102,28 +144,26 @@ function setActionDetailView(trashActive) {
                     colType.style.fontWeight = "700";
                     colType.style.marginBottom = "10px";
                     /*generate Time*/
-                    rowTime = document.createElement("ons-row")
-                    colTimeHeader = document.createElement("ons-col")
-                    colTime = document.createElement("ons-col")
-                    colTimeHeader.innerHTML = ("Uhrzeit")
-                    colTime.innerHTML = results.rows.item(i).time
+                    if (results.rows.item(i).future == "false") {
+                        rowTime = document.createElement("ons-row")
+                        colTimeHeader = document.createElement("ons-col")
+                        colTime = document.createElement("ons-col")
+                        colTimeHeader.innerHTML = ("Uhrzeit")
+                        colTime.innerHTML = results.rows.item(i).time
+                    }
                     /*generate Date*/
                     rowDate = document.createElement("ons-row")
                     colDateHeader = document.createElement("ons-col")
                     colDate = document.createElement("ons-col")
                     colDateHeader.innerHTML = ("Datum")
                     colDate.innerHTML = results.rows.item(i).date
-                    actionDate = Date.parse(results.rows.item(i).date);
-                    if (actionDate > actualDate) {
-                        rowDate2 = document.createElement("ons-row")
-                        colDateHeader2 = document.createElement("ons-col")
-                        colDate2 = document.createElement("ons-col")
-                        colDateHeader2.innerHTML = ("Noch");
-                        // convert from milleseconds to days
-                        var daysLeft = Math.ceil((actionDate - actualDate) / 24 / 60 / 60 / 1000);
-                        colDate2.innerHTML = daysLeft + " Tage";
-                        rowDate2.appendChild(colDateHeader2);
-                        rowDate2.appendChild(colDate2);
+                     /*store action item date to compare with actual date
+                     if actual date and action date are same => user is not allowed
+                     to save next action
+                     */
+                    if ((results.rows.item(i).future == "false") && (getActionDateOnce == false)) {
+                        localStorage.setItem("actionDate", results.rows.item(i).date);
+                        getActionDateOnce = true;
                     }
                     /*result*/
                     if (results.rows.item(i).type == 'Abgeferkelt') {
@@ -172,26 +212,30 @@ function setActionDetailView(trashActive) {
                     rowText.appendChild(colText);
                     /*append rows to container*/
                     content.appendChild(rowType);
-                    rowTime.appendChild(colTimeHeader);
-                    rowTime.appendChild(colTime);
-                    content.appendChild(rowTime);
+                    if (results.rows.item(i).future == "false") {
+                        rowTime.appendChild(colTimeHeader);
+                        rowTime.appendChild(colTime);
+                        content.appendChild(rowTime);
+                    }
                     rowDate.appendChild(colDateHeader);
                     rowDate.appendChild(colDate);
                     content.appendChild(rowDate);
-                    //add element if ction is in future
-                    if (actionDate > actualDate) {
+                    //add element if action is in future
+                    if (results.rows.item(i).future == "true") {
                         content.appendChild(rowDate2);
                     }
-                    if (results.rows.item(i).type == 'Abgeferkelt') {
-                        content.appendChild(rowResult1);
-                        content.appendChild(rowResult2);
-                        content.appendChild(rowResult3);
-                    } else if (results.rows.item(i).type == 'Trächtigkeitsuntersuchung') {
-                        content.appendChild(rowResult);
-                    } else if (results.rows.item(i).type == 'Rauschekontrolle') {
-                        content.appendChild(rowResult);
-                    } else if (results.rows.item(i).type == 'Body Condition Score') {
-                        content.appendChild(rowResult);
+                    if (results.rows.item(i).future == "false") {
+                        if (results.rows.item(i).type == 'Abgeferkelt') {
+                            content.appendChild(rowResult1);
+                            content.appendChild(rowResult2);
+                            content.appendChild(rowResult3);
+                        } else if ((results.rows.item(i).type == 'Kontrolle 1') || (results.rows.item(i).type == 'Kontrolle 2')) {
+                            content.appendChild(rowResult);
+                        } else if (results.rows.item(i).type == 'Rauschekontrolle') {
+                            content.appendChild(rowResult);
+                        } else if (results.rows.item(i).type == 'Body Condition Score') {
+                            content.appendChild(rowResult);
+                        }
                     }
                     /*only add text if not empty*/
                     if (results.rows.item(i).text.length != 0) {
@@ -200,15 +244,30 @@ function setActionDetailView(trashActive) {
                         content.appendChild(colTextArea);
                     }
                     card.appendChild(content);
-                    if (trashActive == "true") {
-                        card.setAttribute("onclick", "deleteActionItem(" + results.rows.item(i).id + ")");
+                    if ((trashActive == "true") && (results.rows.item(i).future == "false") && setTrashOnce == false) {
+                        functionParameters = (results.rows.item(i).id + ',' + results.rows.item(i).type)
+                        card.setAttribute("onclick", "deleteActionItem(" + results.rows.item(i).id + ",'" + results.rows.item(i).type + "')");
+                        setTrashOnce = true;
                     }
                     document.getElementById("containerIndex").appendChild(card);
                     //current date between action in future and action in presence
                     if (actionDate > actualDate) {
                         if ((Date.parse(results.rows.item(i + 1).date)) <= actualDate) {
                             actualDateElement = document.createElement("div")
-                            actualDateElement.innerHTML = ("Anmerkungen")
+                            actualDateElement.style.fontWeight = "700";
+                            actualDateElement.style.marginBottom = "10px";
+                            actualDateElement.style.marginTop = "10px";
+                            actualDateElement.style.marginTop = "10px";
+                            actualDateElement.style.marginLeft = "30%";
+                            actualDateElement.style.textAlign = "center";
+                            actualDateElement.style.backgroundColor = "white";
+                            actualDateElement.style.width = "50%";
+                            actualDateElement.style.padding = "10px";
+                            actualDateElement.style.borderRadius = "10px";
+                            actualDateElement.style.border = "4px solid #3399ff";
+                            var day = days[actualDateNew.getDay()];
+                            var actualDateFormat = new Date(actualDate).toISOString().substr(0, 10);
+                            actualDateElement.innerHTML = day + " - " + actualDateFormat
                             document.getElementById("containerIndex").appendChild(actualDateElement);
                         }
                     }
@@ -288,7 +347,7 @@ function setDrugDetailView(trashActive) {
                     card.appendChild(content);
                     document.getElementById("containerMedical").appendChild(card);
                     if (trashActive == "true") {
-                        card.setAttribute("onclick", "deleteDrugItem(" + results.rows.item(i).id + ")");
+                        card.setAttribute("onclick", "deleteDrugItem(" + results.rows.item(i).id + ", null)");
                     }
                 }
                 if (results.rows.length == 0) {
@@ -530,7 +589,9 @@ function livestockDetailActionRemove(id, container) {
     }
 }
 
-function deleteActionItem(id) {
+function deleteActionItem(id, type) {
+    console.log(type)
+    console.log(id)
     ons.notification.confirm({
         message: 'Möchtest du den Eintrag löschen?',
         title: 'Nutztier Eintrag bearbeiten',
@@ -540,16 +601,30 @@ function deleteActionItem(id) {
         cancelable: true,
         callback: function (index) {
             if (index == 0) {
-                db.transaction(function (tx) {
-                        tx.executeSql('DELETE FROM livestock_action WHERE id = ?',
-                            [id]);
-                    },
-                    function (error) {
-                        alert('Error: ' + error.message + ' code: ' + error.code);
-                    },
-                    function () {
-                        setActionDetailView('true')
-                    });
+                if (type == "Belegung") {
+                    console.log("jep")
+                    db.transaction(function (tx) {
+                            tx.executeSql('DELETE FROM livestock_action WHERE id = ? OR future = ?',
+                                [id, 'true']);
+                        },
+                        function (error) {
+                            alert('Error: ' + error.message + ' code: ' + error.code);
+                        },
+                        function () {
+                            setActionDetailView('true')
+                        });
+                } else {
+                    db.transaction(function (tx) {
+                            tx.executeSql('DELETE FROM livestock_action WHERE id = ?',
+                                [id]);
+                        },
+                        function (error) {
+                            alert('Error: ' + error.message + ' code: ' + error.code);
+                        },
+                        function () {
+                            setActionDetailView('true')
+                        });
+                }
             }
         }
     });

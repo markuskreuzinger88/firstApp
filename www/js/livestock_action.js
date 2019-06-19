@@ -2,6 +2,103 @@ db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //
 var born_alive = "";
 var born_dead = "";
 
+//set list item active handler on livestock action page
+$(document).on('postpush', '#nav1', function (event) {
+    var event = event.originalEvent;
+    if (event.enterPage.id === 'livestock_action') {
+        livestock_id = String(localStorage.LivestockID)
+        livestockActionEdit = String(localStorage.actionEdit)
+        livestockActionDate = Date.parse(localStorage.actionDate)
+        var actualDateNew = new Date();
+        var actualDate = actualDateNew.getTime();
+        var daysLeft = Math.ceil((livestockActionDate - actualDate) / 24 / 60 / 60 / 1000);
+        var daysLeftABS = Math.abs(daysLeft);
+        console.log(daysLeftABS)
+        db.transaction(function (transaction) {
+            transaction.executeSql(
+                'SELECT * FROM livestock_action WHERE future = ? AND livestock_id = ? ORDER BY date DESC', ['false', livestock_id],
+                function (tx, results) {
+                    if (daysLeftABS != 0) {
+                        if (livestockActionEdit == 'true') {
+                            if (results.rows.item(0).type == 'Belegung') {
+                                document.getElementById('livestockActionListField1').setAttribute('disabled')
+                                document.getElementById('livestockActionListField1').removeAttribute('modifier')
+                                document.getElementById('livestockActionListField3').setAttribute('disabled')
+                                document.getElementById('livestockActionListField3').removeAttribute('modifier')
+                                document.getElementById('livestockActionListField4').setAttribute('disabled')
+                                document.getElementById('livestockActionListField4').removeAttribute('modifier')
+                                document.getElementById('livestockActionListField5').setAttribute('disabled')
+                                document.getElementById('livestockActionListField5').removeAttribute('modifier')
+                            } else if (results.rows.item(0).type == 'Kontrolle 1') {
+                                document.getElementById('livestockActionListField1').setAttribute('disabled')
+                                document.getElementById('livestockActionListField1').removeAttribute('modifier')
+                                document.getElementById('livestockActionListField2').setAttribute('disabled')
+                                document.getElementById('livestockActionListField2').removeAttribute('modifier')
+                                document.getElementById('livestockActionListField4').setAttribute('disabled')
+                                document.getElementById('livestockActionListField4').removeAttribute('modifier')
+                                document.getElementById('livestockActionListField5').setAttribute('disabled')
+                                document.getElementById('livestockActionListField5').removeAttribute('modifier')
+                            } else if (results.rows.item(0).type == 'Kontrolle 2') {
+                                document.getElementById('livestockActionListField1').setAttribute('disabled')
+                                document.getElementById('livestockActionListField1').removeAttribute('modifier')
+                                document.getElementById('livestockActionListField2').setAttribute('disabled')
+                                document.getElementById('livestockActionListField2').removeAttribute('modifier')
+                                document.getElementById('livestockActionListField3').setAttribute('disabled')
+                                document.getElementById('livestockActionListField3').removeAttribute('modifier')
+                                document.getElementById('livestockActionListField5').setAttribute('disabled')
+                                document.getElementById('livestockActionListField5').removeAttribute('modifier')
+                            } else if (results.rows.item(0).type == 'Abgeferkelt') {
+                                document.getElementById('livestockActionListField1').setAttribute('disabled')
+                                document.getElementById('livestockActionListField1').removeAttribute('modifier')
+                                document.getElementById('livestockActionListField2').setAttribute('disabled')
+                                document.getElementById('livestockActionListField2').removeAttribute('modifier')
+                                document.getElementById('livestockActionListField3').setAttribute('disabled')
+                                document.getElementById('livestockActionListField3').removeAttribute('modifier')
+                                document.getElementById('livestockActionListField4').setAttribute('disabled')
+                                document.getElementById('livestockActionListField4').removeAttribute('modifier')
+                            } else if (results.rows.item(0).type == 'Abgesetzt') {
+                                document.getElementById('livestockActionListField2').setAttribute('disabled')
+                                document.getElementById('livestockActionListField2').removeAttribute('modifier')
+                                document.getElementById('livestockActionListField3').setAttribute('disabled')
+                                document.getElementById('livestockActionListField3').removeAttribute('modifier')
+                                document.getElementById('livestockActionListField4').setAttribute('disabled')
+                                document.getElementById('livestockActionListField4').removeAttribute('modifier')
+                                document.getElementById('livestockActionListField5').setAttribute('disabled')
+                                document.getElementById('livestockActionListField5').removeAttribute('modifier')
+                            }
+                        } else {
+                            //if no date from each action is reached than user can do nothing
+                            document.getElementById('livestockActionListField1').setAttribute('disabled')
+                            document.getElementById('livestockActionListField1').removeAttribute('modifier')
+                            document.getElementById('livestockActionListField2').setAttribute('disabled')
+                            document.getElementById('livestockActionListField2').removeAttribute('modifier')
+                            document.getElementById('livestockActionListField3').setAttribute('disabled')
+                            document.getElementById('livestockActionListField3').removeAttribute('modifier')
+                            document.getElementById('livestockActionListField4').setAttribute('disabled')
+                            document.getElementById('livestockActionListField4').removeAttribute('modifier')
+                            document.getElementById('livestockActionListField5').setAttribute('disabled')
+                            document.getElementById('livestockActionListField5').removeAttribute('modifier')
+                            livestockActionEditAlert('Du kannst den Wurfindex dieses Nutztieres erst 7 Tage vor dem ersten ausgewählten Datum wieder bearbeiten')
+                        }
+                    } else { 
+                        //if last action date is equal than current date
+                        document.getElementById('livestockActionListField1').setAttribute('disabled')
+                        document.getElementById('livestockActionListField1').removeAttribute('modifier')
+                        document.getElementById('livestockActionListField2').setAttribute('disabled')
+                        document.getElementById('livestockActionListField2').removeAttribute('modifier')
+                        document.getElementById('livestockActionListField3').setAttribute('disabled')
+                        document.getElementById('livestockActionListField3').removeAttribute('modifier')
+                        document.getElementById('livestockActionListField4').setAttribute('disabled')
+                        document.getElementById('livestockActionListField4').removeAttribute('modifier')
+                        document.getElementById('livestockActionListField5').setAttribute('disabled')
+                        document.getElementById('livestockActionListField5').removeAttribute('modifier')
+                        livestockActionEditAlert('Du hast heute schon ein Ereigniss für diese Nutztier abgespeichert')
+                    }
+                }, null);
+        });
+    }
+});
+
 var showPopover = function (target) {
     document
         .getElementById('popover')
@@ -52,7 +149,6 @@ var DialogCheckboxBCS = function (checkbox) {
 var DialogCheckboxPregnancy = function (checkbox) {
     document.getElementById("pregnancy-check-1").checked = false;
     document.getElementById("pregnancy-check-2").checked = false;
-    document.getElementById("pregnancy-check-3").checked = false;
     document.getElementById(checkbox).checked = true;
 };
 
@@ -66,10 +162,11 @@ var DialogCheckbox = function (checkbox) {
 };
 
 var saveDialog = function (id, type, CreatedOnDateID, CreatedOnTimeID, textareaID) {
-    var arrType = ["Belegung", "Trächtigkeitsuntersuchung 1", "Trächtigkeitsuntersuchung 2", "mögliches Abferkeln", "mögliches Absetzen"];
+    var arrType = ["Belegung", "Kontrolle 1", "Kontrolle 2", "Abgeferkelt", "Abgesetzt"];
     var arrCreatedOnDate = [];
     var arrCreatedOnTime = [];
     var arrTextarea = [];
+    var arrFuture = [];
     document.getElementById(id).hide();
     if (id == 'occupancy') {
         startDate = Date.parse(document.getElementById(CreatedOnDateID).value);
@@ -85,22 +182,25 @@ var saveDialog = function (id, type, CreatedOnDateID, CreatedOnTimeID, textareaI
         arrCreatedOnDate[0] = document.getElementById(CreatedOnDateID).value;
         arrCreatedOnTime[0] = document.getElementById(CreatedOnTimeID).value;
         arrTextarea[0] = document.getElementById(textareaID).value;
-
+        arrFuture[0] = "false";
         arrCreatedOnDate[1] = possibleCheck1;
         arrCreatedOnTime[1] = document.getElementById(CreatedOnTimeID).value;
         arrTextarea[1] = "";
+        arrFuture[1] = "true";
         arrCreatedOnDate[2] = possibleCheck2;
         arrCreatedOnTime[2] = document.getElementById(CreatedOnTimeID).value;
         arrTextarea[2] = "";
-
+        arrFuture[2] = "true";
         arrCreatedOnDate[3] = possibleFarrowDate;
         arrCreatedOnTime[3] = document.getElementById(CreatedOnTimeID).value;
         arrTextarea[3] = "";
+        arrFuture[3] = "true";
         arrCreatedOnDate[4] = possibleStripOff;
         arrCreatedOnTime[4] = document.getElementById(CreatedOnTimeID).value;
         arrTextarea[4] = "";
+        arrFuture[4] = "true";
         var result = "";
-        write2DBActionArr(arrType, arrCreatedOnDate, arrCreatedOnTime, arrTextarea, result)
+        write2DBActionArr(arrType, arrCreatedOnDate, arrCreatedOnTime, arrTextarea, result, arrFuture)
     } else if (id == 'farrow') {
         var BornAlive = document.getElementById("BornAlive");
         var BornDead = document.getElementById("BornDead");
@@ -128,54 +228,35 @@ var saveDialog = function (id, type, CreatedOnDateID, CreatedOnTimeID, textareaI
             });
             return
         }
-        write2DBAction(type, CreatedOnDateID, CreatedOnTimeID, textareaID, result)
+        write2DBAction(type, CreatedOnDateID, CreatedOnTimeID, textareaID, result, "false")
     } else if (id == 'stripOff') {
         var result = "";
-        write2DBAction(type, CreatedOnDateID, CreatedOnTimeID, textareaID, result)
-    } else if (id == 'pregnancy') {
+        write2DBAction(type, CreatedOnDateID, CreatedOnTimeID, textareaID, result, "false")
+    } else if ((id == 'pregnancyCheck1') || (id == 'pregnancyCheck2')) {
         var check1 = document.getElementById("pregnancy-check-1");
         var check2 = document.getElementById("pregnancy-check-2");
-        var check3 = document.getElementById("pregnancy-check-3");
         if (check1.checked == true) {
             var result = 'positiv';
-        } else if (check2.checked == true) {
-            var result = 'fraglich';
-        } else if (check3.checked == true) {
+        } else {
             var result = 'negativ';
         }
-        write2DBAction(type, CreatedOnDateID, CreatedOnTimeID, textareaID, result)
-    } else if (id == 'estrusControl') {
-        var check1 = document.getElementById("check-1");
-        var check2 = document.getElementById("check-2");
-        var check3 = document.getElementById("check-3");
-        var check4 = document.getElementById("check-4");
-        if (check1.checked == true) {
-            var result = 'keine Symptome';
-        } else if (check2.checked == true) {
-            var result = 'Duldung';
-        } else if (check3.checked == true) {
-            var result = 'Rötung';
-        } else if (check4.checked == true) {
-            var result = 'Belegaktion';
-        }
-        write2DBAction(type, CreatedOnDateID, CreatedOnTimeID, textareaID, result)
-    } else if (id == 'bcs') {
-        var check1 = document.getElementById("bcs-check-1");
-        var check2 = document.getElementById("bcs-check-2");
-        var check3 = document.getElementById("bcs-check-3");
-        var check4 = document.getElementById("bcs-check-4");
-        var check5 = document.getElementById("bcs-check-5");
-        if (check1.checked == true) {
-            var result = 'Zu mager';
-        } else if (check2.checked == true) {
-            var result = 'Mager';
-        } else if (check3.checked == true) {
-            var result = 'Gut';
-        } else if (check4.checked == true) {
-            var result = 'Fett';
-        } else if (check5.checked == true) {
-            var result = 'Zu Fett';
-        }
-        write2DBAction(type, CreatedOnDateID, CreatedOnTimeID, textareaID, result)
+        write2DBAction(type, CreatedOnDateID, CreatedOnTimeID, textareaID, result, "false")
     }
 };
+
+//if no date from each action is reached than user can do nothing
+function livestockActionEditAlert(msg) {
+    ons.notification.confirm({
+        message: msg,
+        title: 'Nutztier Wurfindex Datum',
+        buttonLabels: ['OK'],
+        animation: 'default',
+        primaryButtonIndex: 1,
+        cancelable: false,
+        callback: function (index) {
+            if (index == 0) {
+                document.querySelector('#nav1').popPage();
+            }
+        }
+    });
+}
