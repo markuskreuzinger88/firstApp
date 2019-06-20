@@ -1,8 +1,12 @@
 var color = "";
 var number = "";
+var actualDate = "";
+var actualDateNew = "";
 var days = ["SO", "MO", "DI", "MI", "DO", "FR", "SA"];
 
 $(document).on('prepop', '#nav1', function (event) {
+    actualDateNew = new Date();
+    actualDate = actualDateNew.getTime();
     var event = event.originalEvent;
     if (event.enterPage.id === 'livestock_detail') {
         setMarkDetailView()
@@ -13,6 +17,8 @@ $(document).on('prepop', '#nav1', function (event) {
 });
 
 document.addEventListener("init", function (event) {
+    actualDateNew = new Date();
+    actualDate = actualDateNew.getTime();
     color = String(localStorage.LivestockColor)
     number = String(localStorage.LivestockNumber)
     var page = event.target;
@@ -64,6 +70,7 @@ function setMarkDetailView() {
                 .charAt(3);
             document.getElementById("PlaceDetail").value = results.rows.item(0).place;
             document.getElementById("BornOnDetail").value = results.rows.item(0).born;
+            document.getElementById("livestockGroup").value = results.rows.item(0).livestock_group;
         }, null);
     });
 };
@@ -75,184 +82,189 @@ function setActionDetailView(trashActive) {
     while (list.hasChildNodes()) {
         list.removeChild(list.firstChild);
     }
-    var actualDateNew = new Date();
-    var actualDate = actualDateNew.getTime();
+    var badgeCounter = 0;
     var setTrashOnce = false;
     var getActionDateOnce = false;
+    var setActualDateFieldOnce = false;
+    var setstartPointIDBelegung = false;
     db.transaction(function (transaction) {
         transaction.executeSql('SELECT * FROM livestock_action WHERE livestock_id = ? ORDER BY date DESC',
             [livestock_id],
             function (tx, results) {
                 for (i = 0; i < results.rows.length; i++) {
-                    card = document.createElement("div")
-                    card.setAttribute("class", "container right");
-                    content = document.createElement("div")
-                    content.setAttribute("class", "content");
-                    /*get action Date*/
-                    actionDate = Date.parse(results.rows.item(i).date);
-                    /*convert date difference from milleseconds to days*/
-                    var daysLeft = Math.ceil((actionDate - actualDate) / 24 / 60 / 60 / 1000);
-                    /*generate Type*/
-                    rowType = document.createElement("ons-row")
-                    colType = document.createElement("ons-col")
-                    if ((trashActive == "true") && (results.rows.item(i).future == "false") && setTrashOnce == false) {
-                        colTypeIcon = document.createElement("ons-col")
-                        icon = document.createElement("ons-icon")
-                        icon.setAttribute("icon", "fa-trash");
-                        icon.setAttribute("style", "color: red; margin-left : 100%");
-                        rowType.appendChild(colType);
-                        colTypeIcon.appendChild(icon);
-                        rowType.appendChild(colTypeIcon);
-                    } else if (results.rows.item(i).future == "true") {
-                        localStorage.setItem("actionEdit", 'false');
-                        //set Icon
-                        colTypeIcon = document.createElement("ons-col")
-                        icon = document.createElement("ons-icon")
-                        rowType.appendChild(colType);
-                        colTypeIcon.appendChild(icon);
-                        rowType.appendChild(colTypeIcon);
-                        //set days left
-                        rowDate2 = document.createElement("ons-row")
-                        colDateHeader2 = document.createElement("ons-col")
-                        colDate2 = document.createElement("ons-col")
-                        colDateHeader2.innerHTML = ("In");
-                        colDateHeader2.style.fontWeight = "700";
-                        colDate2.innerHTML = daysLeft + " Tage";
-                        colDate2.style.fontWeight = "700";
-                        rowDate2.appendChild(colDateHeader2);
-                        rowDate2.appendChild(colDate2);
-                        if (daysLeft > 7) {
-                            icon.setAttribute("icon", "fa-info-circle");
-                            icon.setAttribute("style", "color: #3399ff; margin-left : 100%");
-                        } else if ((daysLeft < 7) && (daysLeft > 0)) {
-                            localStorage.setItem("actionEdit", 'true');
-                            icon.setAttribute("icon", "fa-edit");
-                            icon.setAttribute("style", "color: green; margin-left : 100%");
-                            colDate2.style.color = "green";
-                            colDateHeader2.style.color = "green";
-                        } else {
-                            localStorage.setItem("actionEdit", 'true');
-                            icon.setAttribute("icon", "fa-edit");
+                    if (results.rows.item(i).display == "true") {
+                        card = document.createElement("div")
+                        card.setAttribute("class", "container right");
+                        content = document.createElement("div")
+                        content.setAttribute("class", "content");
+                        /*get action Date*/
+                        actionDate = Date.parse(results.rows.item(i).date);
+                        /*convert date difference from milleseconds to days*/
+                        var daysLeft = Math.ceil((actionDate - actualDate) / 24 / 60 / 60 / 1000);
+                        /*generate Type*/
+                        rowType = document.createElement("ons-row")
+                        colType = document.createElement("ons-col")
+                        //set only trash icon on last element in database if selected
+                        if ((trashActive == "true") && (results.rows.item(i).future == "false") && setTrashOnce == false) {
+                            /*user can only delete no future tagged elements*/
+                            colTypeIcon = document.createElement("ons-col")
+                            icon = document.createElement("ons-icon")
+                            icon.setAttribute("icon", "fa-trash");
                             icon.setAttribute("style", "color: red; margin-left : 100%");
-                            colDate2.style.color = "red";
-                            colDateHeader2.style.color = "red";
+                            rowType.appendChild(colType);
+                            colTypeIcon.appendChild(icon);
+                            rowType.appendChild(colTypeIcon);
+                        } else if (results.rows.item(i).future == "true") {
+                            localStorage.setItem("actionEdit", 'false');
+                            //set Icon
+                            colTypeIcon = document.createElement("ons-col")
+                            icon = document.createElement("ons-icon")
+                            rowType.appendChild(colType);
+                            colTypeIcon.appendChild(icon);
+                            rowType.appendChild(colTypeIcon);
+                            //set days left
+                            rowDate2 = document.createElement("ons-row")
+                            colDateHeader2 = document.createElement("ons-col")
+                            colDate2 = document.createElement("ons-col")
+                            colDateHeader2.innerHTML = ("In");
+                            colDateHeader2.style.fontWeight = "700";
+                            colDate2.innerHTML = daysLeft + " Tage";
+                            colDate2.style.fontWeight = "700";
+                            rowDate2.appendChild(colDateHeader2);
+                            rowDate2.appendChild(colDate2);
+                            /*set days left color to signal user when livestock is ready for next action*/
+                            if (daysLeft > 7) {
+                                icon.setAttribute("icon", "fa-info-circle");
+                                icon.setAttribute("style", "color: #3399ff; margin-left : 100%");
+                            } else if ((daysLeft < 7) && (daysLeft > 0)) {
+                                localStorage.setItem("actionEdit", 'true');
+                                icon.setAttribute("icon", "fa-edit");
+                                icon.setAttribute("style", "color: green; margin-left : 100%");
+                                colDate2.style.color = "green";
+                                colDateHeader2.style.color = "green";
+                                badgeCounter += 1;
+                            } else {
+                                localStorage.setItem("actionEdit", 'true');
+                                icon.setAttribute("icon", "fa-edit");
+                                icon.setAttribute("style", "color: red; margin-left : 100%");
+                                colDate2.style.color = "red";
+                                colDateHeader2.style.color = "red";
+                                badgeCounter += 1;
+                            }
+                        } else {
+                            rowType.appendChild(colType);
                         }
-                    } else {
-                        rowType.appendChild(colType);
-                    }
-                    colType.innerHTML = results.rows.item(i).type
-                    colType.style.fontWeight = "700";
-                    colType.style.marginBottom = "10px";
-                    /*generate Time*/
-                    if (results.rows.item(i).future == "false") {
-                        rowTime = document.createElement("ons-row")
-                        colTimeHeader = document.createElement("ons-col")
-                        colTime = document.createElement("ons-col")
-                        colTimeHeader.innerHTML = ("Uhrzeit")
-                        colTime.innerHTML = results.rows.item(i).time
-                    }
-                    /*generate Date*/
-                    rowDate = document.createElement("ons-row")
-                    colDateHeader = document.createElement("ons-col")
-                    colDate = document.createElement("ons-col")
-                    colDateHeader.innerHTML = ("Datum")
-                    colDate.innerHTML = results.rows.item(i).date
-                     /*store action item date to compare with actual date
-                     if actual date and action date are same => user is not allowed
-                     to save next action
-                     */
-                    if ((results.rows.item(i).future == "false") && (getActionDateOnce == false)) {
-                        localStorage.setItem("actionDate", results.rows.item(i).date);
-                        getActionDateOnce = true;
-                    }
-                    /*result*/
-                    if (results.rows.item(i).type == 'Abgeferkelt') {
-                        rowResult1 = document.createElement("ons-row")
-                        rowResult2 = document.createElement("ons-row")
-                        rowResult3 = document.createElement("ons-row")
-                        colresultHeader1 = document.createElement("ons-col")
-                        colresultHeader2 = document.createElement("ons-col")
-                        colresultHeader3 = document.createElement("ons-col")
-                        colresultHeader1.innerHTML = ("lebendig")
-                        colresultHeader2.innerHTML = ("tot")
-                        colresultHeader3.innerHTML = ("Mumien")
-                        colresult1 = document.createElement("ons-col")
-                        colresult2 = document.createElement("ons-col")
-                        colresult3 = document.createElement("ons-col")
-                        str = results.rows.item(i).result
-                        var res = str.split("+");
-                        colresult1.innerHTML = res[0]
-                        colresult2.innerHTML = res[1]
-                        colresult3.innerHTML = res[2]
-                        rowResult1.appendChild(colresultHeader1);
-                        rowResult1.appendChild(colresult1);
-                        rowResult2.appendChild(colresultHeader2);
-                        rowResult2.appendChild(colresult2);
-                        rowResult3.appendChild(colresultHeader3);
-                        rowResult3.appendChild(colresult3);
-                    } else {
-                        rowResult = document.createElement("ons-row")
-                        colresultHeader = document.createElement("ons-col")
-                        colresult = document.createElement("ons-col")
-                        colresultHeader.innerHTML = ("Ergebnis")
-                        colresult.innerHTML = results.rows.item(i).result
-                        rowResult.appendChild(colresultHeader);
-                        rowResult.appendChild(colresult);
-                    }
-                    /*textfield*/
-                    rowText = document.createElement("ons-row")
-                    colTextHeader = document.createElement("ons-col")
-                    colText = document.createElement("ons-col")
-                    colTextArea = document.createElement("textarea")
-                    colTextArea.setAttribute("class", "textarea");
-                    colTextArea.setAttribute("rows", "3");
-                    colTextHeader.innerHTML = ("Anmerkungen")
-                    colTextArea.value = results.rows.item(i).text
-                    rowText.appendChild(colTextHeader);
-                    rowText.appendChild(colText);
-                    /*append rows to container*/
-                    content.appendChild(rowType);
-                    if (results.rows.item(i).future == "false") {
-                        rowTime.appendChild(colTimeHeader);
-                        rowTime.appendChild(colTime);
-                        content.appendChild(rowTime);
-                    }
-                    rowDate.appendChild(colDateHeader);
-                    rowDate.appendChild(colDate);
-                    content.appendChild(rowDate);
-                    //add element if action is in future
-                    if (results.rows.item(i).future == "true") {
-                        content.appendChild(rowDate2);
-                    }
-                    if (results.rows.item(i).future == "false") {
+                        colType.innerHTML = results.rows.item(i).type
+                        colType.style.fontWeight = "700";
+                        colType.style.marginBottom = "10px";
+                        /*generate Time*/
+                        if (results.rows.item(i).future == "false") {
+                            rowTime = document.createElement("ons-row")
+                            colTimeHeader = document.createElement("ons-col")
+                            colTime = document.createElement("ons-col")
+                            colTimeHeader.innerHTML = ("Uhrzeit")
+                            colTime.innerHTML = results.rows.item(i).time
+                        }
+                        /*generate Date*/
+                        rowDate = document.createElement("ons-row")
+                        colDateHeader = document.createElement("ons-col")
+                        colDate = document.createElement("ons-col")
+                        colDateHeader.innerHTML = ("Datum")
+                        colDate.innerHTML = results.rows.item(i).date
+                        /*store action item date to compare with actual date
+                        if actual date and action date are same => user is not allowed
+                        to save next action
+                        */
+                        if ((results.rows.item(i).future == "false") && (getActionDateOnce == false)) {
+                            localStorage.setItem("actionDate", results.rows.item(i).date);
+                            getActionDateOnce = true;
+                        }
+                        /*result*/
                         if (results.rows.item(i).type == 'Abgeferkelt') {
-                            content.appendChild(rowResult1);
-                            content.appendChild(rowResult2);
-                            content.appendChild(rowResult3);
-                        } else if ((results.rows.item(i).type == 'Kontrolle 1') || (results.rows.item(i).type == 'Kontrolle 2')) {
-                            content.appendChild(rowResult);
-                        } else if (results.rows.item(i).type == 'Rauschekontrolle') {
-                            content.appendChild(rowResult);
-                        } else if (results.rows.item(i).type == 'Body Condition Score') {
-                            content.appendChild(rowResult);
+                            rowResult1 = document.createElement("ons-row")
+                            rowResult2 = document.createElement("ons-row")
+                            rowResult3 = document.createElement("ons-row")
+                            colresultHeader1 = document.createElement("ons-col")
+                            colresultHeader2 = document.createElement("ons-col")
+                            colresultHeader3 = document.createElement("ons-col")
+                            colresultHeader1.innerHTML = ("lebendig")
+                            colresultHeader2.innerHTML = ("tot")
+                            colresultHeader3.innerHTML = ("Mumien")
+                            colresult1 = document.createElement("ons-col")
+                            colresult2 = document.createElement("ons-col")
+                            colresult3 = document.createElement("ons-col")
+                            str = results.rows.item(i).result
+                            var res = str.split("+");
+                            colresult1.innerHTML = res[0]
+                            colresult2.innerHTML = res[1]
+                            colresult3.innerHTML = res[2]
+                            rowResult1.appendChild(colresultHeader1);
+                            rowResult1.appendChild(colresult1);
+                            rowResult2.appendChild(colresultHeader2);
+                            rowResult2.appendChild(colresult2);
+                            rowResult3.appendChild(colresultHeader3);
+                            rowResult3.appendChild(colresult3);
+                        } else {
+                            rowResult = document.createElement("ons-row")
+                            colresultHeader = document.createElement("ons-col")
+                            colresult = document.createElement("ons-col")
+                            colresultHeader.innerHTML = ("Ergebnis")
+                            colresult.innerHTML = results.rows.item(i).result
+                            rowResult.appendChild(colresultHeader);
+                            rowResult.appendChild(colresult);
                         }
-                    }
-                    /*only add text if not empty*/
-                    if (results.rows.item(i).text.length != 0) {
-                        results.rows.item(i).text.length
-                        content.appendChild(rowText);
-                        content.appendChild(colTextArea);
-                    }
-                    card.appendChild(content);
-                    if ((trashActive == "true") && (results.rows.item(i).future == "false") && setTrashOnce == false) {
-                        functionParameters = (results.rows.item(i).id + ',' + results.rows.item(i).type)
-                        card.setAttribute("onclick", "deleteActionItem(" + results.rows.item(i).id + ",'" + results.rows.item(i).type + "')");
-                        setTrashOnce = true;
-                    }
-                    document.getElementById("containerIndex").appendChild(card);
-                    //current date between action in future and action in presence
-                    if (actionDate > actualDate) {
-                        if ((Date.parse(results.rows.item(i + 1).date)) <= actualDate) {
+                        /*textfield*/
+                        rowText = document.createElement("ons-row")
+                        colTextHeader = document.createElement("ons-col")
+                        colText = document.createElement("ons-col")
+                        colTextArea = document.createElement("textarea")
+                        colTextArea.setAttribute("class", "textarea");
+                        colTextArea.setAttribute("rows", "3");
+                        colTextHeader.innerHTML = ("Anmerkungen")
+                        colTextArea.value = results.rows.item(i).text
+                        rowText.appendChild(colTextHeader);
+                        rowText.appendChild(colText);
+                        /*append rows to container*/
+                        content.appendChild(rowType);
+                        if (results.rows.item(i).future == "false") {
+                            rowTime.appendChild(colTimeHeader);
+                            rowTime.appendChild(colTime);
+                            content.appendChild(rowTime);
+                        }
+                        rowDate.appendChild(colDateHeader);
+                        rowDate.appendChild(colDate);
+                        content.appendChild(rowDate);
+                        //add element if action is in future
+                        if ((results.rows.item(i).future == "true") && (results.rows.item(i).display == "true")) {
+                            content.appendChild(rowDate2);
+                        }
+                        if (results.rows.item(i).future == "false") {
+                            if (results.rows.item(i).type == 'Abgeferkelt') {
+                                content.appendChild(rowResult1);
+                                content.appendChild(rowResult2);
+                                content.appendChild(rowResult3);
+                            } else if ((results.rows.item(i).type == 'Kontrolle 1') || (results.rows.item(i).type == 'Kontrolle 2')) {
+                                content.appendChild(rowResult);
+                            } else if (results.rows.item(i).type == 'Rauschekontrolle') {
+                                content.appendChild(rowResult);
+                            } else if (results.rows.item(i).type == 'Body Condition Score') {
+                                content.appendChild(rowResult);
+                            }
+                        }
+                        /*only add text if not empty*/
+                        if (results.rows.item(i).text.length != 0) {
+                            results.rows.item(i).text.length
+                            content.appendChild(rowText);
+                            content.appendChild(colTextArea);
+                        }
+                        card.appendChild(content);
+                        if ((trashActive == "true") && (results.rows.item(i).future == "false") && setTrashOnce == false) {
+                            functionParameters = (results.rows.item(i).id + ',' + results.rows.item(i).type)
+                            card.setAttribute("onclick", "deleteActionItem(" + results.rows.item(i).id + ",'" + results.rows.item(i).type + "')");
+                            setTrashOnce = true;
+                        }
+                        //current date between action in future and action in presence
+                        if ((actionDate <= actualDate) && (setActualDateFieldOnce == false)) {
                             actualDateElement = document.createElement("div")
                             actualDateElement.style.fontWeight = "700";
                             actualDateElement.style.marginBottom = "10px";
@@ -269,12 +281,29 @@ function setActionDetailView(trashActive) {
                             var actualDateFormat = new Date(actualDate).toISOString().substr(0, 10);
                             actualDateElement.innerHTML = day + " - " + actualDateFormat
                             document.getElementById("containerIndex").appendChild(actualDateElement);
+                            setActualDateFieldOnce = true;
+                        }
+                        document.getElementById("containerIndex").appendChild(card);
+                        /*store starting point ID for future elements
+                        e.g display only future elements for one 'Belegung' if more 'Belegung' Action Items are stored in Database
+                        */
+                        if ((results.rows.item(i).type == "Belegung") && (setstartPointIDBelegung == false)) {
+                            localStorage.setItem("startPointIDBelegung", results.rows.item(i).id);
+                            setstartPointIDBelegung = true;
                         }
                     }
                 }
                 if (results.rows.length == 0) {
+                    localStorage.setItem("actionDate", 0);
                     resetlivestockDetailActionColText();
                 }
+                //set badge for tab2 'Wurfindex'
+                if (badgeCounter != 0) {
+                    document.getElementById("tab2badge").setAttribute("badge", badgeCounter);
+                } else {
+                    document.getElementById("tab2badge").removeAttribute("badge");
+                }
+
             }, null);
     });
 };
@@ -285,11 +314,62 @@ function setDrugDetailView(trashActive) {
     while (list.hasChildNodes()) {
         list.removeChild(list.firstChild);
     }
+    var setDelayMsgOnce = false;
+    var badgeCounter = 0;
     db.transaction(function (transaction) {
-        transaction.executeSql('SELECT * FROM drug_delivery WHERE livestock_id = ?',
+        transaction.executeSql('SELECT * FROM drug_delivery WHERE livestock_id = ? ORDER BY id DESC',
             [livestock_id],
             function (tx, results) {
                 for (i = 0; i < results.rows.length; i++) {
+                    /*get action Date*/
+                    actionDate = Date.parse(results.rows.item(i).created);
+                    /*convert delay from days to milliseconds*/
+                    actionDelayMilli = results.rows.item(i).delay * 24 * 60 * 60 * 1000;
+                    /*convert date difference from milleseconds to days*/
+                    var daysLeft = Math.ceil(((actionDate + actionDelayMilli) - actualDate) / 24 / 60 / 60 / 1000);
+                    if ((daysLeft > 0) && (setDelayMsgOnce == false)) {
+                        actualDateElement = document.createElement("div")
+                        actualDateElement.style.fontWeight = "700";
+                        actualDateElement.style.marginBottom = "10px";
+                        actualDateElement.style.marginTop = "10px";
+                        actualDateElement.style.marginTop = "10px";
+                        actualDateElement.style.marginLeft = "30%";
+                        actualDateElement.style.textAlign = "center";
+                        actualDateElement.style.backgroundColor = "white";
+                        actualDateElement.style.width = "50%";
+                        actualDateElement.style.padding = "10px";
+                        actualDateElement.style.borderRadius = "10px";
+                        actualDateElement.style.border = "4px solid #3399ff";
+                        actualDateElement.innerHTML = "Noch " + daysLeft + " Tage Wartefrist"
+                        document.getElementById("containerMedical").appendChild(actualDateElement);
+                    }
+                    /*ccheck if delay was respected
+                    if not show user a warning
+                    */
+                    if ((results.rows.item(i).delay != 0) && (i > 0)) {
+                        var actionDateBefore = Date.parse(results.rows.item(i - 1).created);
+                        var actionDelay = results.rows.item(i).delay * 24 * 60 * 60 * 1000;
+                        var diff = actionDateBefore - (actionDate + actionDelay)
+                        if (diff < 0) {
+                            actualDateElement = document.createElement("div")
+                            actualDateElement.style.fontWeight = "700";
+                            actualDateElement.style.color = "red";
+                            actualDateElement.style.marginBottom = "10px";
+                            actualDateElement.style.marginTop = "10px";
+                            actualDateElement.style.marginTop = "10px";
+                            actualDateElement.style.marginLeft = "30%";
+                            actualDateElement.style.textAlign = "center";
+                            actualDateElement.style.backgroundColor = "white";
+                            actualDateElement.style.width = "50%";
+                            actualDateElement.style.padding = "10px";
+                            actualDateElement.style.borderRadius = "10px";
+                            actualDateElement.style.border = "4px solid #3399ff";
+                            actualDateElement.innerHTML = "Die Wartefrist wurde nicht eingehalten"
+                            document.getElementById("containerMedical").appendChild(actualDateElement);
+                            badgeCounter += 1;
+                        }
+                    }
+                    /*generate Medical Card*/
                     card = document.createElement("div")
                     card.setAttribute("class", "container right");
                     content = document.createElement("div")
@@ -349,9 +429,17 @@ function setDrugDetailView(trashActive) {
                     if (trashActive == "true") {
                         card.setAttribute("onclick", "deleteDrugItem(" + results.rows.item(i).id + ", null)");
                     }
+                    //set Delay Message only on first action item
+                    setDelayMsgOnce = true;
                 }
                 if (results.rows.length == 0) {
                     resetlivestockDetailDrugColText();
+                }
+                //set badge for tab3 'Arzneimittelvergabe'
+                if (badgeCounter != 0) {
+                    document.getElementById("tab3badge").setAttribute("badge", badgeCounter);
+                } else {
+                    document.getElementById("tab3badge").removeAttribute("badge");
                 }
             }, null);
     });
@@ -447,6 +535,7 @@ function modifyInputs() {
         document.getElementById("ColorDetail").removeAttribute("disabled");
         document.getElementById("PlaceDetail").removeAttribute("disabled");
         document.getElementById("BornOnDetail").removeAttribute("disabled");
+        document.getElementById("livestockGroup").removeAttribute("disabled");
         document.getElementById('livestockDetailCol').innerHTML = "Fertig";
         icon = document.createElement("ons-icon")
         icon.setAttribute("icon", "fa-check");
@@ -460,6 +549,7 @@ function modifyInputs() {
         document.getElementById("ColorDetail").removeAttribute("enabled");
         document.getElementById("PlaceDetail").removeAttribute("enabled");
         document.getElementById("BornOnDetail").removeAttribute("enabled");
+        document.getElementById("livestockGroup").removeAttribute("enabled");
         document.getElementById('livestockDetailCol').innerHTML = "Bearbeiten";
         icon = document.createElement("ons-icon")
         icon.setAttribute("icon", "fa-edit");
@@ -528,8 +618,9 @@ function updateLivestock() {
     color = document.getElementById("ColorDetail").style.backgroundColor;
     place = document.getElementById("PlaceDetail").value;
     createdOn = document.getElementById("BornOnDetail").value;
+    livestockGroup = document.getElementById("livestockGroup").value;
     db.transaction(function (tx) {
-        tx.executeSql("UPDATE livestock SET number=?, color = ?, place = ?, created = ? where id = ?", [number, color, place, createdOn, id]);
+        tx.executeSql("UPDATE livestock SET number=?, color = ?, place = ?, created = ?, livestock_group = ? where id = ?", [number, color, place, createdOn, livestockGroup, id]);
     }, function (error) {
         alert('Error: ' + error.message + ' code: ' + error.code);
     }, function () {
@@ -587,47 +678,6 @@ function livestockDetailActionRemove(id, container) {
             setDrugDetailView('false')
         }
     }
-}
-
-function deleteActionItem(id, type) {
-    console.log(type)
-    console.log(id)
-    ons.notification.confirm({
-        message: 'Möchtest du den Eintrag löschen?',
-        title: 'Nutztier Eintrag bearbeiten',
-        buttonLabels: ['Ja', 'Nein'],
-        animation: 'default',
-        primaryButtonIndex: 1,
-        cancelable: true,
-        callback: function (index) {
-            if (index == 0) {
-                if (type == "Belegung") {
-                    console.log("jep")
-                    db.transaction(function (tx) {
-                            tx.executeSql('DELETE FROM livestock_action WHERE id = ? OR future = ?',
-                                [id, 'true']);
-                        },
-                        function (error) {
-                            alert('Error: ' + error.message + ' code: ' + error.code);
-                        },
-                        function () {
-                            setActionDetailView('true')
-                        });
-                } else {
-                    db.transaction(function (tx) {
-                            tx.executeSql('DELETE FROM livestock_action WHERE id = ?',
-                                [id]);
-                        },
-                        function (error) {
-                            alert('Error: ' + error.message + ' code: ' + error.code);
-                        },
-                        function () {
-                            setActionDetailView('true')
-                        });
-                }
-            }
-        }
-    });
 }
 
 function deleteDrugItem(id) {

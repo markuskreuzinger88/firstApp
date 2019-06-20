@@ -18,7 +18,8 @@
     <script type="text/javascript" src="js/livestock_add.js"></script>
     <script type="text/javascript" src="js/livestock_detail.js"></script>
     <script type="text/javascript" src="js/livestock_action.js"></script>
-    <script type="text/javascript" src="js/drug_delivery.js"></script>
+    <script type="text/javascript" src="js/livestock_selector.js"></script>
+    <script type="text/javascript" src="js/drug_action_delivery.js"></script>
     <script type="text/javascript" src="js/database_handler.js"></script>
     <script type="text/javascript" src="js/general.js"></script>
     <script type="text/javascript" src="js/drug.js"></script>
@@ -290,13 +291,13 @@
                     style="margin-top: 8px; margin-left: 50px; text-align: left; font-family: Calibri; font-size: 15px; font-weight: 700">
                     Next Digital Farming</div>
                 <ons-row class="user_cover" style="margin-top: 30px">
-                    <ons-col onclick="pushNextPage('livestock_add')">
+                    <ons-col onclick="pushNextPage('livestock_add', 'livestock_add')">
                         <div class="user_thumbnail" id="livestock_add">
                             <ons-icon icon="fa-file-medical"></ons-icon>
                         </div>
                         <div class="title">Tier anlegen</div>
                     </ons-col>
-                    <ons-col onclick="pushNextPage('livestock')">
+                    <ons-col onclick="pushNextPage('livestock', 'livestock')">
                         <div class="user_thumbnail" id="livestock">
                             <ons-icon icon="fa-folder-open"></ons-icon>
                         </div>
@@ -305,17 +306,17 @@
                 </ons-row>
                 <ons-row class="user_cover">
                     <!-- <ons-col onclick="nav1.pushPage('drug_delivery.html')"> -->
-                    <ons-col onclick="pushNextPage('drug_delivery')">
+                    <ons-col onclick="pushNextPage('drug_delivery', 'drug_action_delivery')">
                         <div class="user_thumbnail" id="drug_delivery">
                             <ons-icon icon="fa-syringe"></ons-icon>
                         </div>
                         <div class="title" id="user_2_name">Behandlung</div>
                     </ons-col>
-                    <ons-col onclick="underConstruction()">
-                        <div class="user_thumbnail" id="drugs">
-                            <ons-icon icon="fa-pills"></ons-icon>
+                    <ons-col onclick="pushNextPage('wurfindex', 'drug_action_delivery')">
+                        <div class="user_thumbnail" id="wurfindex">
+                            <ons-icon icon="fa-calendar-alt"></ons-icon>
                         </div>
-                        <div class="title">Medikamente</div>
+                        <div class="title">Wurfindex</div>
                     </ons-col>
                 </ons-row>
                 <ons-row class="user_cover">
@@ -638,6 +639,15 @@
                         Standort
                     </label>
                 </ons-list-item>
+                <ons-list-item onchange="hideDialogSort('sort', 'checkSort-5', 'fa-users')" tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkSort-5"></ons-checkbox>
+                    </label>
+                    <label for="check-2" class="center">
+                        <ons-icon style="margin-right: 10px" icon="fa-users"></ons-icon>
+                        Gruppe
+                    </label>
+                </ons-list-item>
             </ons-list>
         </ons-dialog>
     </template>
@@ -878,10 +888,23 @@
                         </ons-col>
                     </ons-row>
                     <ons-row>
-                        <ons-col style="margin-left: 10%; margin-top: 15px">Erstellt am</ons-col>
-                        <ons-col>
-                            <input id="CreatedOn" type="date" value="tt.mm.jjjj "
-                                style="width:140px; margin-top: 5px"><br><br>
+                        <ons-col style="margin-left: 10%; margin-top: 10px">Gruppe</ons-col>
+                        <ons-col style="margin-left: 1%">
+                            <select id="ChooseGroupe" style="text-align: center; text-align-last: center; width:140px;">
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                                <option value="F">F</option>
+                                <option value="G">G</option>
+                                <option value="H">H</option>
+                                <option value="I">I</option>
+                                <option value="J">J</option>
+                                <option value="K">K</option>
+                                <option value="L">L</option>
+                                <option value="M">M</option>
+                            </select>
                         </ons-col>
                     </ons-row>
                     <section style="margin-left: 10%; margin-right: 10%; margin-top: 10%;  margin-bottom: 10%">
@@ -981,9 +1004,9 @@
                 <!--        <ons-tabbar>-->
                 <ons-tab page="tab1.html" label="ID" icon="fa-qrcode" active>
                 </ons-tab>
-                <ons-tab page="tab2.html" label="Wurfindex" icon="fa-calendar-alt">
+                <ons-tab id="tab2badge" page="tab2.html" label="Wurfindex" icon="fa-calendar-alt">
                 </ons-tab>
-                <ons-tab page="tab3.html" label="Arzneimittel" icon="fa-syringe">
+                <ons-tab id="tab3badge" page="tab3.html" label="Arzneimittel" icon="fa-syringe">
                 </ons-tab>
             </ons-tabbar>
             <style type="text/css">
@@ -1351,6 +1374,26 @@
                         <ons-col>
                             <input id="BornOnDetail" type="date" value="tt.mm.jjjj " name="BornOn"
                                 style="width:140px; margin-top: 20px" disabled><br><br>
+                        </ons-col>
+                    </ons-row>
+                    <ons-row>
+                        <ons-col style="margin-left: 10%; margin-top: 10px">Gruppe</ons-col>
+                        <ons-col style="margin-left: 1%">
+                            <select id="livestockGroup" style="text-align: center; text-align-last: center; width:140px;" disabled>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                                <option value="F">F</option>
+                                <option value="G">G</option>
+                                <option value="H">H</option>
+                                <option value="I">I</option>
+                                <option value="J">J</option>
+                                <option value="K">K</option>
+                                <option value="L">L</option>
+                                <option value="M">M</option>
+                            </select>
                         </ons-col>
                     </ons-row>
                 </form>
@@ -2056,16 +2099,16 @@
     </template>
 
     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
-    <!-- ----------------------------- DRUG DELIVERY PAGE ---------------------------- -->
+    <!-- ------------------------ DRUG AND ACTION DELIVERY PAGE ------------------------->
     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 
-    <template id="drug_delivery.html">
-        <ons-page id="drug_delivery">
+    <template id="drug_action_delivery.html">
+        <ons-page id="drug_action_delivery">
             <ons-toolbar>
                 <div class="left">
                     <ons-back-button></ons-back-button>
                 </div>
-                <div class="center">Arzneimittelvergabe</div>
+                <div id="drugAndActionPageTitle" class="center">Arzneimittelvergabe</div>
                 <div class="right"></div>
             </ons-toolbar>
             <ons-card>
@@ -2085,8 +2128,8 @@
                         </p>
                     </ons-col>
                     <ons-col style="text-align: center;">
-                        <!-- <p onclick="nav1.pushPage('livestock.html')" style="margin-top: -5px"> Hinzufügen -->
-                        <p onclick="nextPage()" style="margin-top: -5px"> Hinzufügen
+                        <p onclick="nav1.pushPage('livestock_selector.html')" style="margin-top: -5px"> Hinzufügen
+                        <!-- <p onclick="nextPage()" style="margin-top: -5px"> Hinzufügen -->
                             <ons-icon style="margin-left: 3px" icon="fa-plus"></ons-icon>
                         </p>
                     </ons-col>
@@ -2107,7 +2150,7 @@
                         </p>
                     </ons-col>
                     <ons-col style="text-align: center;">
-                        <p onclick="nav1.pushPage('drug.html')" style="margin-top: -5px"> Hinzufügen
+                        <p onclick="selectNextPage()" style="margin-top: -5px"> Hinzufügen
                             <ons-icon style="margin-left: 3px" icon="fa-plus"></ons-icon>
                         </p>
                     </ons-col>
@@ -2223,6 +2266,152 @@
             </style>
         </ons-page>
     </template>
+
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+    <!-- ------------------------------- LIVESTOCK SELECTOR------------------------------- -->
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+
+    <template id="livestock_selector.html">
+        <ons-page id="livestock_selector">
+            <ons-toolbar>
+                <div class="left">
+                    <ons-back-button></ons-back-button>
+                </div>
+                <div class="center">Nutztier hinzufügen</div>
+                <div class="right"></div>
+            </ons-toolbar>
+            <ons-list ng-controller="DialogController">
+                <ons-list-item onclick="nextPage()"
+                    modifier="chevron" tappable>
+                    Nutztier auswählen
+                </ons-list-item>
+                <ons-list-item
+                    onclick="showTemplateDialogLivestockGroup('livestockGroupDialog', 'livestockGroupDialog.html')"
+                    modifier="chevron" tappable>
+                    Gruppe auswählen
+                </ons-list-item>
+            </ons-list>
+        </ons-page>
+    </template>
+
+    <template id="livestockGroupDialog.html">
+        <ons-dialog id="livestockGroupDialog" cancelable>
+            <div style="text-align: center; padding: 5px;">
+                <p>
+                    <b>
+                        Gruppe auswählen
+                    </b>
+                </p>
+            </div>
+            <ons-list>
+                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'A', 'checkBoxGroup-1')" tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkBoxGroup-1"></ons-checkbox>
+                    </label>
+                    <label class="center">
+                        Gruppe: A
+                    </label>
+                </ons-list-item>
+                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'B', 'checkBoxGroup-2')" tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkBoxGroup-2"></ons-checkbox>
+                    </label>
+                    <label class="center">
+                        Gruppe: B
+                    </label>
+                </ons-list-item>
+                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'C', 'checkBoxGroup-3')" tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkBoxGroup-3"></ons-checkbox>
+                    </label>
+                    <label class="center">
+                        Gruppe: C
+                    </label>
+                </ons-list-item>
+                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'D', 'checkBoxGroup-4')" tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkBoxGroup-4"></ons-checkbox>
+                    </label>
+                    <label class="center">
+                        Gruppe: D
+                    </label>
+                </ons-list-item>
+                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'E', 'checkBoxGroup-5')" tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkBoxGroup-5"></ons-checkbox>
+                    </label>
+                    <label class="center">
+                        Gruppe: E
+                    </label>
+                </ons-list-item>
+                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'F', 'checkBoxGroup-6')" tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkBoxGroup-6"></ons-checkbox>
+                    </label>
+                    <label class="center">
+                        Gruppe: F
+                    </label>
+                </ons-list-item>
+                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'G', 'checkBoxGroup-7')" tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkBoxGroup-7"></ons-checkbox>
+                    </label>
+                    <label class="center">
+                        Gruppe: G
+                    </label>
+                </ons-list-item>
+                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'H', 'checkBoxGroup-8')" tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkBoxGroup-8"></ons-checkbox>
+                    </label>
+                    <label class="center">
+                        Gruppe: H
+                    </label>
+                </ons-list-item>
+                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'I', 'checkBoxGroup-9')" tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkBoxGroup-9"></ons-checkbox>
+                    </label>
+                    <label class="center">
+                        Gruppe: I
+                    </label>
+                </ons-list-item>
+                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'J', 'checkBoxGroup-10')" tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkBoxGroup-10"></ons-checkbox>
+                    </label>
+                    <label class="center">
+                        Gruppe: J
+                    </label>
+                </ons-list-item>
+                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'K', 'checkBoxGroup-11')" tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkBoxGroup-11"></ons-checkbox>
+                    </label>
+                    <label class="center">
+                        Gruppe: K
+                    </label>
+                </ons-list-item>
+                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'L', 'checkBoxGroup-12')" tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkBoxGroup-12"></ons-checkbox>
+                    </label>
+                    <label class="center">
+                        Gruppe: L
+                    </label>
+                </ons-list-item>
+                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'M', 'checkBoxGroup-13')" tappable>
+                    <label class="left">
+                        <ons-checkbox input-id="checkBoxGroup-13"></ons-checkbox>
+                    </label>
+                    <label class="center">
+                        Gruppe: M
+                    </label>
+                </ons-list-item>
+            </ons-list>
+        </ons-dialog>
+    </template>
+
 
     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
     <!-- ------------------------------- DRUG PAGE------------------------------- -->

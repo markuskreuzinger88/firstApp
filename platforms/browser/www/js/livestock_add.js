@@ -14,15 +14,11 @@ document.addEventListener("init", function (event) {
     var page = event.target;
     if (page.id === 'livestock_add') {
         BornOn.max = new Date().toISOString().split("T")[0];
-        CreatedOn.max = new Date().toISOString().split("T")[0];
         switchState = localStorage.getItem("settings_request")
         ipAdress = localStorage.getItem("settings_ipAdress")
         //calc window size and adapte SVG Object
         var w = window.innerWidth;
         var h = window.innerHeight;
-        console.log(w)
-        console.log(((w - 250) / 2))
-        console.log(h)
         var OffsestWidthX = (w - 250 - 50) / 2
         //set Object width depending on Display width
         document.getElementById("SvgObj").setAttribute("width", w - 30);
@@ -48,7 +44,6 @@ document.addEventListener("init", function (event) {
         }
         let today = new Date().toISOString().substr(0, 10);
         document.querySelector("#BornOn").value = today;
-        document.querySelector("#CreatedOn").value = today;
         db.transaction(function (transaction) {
             transaction.executeSql('SELECT * FROM user', [], function (tx, results) {
                 //get email
@@ -147,6 +142,8 @@ var hideDialogColorAdd = function (id, checkbox, color) {
 };
 
 function checkInputs() {
+    var actualDateNew = new Date();
+    var actualDate = actualDateNew.getTime();
     var CodeDigit0 = document.getElementById("CodeDigit0").value;
     var CodeDigit1 = document.getElementById("CodeDigit1").value;
     var CodeDigit2 = document.getElementById("CodeDigit2").value;
@@ -154,11 +151,11 @@ function checkInputs() {
     place = document.getElementById("ChooseSelPlace").value;
     color = document.getElementById("Color").style.backgroundColor;
     born = document.getElementById("BornOn").value;
-    created = document.getElementById("CreatedOn").value;
+    group = document.getElementById("ChooseGroupe").value;
     localStorage.setItem("ChooseSelPlaceStorage", place);
     number = CodeDigit0 + CodeDigit1 + CodeDigit2 + CodeDigit3
     if (number.length == 4) {
-        checkLivestockDB(born, color, number, place, created, email)
+        checkLivestockDB(born, color, number, place, actualDate, group, email)
     } else {
         ons.notification.alert({
             message: 'Die Nummer muss aus 4 Ziffern bestehen',
@@ -167,7 +164,7 @@ function checkInputs() {
     }
 }
 
-function checkLivestockDB(born, color, number, place, created, email) {
+function checkLivestockDB(born, color, number, place, actualDate, group, email) {
     db.transaction(function (transaction) {
         transaction.executeSql(
             'SELECT * FROM livestock WHERE color = ? AND number = ?', [color, number],
@@ -176,7 +173,7 @@ function checkLivestockDB(born, color, number, place, created, email) {
                     if (switchState == 'true') {
                         RESTAddLivestock()
                     } else {
-                        write2DBLivestock(born, color, number, place, created, email)
+                        write2DBLivestock(born, color, number, place, actualDate, group, email)
                     }
                 } else {
                     ons.notification.alert({

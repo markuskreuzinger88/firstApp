@@ -17,31 +17,37 @@ var arrID = [];
 var arrDrugNumber = [];
 var arrDrugDelay = [];
 var arrDrugAmount = [];
+var pageSelector = "";
 
 $(document).on('prepop', '#nav1', function (event) {
     var event = event.originalEvent;
-    if (event.enterPage.id === 'drug_delivery') {
+    if (event.enterPage.id === 'drug_action_delivery') {
+        pageSelector = localStorage.PageSelector;
+        if (pageSelector == 'wurfindex') {
+            document.getElementById("drugAndActionPageTitle").innerHTML = "Wurfindex"
+            document.getElementById("drugDrugDeliveryText").innerHTML = "Nutztier Ereignis auswählen"
+        } else {
+            document.getElementById("drugAndActionPageTitle").innerHTML = "Arzneimittelvergabe"
+            document.getElementById("drugDrugDeliveryText").innerHTML = "Arzneimittel auswählen"
+        }
         getDrugDeliveryView()
     }
 });
 
 document.addEventListener("init", function (event) {
     var page = event.target;
-    if (page.id === 'drug_delivery') {
+    if (page.id === 'drug_action_delivery') {
+        pageSelector = localStorage.PageSelector;
+        if (pageSelector == 'wurfindex') {
+            document.getElementById("drugAndActionPageTitle").innerHTML = "Wurfindex"
+            document.getElementById("drugDrugDeliveryText").innerHTML = "Nutztier Ereignis auswählen"
+        } else {
+            document.getElementById("drugAndActionPageTitle").innerHTML = "Arzneimittelvergabe"
+            document.getElementById("drugDrugDeliveryText").innerHTML = "Arzneimittel auswählen"
+        }
         getDrugDeliveryView()
     }
 });
-
-//check first the number of pages in stack. If number is 5 than 
-//the page livestock.html is already loaded --> bring the page to the front
-function nextPage() {
-    //livestock.html already in stack
-    if (document.querySelector('#nav1').pages.length == 5) {
-        document.querySelector('#nav1').bringPageTop('livestock.html')
-    } else {
-        document.querySelector('#nav1').pushPage('livestock.html')
-    }
-}
 
 function getDrugDeliveryView() {
     CreatedOn.max = new Date().toISOString().split("T")[0];
@@ -85,7 +91,7 @@ function GetDBTaggedResult() {
     //read out Database
     db.transaction(function (transaction) {
         transaction.executeSql(
-            'SELECT * FROM livestock WHERE tagged = ? ORDER BY Number DESC', ['true'],
+            'SELECT * FROM livestock WHERE tagged = ? ORDER BY livestock_group ASC', ['true'],
             function (tx, results) {
                 DisplayResultDrugDelivery(results)
             }, null);
@@ -126,7 +132,8 @@ function DisplayResultDrugDelivery(results) {
             span_center1.setAttribute("class", "list-item__title");
             span_center2.setAttribute("class", "list-item__subtitle");
             span_center1.innerHTML = LiveStockNbr + results.rows.item(i).number;
-            span_center2.innerHTML = results.rows.item(i).place + "<br>" + results.rows.item(i).born;
+            span_center2.innerHTML = results.rows.item(i).place + "<br>" +
+            "Gruppe " + results.rows.item(i).livestock_group + "<br>" + results.rows.item(i).born;
             div_left = document.createElement("div")
             div_left.setAttribute("class", "left");
             //create color mark right
@@ -159,7 +166,7 @@ function DisplayResultDrugDelivery(results) {
         div.setAttribute("id", "livestockEmpty");
         list.appendChild(div);
         document.getElementById("drugDeliveryContainer").appendChild(list);
-        document.getElementById("drugDeliveryContainer").setAttribute("onclick", "onclick=nav1.pushPage('livestock.html')");
+        document.getElementById("drugDeliveryContainer").setAttribute("onclick", "onclick=nav1.pushPage('livestock_selector.html')");
         document.getElementById("livestockDrugDeliveryText").innerHTML = "Nutztier auswählen";
         document.getElementById("removeLivestocks").style.visibility = "hidden";
         document.getElementById("removeLivestocks").disabled = true;
@@ -235,17 +242,29 @@ function DisplayTaggedDrug(results) {
             arrDrugDelay.push(results.rows.item(i).delay);
             document.getElementById("removeDrugs").style.visibility = "visible";
             document.getElementById("removeDrugs").disabled = false;
-            document.getElementById("drugDrugDeliveryText").innerHTML = "Ausgewählte Arzneimittel";
+            if (pageSelector == 'wurfindex') {
+                document.getElementById("drugDrugDeliveryText").innerHTML = "Ausgewählte Ereignisse"
+            } else {
+                document.getElementById("drugDrugDeliveryText").innerHTML = "Ausgewählte Arzneimittel"
+            }
         }
     } else {
         list = document.createElement("ons-list-item")
         div = document.createElement("div")
         div.setAttribute("id", "drugEmpty");
-        div.innerHTML = "Kein Arzneimittel ausgewählt"
+        if (pageSelector == 'wurfindex') {
+            div.innerHTML = "Kein Ereignis ausgewählt"
+        } else {
+            div.innerHTML = "Kein Arzneimittel ausgewählt"
+        }
         list.appendChild(div);
         document.getElementById("drugContainer").appendChild(list);
         document.getElementById("drugContainer").setAttribute("onclick", "onclick=nav1.pushPage('drug.html')");
-        document.getElementById("drugDrugDeliveryText").innerHTML = "Arzneimittel auswählen";
+        if (pageSelector == 'wurfindex') {
+            document.getElementById("drugDrugDeliveryText").innerHTML = "Ereignis auswählen"
+        } else {
+            document.getElementById("drugDrugDeliveryText").innerHTML = "Arzneimittel auswählen"
+        }
         document.getElementById("removeDrugs").style.visibility = "hidden";
         document.getElementById("removeDrugs").disabled = true;
     }
@@ -423,4 +442,12 @@ function checkAmoutInputFields() {
         }
     }
     return true;
+}
+
+function selectNextPage() {
+    if (pageSelector == 'wurfindex') {
+        nav1.pushPage('livestock_action.html')
+    } else {
+        nav1.pushPage('drug.html')
+    }
 }

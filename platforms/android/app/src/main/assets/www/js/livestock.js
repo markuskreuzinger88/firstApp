@@ -27,7 +27,7 @@
         localStorage.removeItem('ColorFilter');
         localStorage.setItem('DBSort', "checkSort-1");
         localStorage.removeItem('PlaceFilter');
-        if (leavePage == "drug_delivery") {
+        if (leavePage == "livestock_selector") {
             col = document.getElementById("actionCol").innerHTML = "Scannen"
             icon = document.createElement("ons-icon")
             icon.setAttribute("icon", "fa-qrcode")
@@ -68,7 +68,7 @@
             span_center2.setAttribute("class", "list-item__subtitle");
             span_center1.innerHTML = LiveStockNbr + results.rows.item(i).number;
             span_center2.innerHTML = results.rows.item(i).place + "<br>" +
-                results.rows.item(i).born;
+                "Gruppe " + results.rows.item(i).livestock_group + "<br>" + results.rows.item(i).born;
             div_left = document.createElement("div")
             div_left.setAttribute("class", "left");
             input = document.createElement("input")
@@ -80,7 +80,7 @@
             list.setAttribute("tappable", true);
             //modify selection depending on last site --> when last page drug delivery
             //use tag icon else use chevron
-            if (leavePage == "drug_delivery") {
+            if (leavePage == "livestock_selector") {
                 list.setAttribute("onclick", "livestockTag(" + i + ")");
                 div_right = document.createElement("ons-checkbox")
                 div_right.setAttribute("class", "right");
@@ -229,6 +229,19 @@
                 ShowResultDBColorPlaceFilter('SELECT * FROM livestock WHERE Color = ? and Place = ? ORDER BY Place',
                     ColorFilter, PlaceFilter)
             }
+        } else if (Checkbox == "checkSort-5") {
+            if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("PlaceFilter") === null)) {
+                ShowResultDBSort('SELECT * FROM livestock ORDER BY livestock_group')
+            } else if ((localStorage.getItem("ColorFilter") !== null) && (localStorage.getItem("PlaceFilter") ===
+                    null)) {
+                ShowResultDBColorFilter('SELECT * FROM livestock WHERE Color = ? ORDER BY livestock_group', ColorFilter)
+            } else if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("PlaceFilter") !==
+                    null)) {
+                ShowResultDBColorFilter('SELECT * FROM livestock WHERE Place = ? ORDER BY livestock_group', PlaceFilter)
+            } else {
+                ShowResultDBColorPlaceFilter('SELECT * FROM livestock WHERE Color = ? and Place = ? ORDER BY livestock_group',
+                    ColorFilter, PlaceFilter)
+            }
         }
     }
 
@@ -238,6 +251,7 @@
         document.getElementById("checkSort-2").checked = false;
         document.getElementById("checkSort-3").checked = false;
         document.getElementById("checkSort-4").checked = false;
+        document.getElementById("checkSort-5").checked = false;
         document.getElementById(checkbox).checked = true;
         document.getElementById(id).hide();
         //change icon of button

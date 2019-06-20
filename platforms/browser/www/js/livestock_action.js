@@ -169,6 +169,7 @@ var saveDialog = function (id, type, CreatedOnDateID, CreatedOnTimeID, textareaI
     var arrFuture = [];
     document.getElementById(id).hide();
     if (id == 'occupancy') {
+        //calculate dates depending on user input
         startDate = Date.parse(document.getElementById(CreatedOnDateID).value);
         var newDate1 = (document.getElementById("possibleFarrow").value * 24 * 60 * 60 * 1000) + startDate;
         var possibleFarrowDate = new Date(newDate1).toISOString().substr(0, 10);
@@ -178,29 +179,34 @@ var saveDialog = function (id, type, CreatedOnDateID, CreatedOnTimeID, textareaI
         var possibleCheck1 = new Date(newDate3).toISOString().substr(0, 10);
         var newDate4 = (document.getElementById("possibleCheck2").value * 24 * 60 * 60 * 1000) + startDate;
         var possibleCheck2 = new Date(newDate4).toISOString().substr(0, 10);
-
+        // add variables to Array
+        //occupancy
         arrCreatedOnDate[0] = document.getElementById(CreatedOnDateID).value;
         arrCreatedOnTime[0] = document.getElementById(CreatedOnTimeID).value;
         arrTextarea[0] = document.getElementById(textareaID).value;
         arrFuture[0] = "false";
+        //first check from vet
         arrCreatedOnDate[1] = possibleCheck1;
         arrCreatedOnTime[1] = document.getElementById(CreatedOnTimeID).value;
         arrTextarea[1] = "";
         arrFuture[1] = "true";
+        //second check from vet
         arrCreatedOnDate[2] = possibleCheck2;
         arrCreatedOnTime[2] = document.getElementById(CreatedOnTimeID).value;
         arrTextarea[2] = "";
         arrFuture[2] = "true";
+        //possible farrow date
         arrCreatedOnDate[3] = possibleFarrowDate;
         arrCreatedOnTime[3] = document.getElementById(CreatedOnTimeID).value;
         arrTextarea[3] = "";
         arrFuture[3] = "true";
+        //possible strip off date
         arrCreatedOnDate[4] = possibleStripOff;
         arrCreatedOnTime[4] = document.getElementById(CreatedOnTimeID).value;
         arrTextarea[4] = "";
         arrFuture[4] = "true";
         var result = "";
-        write2DBActionArr(arrType, arrCreatedOnDate, arrCreatedOnTime, arrTextarea, result, arrFuture)
+        write2DBActionArr(arrType, arrCreatedOnDate, arrCreatedOnTime, arrTextarea, result, arrFuture, "true")
     } else if (id == 'farrow') {
         var BornAlive = document.getElementById("BornAlive");
         var BornDead = document.getElementById("BornDead");
@@ -228,10 +234,10 @@ var saveDialog = function (id, type, CreatedOnDateID, CreatedOnTimeID, textareaI
             });
             return
         }
-        write2DBAction(type, CreatedOnDateID, CreatedOnTimeID, textareaID, result, "false")
+        write2DBAction(type, CreatedOnDateID, CreatedOnTimeID, textareaID, result, "false", "true")
     } else if (id == 'stripOff') {
         var result = "";
-        write2DBAction(type, CreatedOnDateID, CreatedOnTimeID, textareaID, result, "false")
+        write2DBAction(type, CreatedOnDateID, CreatedOnTimeID, textareaID, result, "false", "true")
     } else if ((id == 'pregnancyCheck1') || (id == 'pregnancyCheck2')) {
         var check1 = document.getElementById("pregnancy-check-1");
         var check2 = document.getElementById("pregnancy-check-2");
@@ -240,7 +246,7 @@ var saveDialog = function (id, type, CreatedOnDateID, CreatedOnTimeID, textareaI
         } else {
             var result = 'negativ';
         }
-        write2DBAction(type, CreatedOnDateID, CreatedOnTimeID, textareaID, result, "false")
+        write2DBAction(type, CreatedOnDateID, CreatedOnTimeID, textareaID, result, "false", "true")
     }
 };
 
