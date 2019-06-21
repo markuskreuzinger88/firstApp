@@ -20,7 +20,7 @@ var pushNextPage = function (id, page) {
 
 $(document).on('postpush', '#nav1', function (event) {
     var event = event.originalEvent;
-    if ((event.enterPage.id === 'drug_action_delivery') || (event.enterPage.id === 'livestock') || (event.enterPage.id === 'livestock_add')) {
+    if ((event.enterPage.id === 'drug_action_delivery') || (event.enterPage.id === 'livestock') || (event.enterPage.id === 'livestock_add') || (event.enterPage.id === 'wurfindex')) {
         document.getElementById("livestock_add").style.boxShadow = '10px 10px 5px #888888';
         document.getElementById("livestock").style.boxShadow = '10px 10px 5px #888888';
         document.getElementById("drug_delivery").style.boxShadow = '10px 10px 5px #888888';
