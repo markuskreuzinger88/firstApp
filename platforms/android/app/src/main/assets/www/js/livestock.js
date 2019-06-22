@@ -32,6 +32,8 @@
             icon = document.createElement("ons-icon")
             icon.setAttribute("icon", "fa-qrcode")
             icon.setAttribute("style", "margin-left: 10px");
+            document.getElementById("actionCol").removeAttribute("onclick");
+            document.getElementById("actionCol").setAttribute("onclick", "scan()");
             document.getElementById("actionCol").appendChild(icon);
         }
         ShowResultDBSort('SELECT * FROM livestock ORDER BY Number DESC')

@@ -1,14 +1,32 @@
+var enterPage = ""
+
+$(document).on('postpush', '#nav1', function (event) {
+    var event = event.originalEvent;
+    enterPage = event.enterPage.id;
+});
+
+$(document).on('postpop', '#nav1', function (event) {
+    var event = event.originalEvent;
+    enterPage = event.enterPage.id;
+});
+
 //scan QR code
 function scan() {
     cordova.plugins.barcodeScanner.scan(
-        function(result) {
+        function (result) {
             if (!result.cancelled) {
                 if (result.format == "QR_CODE") {
-                    getLivestock(result.text)
+                    if (enterPage == 'livestock') {
+                        tagLivestock(result.text)
+                    } else {
+                        getLivestock(result.text)
+                    }
+                } else if (result.format == "EAN_13") {
+                    alert("Medikament: " + result.text)
                 }
             }
         },
-        function(error) {
+        function (error) {
             ons.notification.alert({
                 message: 'Scanning failed: ' + error,
                 title: 'Bad Scan',
@@ -21,7 +39,7 @@ function scan() {
             saveHistory: false, // Android, save scan history (default false)
             prompt: "Place a barcode inside the scan area", // Android
             resultDisplayDuration: 500, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
-            formats: "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
+            formats: "QR_CODE,PDF_417, EAN_13", // default: all but PDF_417 and RSS_EXPANDED
             orientation: "portrait" // Android only (portrait|landscape), default unset so it rotates with the device
         }
     );
@@ -30,19 +48,41 @@ function scan() {
 //spilt data from QR Code
 function getLivestock(CodeData) {
     var res = CodeData.split("+");
-    alert(res[0])
-    alert(res[1])
+    var color = String(res[0]);
+    var number = String(res[1]);
     db.transaction(function (transaction) {
-        transaction.executeSql('SELECT livestock_id FROM livestock WHERE color = ? AND number = ?', [res[0], res[1]], function (tx, results) {
+        transaction.executeSql('SELECT id FROM livestock WHERE color = ? AND number = ?', [color, number], function (tx, results) {
             if (results.rows.length > 0) {
-                alert(results.rows.item(i).livestock_id)
+                localStorage.setItem("LivestockColor", res[0]);
+                localStorage.setItem("LivestockNumber", res[1]);
+                localStorage.setItem("LivestockID", results.rows.item(0).id);
+                document.querySelector('#nav1').pushPage('livestock_detail.html');
             } else {
                 ons.notification.alert({
                     message: 'Nutztier ist nicht in deiner Datenbank hinterlegt',
                     title: 'Nutztier nicht vorhanden',
                 });
             }
-            // document.querySelector('#nav1').pushPage('livestock_open_action.html');
         }, null);
+    });
+}
+
+//tag livestock for drug delivery 
+function tagLivestock(CodeData) {
+    var res = CodeData.split("+");
+    var color = String(res[0]);
+    var number = String(res[1]);
+    db.transaction(function (tx) {
+        tx.executeSql("UPDATE livestock SET tagged=? where Color = ? AND Number = ?", ['true', color, number],
+            function (tx, result) {
+                ons.notification.alert({
+                    message: 'Nutztier mit der Kennzeichnung :' + color + " " + number + ' wurde ausgewählt',
+                    title: 'Nutztier ausgewählt',
+                });
+                readDBLivestock()
+            },
+            function (error) {
+                alert('Error: ' + error.message + ' code: ' + error.code);
+            });
     });
 }
