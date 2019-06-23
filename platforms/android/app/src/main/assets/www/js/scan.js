@@ -95,24 +95,32 @@ function checkIfDrugExists(CodeData) {
             function (tx, results) {
                 if (results.rows.length == 0) {
                     ons.notification.alert({
-                        message: 'Das Medikament ist nicht in der Datenbank hinterlegt',
+                        message: 'Das Medikament mit dem Code :' + results.rows.item(0).barcode + 'ist nicht in der Datenbank hinterlegt',
                         title: 'Medikament nicht vorhanden',
                     });
                 } else {
-                    tagDrug(CodeData)
+                    ons.notification.confirm({
+                        message: 'Das Medikament ' + results.rows.item(0).name + ' mit dem Code: ' + results.rows.item(0).barcode + ' wurde ausgewählt Möchtest du das Medikament zur Liste für die Behandlung hinzufügen?',
+                        title: 'Medikament hinzufügen',
+                        buttonLabels: ['Ja', 'Nein'],
+                        primaryButtonIndex: 1,
+                        cancelable: true,
+                        callback: function (index) {
+                            tagDrug(CodeData, results.rows.item(0).name)
+                        }
+                    });   
                 }
             }, null);
     });
 }
 
-
 //tag drug for drug delivery 
-function tagDrug(CodeData) {
+function tagDrug(CodeData, drug) {
     db.transaction(function (tx) {
         tx.executeSql("UPDATE drugs SET tagged=? where barcode = ?", ['true', CodeData],
-            function (tx, result) {
+            function (tx, results) {
                 ons.notification.alert({
-                    message: 'Das Medikament mit dem Code: ' + CodeData + ' wurde ausgewählt',
+                    message: 'Das Medikament ' + drug + ' mit dem Code: ' + CodeData + ' wurde ausgewählt',
                     title: 'Medikament ausgewählt',
                 });
                 if (enterPage == 'drug') {
@@ -126,3 +134,4 @@ function tagDrug(CodeData) {
             });
     });
 }
+
