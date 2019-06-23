@@ -646,7 +646,7 @@ function newDrugDelivery() {
     }, function (error) {
         alert('Error: ' + error.message + ' code: ' + error.code);
     }, function () {
-        document.querySelector('#nav1').pushPage('drug_delivery.html');
+        document.querySelector('#nav1').pushPage('drug_action_delivery.html');
     });
 }
 
