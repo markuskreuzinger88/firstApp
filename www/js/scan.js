@@ -59,7 +59,7 @@ function getLivestock(CodeData) {
                 document.querySelector('#nav1').pushPage('livestock_detail.html');
             } else {
                 ons.notification.alert({
-                    message: 'Nutztier ist nicht in deiner Datenbank hinterlegt',
+                    message: 'Das Nutztier ist nicht in deiner Datenbank hinterlegt',
                     title: 'Nutztier nicht vorhanden',
                 });
             }
@@ -92,14 +92,17 @@ function tagDrug(CodeData) {
     db.transaction(function (tx) {
         tx.executeSql("UPDATE drugs SET tagged=? where barcode = ?", ['true', CodeData],
             function (tx, result) {
-                ons.notification.alert({
-                    message: 'Das Medikament mit dem Code: ' + CodeData + ' wurde ausgewählt',
-                    title: 'Medikament ausgewählt',
-                });
-                if (enterPage == 'drug') {
-                    CommandDBDrugs()
+                if (results.rows.length > 0) {
+                    if (enterPage == 'drug') {
+                        CommandDBDrugs()
+                    } else {
+                        nav1.pushPage('drug_action_delivery.html')
+                    }
                 } else {
-                    nav1.pushPage('drug_action_delivery.html')
+                    ons.notification.alert({
+                        message: 'Das Medikament ist nicht in deiner Datenbank hinterlegt',
+                        title: 'Medikament nicht vorhanden',
+                    });
                 }
             },
             function (error) {
