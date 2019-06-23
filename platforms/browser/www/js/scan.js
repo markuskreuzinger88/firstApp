@@ -22,7 +22,7 @@ function scan() {
                         getLivestock(result.text)
                     }
                 } else if (result.format == "EAN_13") {
-                    alert("Medikament: " + result.text)
+                    tagDrug(result.text)
                 }
             }
         },
@@ -76,10 +76,31 @@ function tagLivestock(CodeData) {
         tx.executeSql("UPDATE livestock SET tagged=? where Color = ? AND Number = ?", ['true', color, number],
             function (tx, result) {
                 ons.notification.alert({
-                    message: 'Nutztier mit der Kennzeichnung :' + color + " " + number + ' wurde ausgewählt',
+                    message: 'Das Nutztier mit der Kennzeichnung: ' + color + " " + number + ' wurde ausgewählt',
                     title: 'Nutztier ausgewählt',
                 });
                 readDBLivestock()
+            },
+            function (error) {
+                alert('Error: ' + error.message + ' code: ' + error.code);
+            });
+    });
+}
+
+//tag drug for drug delivery 
+function tagDrug(CodeData) {
+    db.transaction(function (tx) {
+        tx.executeSql("UPDATE drugs SET tagged=? where barcode = ?", ['true', CodeData],
+            function (tx, result) {
+                ons.notification.alert({
+                    message: 'Das Medikament mit dem Code: ' + CodeData + ' wurde ausgewählt',
+                    title: 'Medikament ausgewählt',
+                });
+                if (enterPage == 'drug') {
+                    CommandDBDrugs()
+                } else {
+                    nav1.pushPage('drug_action_delivery.html')
+                }
             },
             function (error) {
                 alert('Error: ' + error.message + ' code: ' + error.code);

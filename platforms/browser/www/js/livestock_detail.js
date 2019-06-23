@@ -140,6 +140,7 @@ function setActionDetailView(trashActive) {
                                 localStorage.setItem("actionEdit", 'true');
                                 icon.setAttribute("icon", "fa-edit");
                                 icon.setAttribute("style", "color: green; margin-left : 100%");
+                                card.setAttribute("onclick", "getActionDialog('" + results.rows.item(i).type + "')");
                                 colDate2.style.color = "green";
                                 colDateHeader2.style.color = "green";
                                 badgeCounter += 1;
@@ -147,6 +148,7 @@ function setActionDetailView(trashActive) {
                                 localStorage.setItem("actionEdit", 'true');
                                 icon.setAttribute("icon", "fa-edit");
                                 icon.setAttribute("style", "color: red; margin-left : 100%");
+                                card.setAttribute("onclick", "getActionDialog('" + results.rows.item(i).type + "')");
                                 colDate2.style.color = "red";
                                 colDateHeader2.style.color = "red";
                                 badgeCounter += 1;
@@ -719,4 +721,16 @@ function resetlivestockDetailDrugColText() {
     icon.setAttribute("icon", "fa-trash");
     icon.setAttribute("style", "margin-left : 3px");
     document.getElementById("livestockDetailDrugCol").appendChild(icon);
+}
+
+function getActionDialog(type) {
+    if (type == 'Kontrolle 1') {
+        showTemplateDialog('pregnancyCheck1', 'pregnancyCheck1.html', '#CreatedOnPregnancyDate1', '#CreatedOnPregnancyTime1')
+    } else if (type == 'Kontrolle 2') {
+        showTemplateDialog('pregnancyCheck2', 'pregnancyCheck2.html', '#CreatedOnPregnancyDate2', '#CreatedOnPregnancyTime2')
+    } else if (type == 'Abferkeln') {
+        showTemplateDialog('farrow', 'farrow.html', '#CreatedOnFarrowDate', '#CreatedOnFarrowTime')
+    } else if (type == 'Absetzen') {
+        showTemplateDialog('stripOff', 'stripOff.html', '#CreatedOnStripOffDate', '#CreatedOnStripOffTime')
+    }
 }

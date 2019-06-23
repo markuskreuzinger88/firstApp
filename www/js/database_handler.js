@@ -1,4 +1,15 @@
 db = window.openDatabase("Database", "1.0", "Nutztier db", 20 * 1024 * 1024); //create 20MB Database
+var enterPage = ""
+
+$(document).on('postpush', '#nav1', function (event) {
+    var event = event.originalEvent;
+    enterPage = event.enterPage.id;
+});
+
+$(document).on('postpop', '#nav1', function (event) {
+    var event = event.originalEvent;
+    enterPage = event.enterPage.id;
+});
 
 //add livestock action Array to database
 function write2DBActionArr(arrType, arrCreatedOnDate, arrCreatedOnTime, arrTextarea, result, arrFuture, display) {
@@ -51,7 +62,7 @@ function write2DBAction(type, CreatedOnDateID, CreatedOnTimeID, textareaID, resu
 //dont show future action if actual action is displayed
 //e.g Kontrolle 1 future action is not displayed if Kontrolle 1 ia actually set by user
 function updateDBActionFutureElement(id, type, display) {
-    var startPointID= String(localStorage.startPointIDBelegung)
+    var startPointID = String(localStorage.startPointIDBelegung)
     db.transaction(function (tx) {
             tx.executeSql('UPDATE livestock_action SET display = ? WHERE livestock_id = ? AND type = ? AND future = ? AND id > ?',
                 [display, id, type, 'true', startPointID]);
@@ -60,14 +71,18 @@ function updateDBActionFutureElement(id, type, display) {
             alert('Error: ' + error.message + ' code: ' + error.code);
         },
         function () {
-            document.querySelector('#nav1').popPage();
+            if (enterPage == 'livestock_action') {
+                document.querySelector('#nav1').popPage();
+            } else {
+                setActionDetailView('false')
+            }
         });
 }
 
 //delete action Item from database
 function deleteActionItem(id, type) {
     var livestock_id = String(localStorage.LivestockID)
-    var startPointID= String(localStorage.startPointIDBelegung)
+    var startPointID = String(localStorage.startPointIDBelegung)
     ons.notification.confirm({
         message: 'Möchtest du den Eintrag löschen?',
         title: 'Nutztier Eintrag löschen',
@@ -181,38 +196,39 @@ function write2DBLogin(bearerToken, refreshToken) {
 }
 
 function sampleDrugs() {
-    write2DBDrug('Aconitum', '838031', '0', 'Homöopathika', 'mg/ml', 'false')
-    write2DBDrug('Advocid', '8-00295', '3', 'Standardarzneimittel', 'mg/ml', 'false')
-    write2DBDrug('Baytril', '8-00988', '7', 'Fütterungsarzneimittel', 'mg/ml', 'false')
-    write2DBDrug('Ceftiocyl Flow', '836487', '1', 'Homöopathika', 'µg/ml', 'false')
-    write2DBDrug('Dexatat', 'EU/2/17/209/001-002', '30', 'Fütterungsarzneimittel', 'mg/ml', 'false')
-    write2DBDrug('Melovem', '8-00718', '0', 'Standardarzneimittel', 'mg/ml', 'false')
-    write2DBDrug('Neomycin-Penicillin', '837660', '20', 'Fütterungsarzneimittel', 'mg/ml', 'false')
-    write2DBDrug('Oxytetracyclin', '13910', '100', 'Standardarzneimittel', 'g/kg', 'false')
-    write2DBDrug('Porcilis M Hyo', '838068', '0', 'Homöopathika', 'IU/ml', 'false')
-    write2DBDrug('Repose 500', '838093', '17', 'Biologika', 'g/g', 'false')
-
+    write2DBDrug('Aconitum', '838031', '0', 'Homöopathika', 'ml', '', 'false')
+    write2DBDrug('Advocid', '8-00295', '3', 'Standardarzneimittel', 'ml', '', 'false')
+    write2DBDrug('Baytril', '8-00988', '7', 'Fütterungsarzneimittel', 'ml', '', 'false')
+    write2DBDrug('Ceftiocyl Flow', '836487', '1', 'Homöopathika', 'ml', '', 'false')
+    write2DBDrug('Dexatat', 'EU/2/17/209/001-002', '30', 'Fütterungsarzneimittel', 'ml', '', 'false')
+    write2DBDrug('Melovem', '8-00718', '0', 'Standardarzneimittel', 'ml', '', 'false')
+    write2DBDrug('Neomycin-Penicillin', '837660', '20', 'Fütterungsarzneimittel', 'ml', '', 'false')
+    write2DBDrug('Oxytetracyclin', '13910', '100', 'Standardarzneimittel', 'ml', '', 'false')
+    write2DBDrug('Porcilis M Hyo', '838068', '0', 'Homöopathika', 'ml', '', 'false')
+    write2DBDrug('Repose 500', '838093', '17', 'Biologika', 'ml', '', 'false')
+    write2DBDrug('Dinolytic 5 mg/ml', '8-00003', '1', 'Standardarzneimittel', 'ml', '9088881277538', 'false')
+    write2DBDrug('Parvoruvac', '8-20066', '0', 'Standardarzneimittel', 'ml', '3411112293773', 'false')
 }
 
 function sampleLivestocks() {
     write2DBLivestockTester('2019-05-31', 'yellow', '1234', 'Dekzentrum', 'A', '2019-06-01', 'example@example.com')
-    write2DBLivestockTester('2019-05-02', 'red', '4567', 'Wartestall',  'A', '2019-04-01', 'example@example.com')
-    write2DBLivestockTester('2019-05-01', 'green', '8743', 'Abferkelbox',  'D', '2019-05-21', 'example@example.com')
-    write2DBLivestockTester('2019-05-30', 'blue', '1256', 'Futterventile',  'A', '2019-06-26', 'example@example.com')
-    write2DBLivestockTester('2019-05-27', 'orange', '7890', 'Abferkelbox',  'C', '2019-04-12', 'example@example.com')
-    write2DBLivestockTester('2019-05-09', 'white', '3456', 'Abferkelbox',  'C', '2019-03-01', 'example@example.com')
-    write2DBLivestockTester('2019-05-03', 'red', '4390', 'Futterventile',  'A', '2019-01-01', 'example@example.com')
-    write2DBLivestockTester('2019-05-19', 'blue', '4567', 'Wartestall',  'D', '2019-02-24', 'example@example.com')
-    write2DBLivestockTester('2019-05-15', 'yellow', '1238', 'Dekzentrum',  'B', '2019-01-16', 'example@example.com')
-    write2DBLivestockTester('2019-05-29', 'red', '9805', 'Dekzentrum',  'A', '2019-03-12', 'example@example.com')
+    write2DBLivestockTester('2019-05-02', 'red', '4567', 'Wartestall', 'A', '2019-04-01', 'example@example.com')
+    write2DBLivestockTester('2019-05-01', 'green', '8743', 'Abferkelbox', 'D', '2019-05-21', 'example@example.com')
+    write2DBLivestockTester('2019-05-30', 'blue', '1256', 'Futterventile', 'A', '2019-06-26', 'example@example.com')
+    write2DBLivestockTester('2019-05-27', 'orange', '7890', 'Abferkelbox', 'C', '2019-04-12', 'example@example.com')
+    write2DBLivestockTester('2019-05-09', 'white', '3456', 'Abferkelbox', 'C', '2019-03-01', 'example@example.com')
+    write2DBLivestockTester('2019-05-03', 'red', '4390', 'Futterventile', 'A', '2019-01-01', 'example@example.com')
+    write2DBLivestockTester('2019-05-19', 'blue', '4567', 'Wartestall', 'D', '2019-02-24', 'example@example.com')
+    write2DBLivestockTester('2019-05-15', 'yellow', '1238', 'Dekzentrum', 'B', '2019-01-16', 'example@example.com')
+    write2DBLivestockTester('2019-05-29', 'red', '9805', 'Dekzentrum', 'A', '2019-03-12', 'example@example.com')
 }
 
 //add livestock to database
-function write2DBLivestockTester(born, color, number, place, group, created, email) {
-    db.transaction(function (transaction) {
+async function write2DBLivestockTester(born, color, number, place, group, created, email) {
+    await db.transaction(function (transaction) {
         var executeQuery =
             "INSERT INTO livestock (born, color, number, place, created,  livestock_group, user, tagged, sync) VALUES (?,?,?,?,?,?,?,?,?)";
-        transaction.executeSql(executeQuery, [born, color, number, place, created,  group, email, "false", "true"],
+        transaction.executeSql(executeQuery, [born, color, number, place, created, group, email, "false", "true"],
             function (tx, result) {
                 console.log("Livestock added")
             },
@@ -223,12 +239,12 @@ function write2DBLivestockTester(born, color, number, place, group, created, ema
 }
 
 //ONLY FOR TESTING!!!!!
-function write2DBDrug(name, number, delay, category, drug_unit, tagged) {
+async function write2DBDrug(name, number, delay, category, drug_unit, barcode, tagged) {
 
-    db.transaction(function (transaction) {
+    await db.transaction(function (transaction) {
         var executeQuery =
-            "INSERT INTO drugs (name, number, delay, category, drug_unit, tagged) VALUES (?,?,?,?,?,?)";
-        transaction.executeSql(executeQuery, [name, number, delay, category, drug_unit, tagged],
+            "INSERT INTO drugs (name, number, delay, category, drug_unit, barcode, tagged) VALUES (?,?,?,?,?,?,?)";
+        transaction.executeSql(executeQuery, [name, number, delay, category, drug_unit, barcode, tagged],
             function (tx, result) {
                 console.log("Drug added")
             },

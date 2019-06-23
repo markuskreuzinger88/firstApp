@@ -49,8 +49,6 @@
             <p class="header">Willkommen</p>
             <div class="container">
                 <form action="/menu.html">
-                    <input id="firstname" name="loginName" placeholder="Vorname">
-                    <input id="lastname" name="loginName" placeholder="Nachname">
                     <input type="email" id="email" name="login" placeholder="Email">
                     <input type="password" id="psw" name="login" placeholder="Passwort">
                     <p class="link" style="text-align: right">Passwort vergessen?</p>
@@ -567,9 +565,9 @@
                             <ons-icon style="margin-right: 3px" icon="fa-search"></ons-icon>
                             <input id="SearchInput"
                                 style="width: 100px; border-right: none; border-left: none; border-top: none"
-                                onkeyup="UpdateDBResult()">
+                                onkeyup="underConstruction()">
                         </ons-col>
-                        <ons-col id="actionCol" onclick="nav1.pushPage('livestock_add.html')">Hinzufügen
+                        <ons-col id="actionCol" onclick="underConstruction()">Hinzufügen
                             <ons-icon id="actionIcon" style="margin-left: 3px" icon="fa-plus"></ons-icon>
                         </ons-col>
                     </ons-row>
@@ -577,11 +575,11 @@
                 <ons-list-item>
                     <ons-row style="margin-top: 5px; text-align: center">
                         <ons-col style="border-right: thick solid black"
-                            onclick="showTemplateDialog('sort', 'sort.html')">
+                        onclick="underConstruction()">
                             <ons-icon id="SortIcon" style="margin-left: 3px" icon="fa-trash"></ons-icon>
                             Löschen
                         </ons-col>
-                        <ons-col onclick="showTemplateDialog('filter', 'filter.html')">
+                        <ons-col onclick="underConstruction()">
                             Filtern nach
                             <ons-icon id="FilterIcon" style="margin-left: 3px" icon="fa-filter"></ons-icon>
                         </ons-col>
@@ -2773,7 +2771,7 @@
                                 style="width: 100px; border-right: none; border-left: none; border-top: none"
                                 onkeyup="SearchDBDrug()">
                         </ons-col>
-                        <ons-col id="actionCol">Scannen
+                        <ons-col id="actionCol" onclick="scan()">Scannen
                             <ons-icon id="actionIcon" style="margin-left: 3px" icon="fa-qrcode"></ons-icon>
                         </ons-col>
                     </ons-row>
