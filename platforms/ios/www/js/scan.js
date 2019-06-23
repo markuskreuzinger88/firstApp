@@ -15,6 +15,8 @@ function scan() {
     cordova.plugins.barcodeScanner.scan(
         function (result) {
             if (!result.cancelled) {
+                alert(result.format)
+                alert(result.text)
                 if (result.format == "QR_CODE") {
                     if (enterPage == 'livestock') {
                         tagLivestock(result.text)
