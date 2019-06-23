@@ -37,8 +37,6 @@ function switchFuncCredentials() {
     switchState = document.getElementById("switchCredentials").checked
     localStorage.setItem("settings_credentials", switchState);
     if (switchState == true) {
-        document.getElementById("firstname").value = "Max";
-        document.getElementById("lastname").value = "Muster";
         document.getElementById("email").value = "AniCareAdmin";
         document.getElementById("psw").value = "anicare";
     } else {
