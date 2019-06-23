@@ -22,7 +22,7 @@ function scan() {
                         getLivestock(result.text)
                     }
                 } else if (result.format == "EAN_13") {
-                    tagDrug(result.text)
+                    checkIfDrugExists(result.text)
                 }
             }
         },
@@ -87,22 +87,38 @@ function tagLivestock(CodeData) {
     });
 }
 
+//check if drug exists in database
+function checkIfDrugExists(CodeData) {
+    db.transaction(function (transaction) {
+        transaction.executeSql(
+            'SELECT * FROM drugs WHERE barcode = ?', [CodeData],
+            function (tx, results) {
+                if (results.rows.length == 0) {
+                    ons.notification.alert({
+                        message: 'Das Medikament ist nicht in der Datenbank hinterlegt',
+                        title: 'Medikament nicht vorhanden',
+                    });
+                } else {
+                    tagDrug(CodeData)
+                }
+            }, null);
+    });
+}
+
+
 //tag drug for drug delivery 
 function tagDrug(CodeData) {
     db.transaction(function (tx) {
         tx.executeSql("UPDATE drugs SET tagged=? where barcode = ?", ['true', CodeData],
             function (tx, result) {
-                if (results.rows.length > 0) {
-                    if (enterPage == 'drug') {
-                        CommandDBDrugs()
-                    } else {
-                        nav1.pushPage('drug_action_delivery.html')
-                    }
+                ons.notification.alert({
+                    message: 'Das Medikament mit dem Code: ' + CodeData + ' wurde ausgewählt',
+                    title: 'Medikament ausgewählt',
+                });
+                if (enterPage == 'drug') {
+                    CommandDBDrugs()
                 } else {
-                    ons.notification.alert({
-                        message: 'Das Medikament ist nicht in deiner Datenbank hinterlegt',
-                        title: 'Medikament nicht vorhanden',
-                    });
+                    nav1.pushPage('drug_action_delivery.html')
                 }
             },
             function (error) {
