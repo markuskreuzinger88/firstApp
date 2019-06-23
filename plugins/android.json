@@ -9,9 +9,6 @@
   "installed_plugins": {
     "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.company.firstAppTeam"
-    },
-    "cordova-plugin-barcodescanner": {
-      "PACKAGE_NAME": "com.company.firstAppTeam"
     }
   },
   "dependent_plugins": {}
