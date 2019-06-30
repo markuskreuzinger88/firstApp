@@ -1,7 +1,7 @@
 db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //create 20MB Database
 
 //set first ons page
-ons.ready(function() {
+ons.ready(function () {
     if (localStorage.getItem("login") == 'true') {
         document.querySelector('#nav1').pushPage('home_splitter.html');
     } else {
