@@ -124,11 +124,11 @@ function deleteActionItem(id, type) {
 
 
 //add livestock to database
-function write2DBLivestock(born, color, number, place, created, group, email) {
+function write2DBLivestock(born, color, number, place, created, email) {
     db.transaction(function (transaction) {
         var executeQuery =
-            "INSERT INTO livestock (born, color, number, place, created, livestock_group, user, tagged, sync) VALUES (?,?,?,?,?,?,?,?,?)";
-        transaction.executeSql(executeQuery, [born, color, number, place, created, group, email, "false", "true"],
+            "INSERT INTO livestock (born, color, number, place, created, user, tagged, sync) VALUES (?,?,?,?,?,?,?,?)";
+        transaction.executeSql(executeQuery, [born, color, number, place, created, email, "false", "true"],
             function (tx, result) {
                 document.querySelector('#nav1').popPage();
             },
@@ -137,6 +137,22 @@ function write2DBLivestock(born, color, number, place, created, group, email) {
             });
     });
 }
+
+async function write2DBLivestockArr(born, color, number, place, created, email) {
+    await db.transaction(async function (transaction) {
+        var livestock_id = String(localStorage.LivestockID)
+        var executeQuery =
+        "INSERT INTO livestock (born, color, number, place, created, user, tagged, sync) VALUES (?,?,?,?,?,?,?,?)";
+        transaction.executeSql(executeQuery, [born, color, number, place, created, email, "false", "true"],
+            function (tx, result) {
+                console.log("success")
+            },
+            function (error) {
+                alert('Error: ' + error.message + ' code: ' + error.code);
+            });
+    });
+}
+
 
 //add drug delivery to database
 async function write2DBDrugDelivery() {
@@ -179,14 +195,15 @@ async function write2DBDrugDelivery2(id, drug, approval_number, delay, amount) {
 }
 
 //Write to database
-function write2DBLogin(bearerToken, refreshToken) {
+function write2DBLogin() {
     var email = document.getElementById("email").value;
     var psw = document.getElementById("psw").value;
     db.transaction(function (transaction) {
         var executeQuery =
-            "INSERT INTO user (bearerToken, refreshToken, email, password) VALUES (?,?,?,?)";
-        transaction.executeSql(executeQuery, [bearerToken, refreshToken, email, psw],
+            "INSERT INTO user (email, password) VALUES (?,?)";
+        transaction.executeSql(executeQuery, [email, psw],
             function (tx, result) {
+                RESTGetLivestock()
                 document.querySelector('#nav1').pushPage('home_splitter.html');
             },
             function (error) {

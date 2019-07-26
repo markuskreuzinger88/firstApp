@@ -27,9 +27,14 @@ $(document).on('postpush', '#nav1', function (event) {
         document.getElementById("wurfindex").style.boxShadow = '10px 10px 5px #888888';
     }
     if (event.enterPage.id === 'home_splitter') {
+        //get window high size to set logout field in sidebar menu
+        var h = window.innerHeight;
+        logoutButtonMarginTop = parseInt(h) - 470;
+        // alert(h + " "+ logoutButtonMarginTop)
         // $("#menu-splitter .page__background").css("background","rgba(255, 255, 255, .7)");
+        $("#menu-splitter .page__background").css("background","white");
         // $("#menu-splitter .page__background").css("background", "white");
-        // document.getElementById("menu-splitter-list").style.background = 'white';
+        // document.getElementById("logoutButton").style.marginTop = logoutButtonMarginTop + 'px';
     }
 });
 

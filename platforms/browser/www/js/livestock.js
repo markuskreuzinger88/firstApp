@@ -17,39 +17,6 @@
         if (event.enterPage.id === 'livestock') {
             readDBLivestock()
         }
-        if (event.enterPage.id === 'livestock') {
-            var pullHook = document.getElementById('pull-hook');
-
-            pullHook.addEventListener('changestate', function (event) {
-                var message = '';
-
-                switch (event.state) {
-                    case 'initial':
-                        //                        message = 'Pull to refresh';
-
-                        break;
-                    case 'preaction':
-                        //                        message = 'Release';
-                        var child = document.getElementById("progress");
-                        pullHook.removeChild(child);
-                        //                        pullHook.removeChild(pullHook.firstChild);
-                        break;
-                    case 'action':
-                        //                    message = 'Loading...';
-                        progress = document.createElement("ons-progress-circular")
-                        progress.setAttribute("indeterminate")
-                        progress.setAttribute("id", "progress")
-                        pullHook.appendChild(progress);
-                        break;
-                }
-
-                //                pullHook.innerHTML = message;
-            });
-
-            pullHook.onAction = function (done) {
-                setTimeout(done, 5000);
-            };
-        }
     });
 
     function readDBLivestock() {

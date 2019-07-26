@@ -142,8 +142,8 @@ var hideDialogColorAdd = function (id, checkbox, color) {
 };
 
 function checkInputs() {
-    var actualDateNew = new Date();
-    var actualDate = actualDateNew.getTime();
+    let today = new Date().toISOString().substr(0, 10);
+    var actualDate = today;
     var CodeDigit0 = document.getElementById("CodeDigit0").value;
     var CodeDigit1 = document.getElementById("CodeDigit1").value;
     var CodeDigit2 = document.getElementById("CodeDigit2").value;
@@ -151,11 +151,10 @@ function checkInputs() {
     place = document.getElementById("ChooseSelPlace").value;
     color = document.getElementById("Color").style.backgroundColor;
     born = document.getElementById("BornOn").value;
-    group = document.getElementById("ChooseGroupe").value;
     localStorage.setItem("ChooseSelPlaceStorage", place);
     number = CodeDigit0 + CodeDigit1 + CodeDigit2 + CodeDigit3
     if (number.length == 4) {
-        checkLivestockDB(born, color, number, place, actualDate, group, email)
+        checkLivestockDB(born, color, number, place, actualDate, email)
     } else {
         ons.notification.alert({
             message: 'Die Nummer muss aus 4 Ziffern bestehen',
@@ -164,16 +163,16 @@ function checkInputs() {
     }
 }
 
-function checkLivestockDB(born, color, number, place, actualDate, group, email) {
+function checkLivestockDB(born, color, number, place, actualDate, email) {
     db.transaction(function (transaction) {
         transaction.executeSql(
             'SELECT * FROM livestock WHERE color = ? AND number = ?', [color, number],
             function (tx, results) {
                 if (results.rows.length == 0) {
                     if (switchState == 'true') {
-                        RESTAddLivestock()
+                        RESTAddLivestock(born, color, number, place, actualDate, email)
                     } else {
-                        write2DBLivestock(born, color, number, place, actualDate, group, email)
+                        write2DBLivestock(born, color, number, place, actualDate, email)
                     }
                 } else {
                     ons.notification.alert({

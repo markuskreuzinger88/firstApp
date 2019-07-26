@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Index Page</title>
+    <!--    <button onclick="ClearDB()">Click me</button>-->
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //create 20MB Database
+        // Wait for device API libraries to load
+        document.addEventListener("deviceready", onDeviceReady, false);
+        // device APIs are available 
+        function onDeviceReady() {
+            //only for debugging!!!!!
+            localStorage.setItem("settings_request", 'false');
+            localStorage.setItem("settings_credentials", 'false');
+            db.transaction(function(tx) {
+                tx.executeSql('DROP TABLE IF EXISTS Nutztiere');
+                tx.executeSql('DROP TABLE IF EXISTS Arzneimittelvergabe');
+                tx.executeSql('DROP TABLE IF EXISTS user');
+                tx.executeSql('DROP TABLE IF EXISTS livestock');
+                tx.executeSql('DROP TABLE IF EXISTS drug_delivery');
+                tx.executeSql('DROP TABLE IF EXISTS livestock_action');
+                tx.executeSql('DROP TABLE IF EXISTS drugs');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS user (bearerToken, refreshToken, email, password)');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS livestock (id INTEGER PRIMARY KEY, born, color, number, place, created, livestock_group, user, tagged, sync)');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS drug_delivery (id INTEGER PRIMARY KEY, livestock_id, drug, approval_number, delay, amount, created, DBSyncServer)');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS livestock_action (id INTEGER PRIMARY KEY, livestock_id, type, date, time, result, text, future, display, sync)');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS drugs (id INTEGER PRIMARY KEY, name, number, delay, category, drug_unit, barcode, tagged)');
+            }, function(error) {
+                alert('Error: ' + error.message + ' code: ' + error.code);
+            }, function() {
+                db.transaction(function(tx) {
+                    tx.executeSql('SELECT * FROM user', [], function(tx, results) {
+                        //check if user table is not empty
+                        //otherwise go to login page
+                        if (results.rows.length > 0) {
+                            localStorage.setItem("login", 'true');
+                            window.location = "menu.html";
+                        } else {
+                            localStorage.setItem("login", 'false');
+                            window.location = "menu.html";
+                        }
+                    }, null);
+                });
+            });
+        }
+
+    </script>
+</head>
+
+<body>
+</body>
+
+</html>

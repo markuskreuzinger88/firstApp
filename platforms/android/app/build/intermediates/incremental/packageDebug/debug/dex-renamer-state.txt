@@ -1,0 +1,4 @@
+#Thu Jul 25 11:57:56 CEST 2019
+base.0=C\:\\Users\\Max StandPc\\LogC Git\\firstApp\\platforms\\android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
+path.0=classes.dex
+renamed.0=classes.dex
