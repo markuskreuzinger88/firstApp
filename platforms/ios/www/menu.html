@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Create QR Data</title>
-
+    <script src="http://192.168.0.105:8080/target/target-script-min.js#anonymous"></script>
     <script src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
@@ -36,7 +36,7 @@
     <!-- <ons-navigator id="nav1" page="login.html"> </ons-navigator> -->
     <ons-navigator id="nav1"> </ons-navigator>
 
-    <!--  The Login Page -->
+    <!--  The Login Page -->  
 
     <template id="login.html">
         <ons-page id="login">
@@ -44,16 +44,16 @@
                 <ons-icon size="20px" style="margin-left: 10px; margin-top: 10px; color: #008F97;" icon="fa-bug"
                     onclick="nav1.pushPage('debug-settings.html')">
                 </ons-icon>
-            </div>
-            <img src="img/stablex_logo.png" style="width: 60%; margin-left: 20%; margin-top: 10%" />
+            </div> 
+            <img src="img/logo.png" style="width: 60%; margin-left: 20%; margin-top: 10%;" /> 
             <p class="header">Willkommen</p>
-            <div class="container">
+            <div class="container"> 
                 <form action="/menu.html">
-                    <input type="email" id="email" name="login" placeholder="Email">
-                    <input type="password" id="psw" name="login" placeholder="Passwort">
+                    <input type="email" id="email" name="login" placeholder="Email"> 
+                    <input type="password" id="psw" name="login" placeholder="Passwort"> 
                     <p class="link" style="text-align: right">Passwort vergessen?</p>
                     <!-- <ons-button modifier="large" style="background-color: #008F97; text-align: center" onclick="checkInputsLogin()"> -->
-                    <ons-button modifier="large" style="background-color: #008F97; text-align: center"
+                    <ons-button modifier="large" style="background-color: #253148; text-align: center"
                         onclick="RESTLogin()">
                         Anmelden
                     </ons-button>
@@ -132,7 +132,7 @@
             <ons-list id="menu-splitter-list" style="background-color: white">
                 <ons-list-item style="margin-top: 20px">
                     <div class="left">
-                        <img class="list-item__thumbnail" src="img/stablex_logo.png">  
+                        <img class="list-item__thumbnail" src="img/logo.png">  
                     </div>
                     <div class="center">
                         <span class="list-item__title">Stablex</span><span
@@ -356,16 +356,18 @@
                     font-size: 12px;
                 }
 
-                .user_thumbnail {
+                .user_thumbnail { 
                     width: 120px;
                     height: 120px;
                     display: table;
                     text-align: center;
                     margin: auto;
-                    background-color: #3399ff;
-                    border-radius: 25px;
-                    border: 2px solid #e7e7e7;
-                    box-shadow: 10px 10px 5px #888888;
+                    /* background-color: #253148; */
+                    background-color: #253148;
+                    border-radius: 10px;
+                    border: 2px solid #253148;
+                    /* border: 2px solid #e7e7e7; */
+                    /* box-shadow: 10px 10px 5px #888888; */
                 }
 
                 .user_thumbnail img {

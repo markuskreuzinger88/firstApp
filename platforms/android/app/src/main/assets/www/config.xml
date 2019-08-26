@@ -22,14 +22,19 @@
         <allow-intent href="market:*" />
         <preference name="SplashMaintainAspectRatio" value="true" />
     </platform>
-    <icon src="res/icon.png" />
-         <platform name="android">
-              <icon src="res/icon/android/ldpi.png" density="ldpi" />
-              <icon src="res/icon/android/mdpi.png" density="mdpi" />
-              <icon src="res/icon/android/hdpi.png" density="hdpi" />
-              <icon src="res/icon/android/xhdpi.png" density="xhdpi" />
-              <icon src="res/icon/android/xxhdpi.png" density="xxhdpi" />
-              <icon src="res/icon/android/xxxhdpi.png" density="xxxhdpi" />
+    <platform name="android">
+        <icon src="res/icon/android/ldpi.png" density="ldpi" />
+        <icon src="res/icon/android/mdpi.png" density="mdpi" />
+        <icon src="res/icon/android/hdpi.png" density="hdpi" />
+        <icon src="res/icon/android/xhdpi.png" density="xhdpi" />
+        <icon src="res/icon/android/xxhdpi.png" density="xxhdpi" />
+        <icon src="res/icon/android/xxxhdpi.png" density="xxxhdpi" />
+        <splash src="res/screen/android/splash-port-hdpi.png"  qualifier="splash-port-hdpi" />
+        <splash src="res/screen/android/splash-port-ldpi.png"  qualifier="splash-port-ldpi" />
+        <splash src="res/screen/android/splash-port-mdpi.png"  qualifier="splash-port-mdpi" />
+        <splash src="res/screen/android/splash-port-xhdpi.png"  qualifier="splash-port-xhdpi" />
+        <splash src="res/screen/android/splash-port-xxhdpi.png"  qualifier="splash-port-xxhdpi" />
+        <splash src="res/screen/android/splash-port-xxxhdpi.png"  qualifier="splash-port-xxxhdpi" />
      </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />

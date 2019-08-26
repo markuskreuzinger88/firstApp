@@ -40,7 +40,7 @@ document.addEventListener("init", function (event) {
             document.getElementById("Color").style.backgroundColor = localStorage.getItem("MarkColor");
             document.getElementById("rect1").style.fill = localStorage.getItem("MarkColor");
             document.getElementById("rect2").style.fill = localStorage.getItem("MarkColor");
-            document.getElementById("circle1").style.fill = localStorage.getItem("MarkColor");
+            document.getElementById("circle1").style.fill = localStorage.getItem("MarkColor"); 
         }
         let today = new Date().toISOString().substr(0, 10);
         document.querySelector("#BornOn").value = today;

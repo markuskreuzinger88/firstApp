@@ -23,7 +23,6 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
-    <icon src="res/icon.png" />
     <allow-intent href="market:*" />
     <icon density="ldpi" src="res/icon/android/ldpi.png" />
     <icon density="mdpi" src="res/icon/android/mdpi.png" />
@@ -31,6 +30,12 @@
     <icon density="xhdpi" src="res/icon/android/xhdpi.png" />
     <icon density="xxhdpi" src="res/icon/android/xxhdpi.png" />
     <icon density="xxxhdpi" src="res/icon/android/xxxhdpi.png" />
+    <splash qualifier="splash-port-hdpi" src="res/screen/android/splash-port-hdpi.png" />
+    <splash qualifier="splash-port-ldpi" src="res/screen/android/splash-port-ldpi.png" />
+    <splash qualifier="splash-port-mdpi" src="res/screen/android/splash-port-mdpi.png" />
+    <splash qualifier="splash-port-xhdpi" src="res/screen/android/splash-port-xhdpi.png" />
+    <splash qualifier="splash-port-xxhdpi" src="res/screen/android/splash-port-xxhdpi.png" />
+    <splash qualifier="splash-port-xxxhdpi" src="res/screen/android/splash-port-xxxhdpi.png" />
     <preference name="loglevel" value="DEBUG" />
     <preference name="SplashScreenDelay" value="5000" />
     <preference name="phonegap-version" value="cli-8.1.1" />

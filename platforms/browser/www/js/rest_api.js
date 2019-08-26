@@ -52,7 +52,7 @@
 
 
 
-//REST add Livestock
+//REST add Livestock 
 function RESTAddLivestock(born, color, number, place, actualDate, email) {
     var DEBUGIP = localStorage.getItem("settings_ipAdress")
     var endpoint = 'http://' + DEBUGIP + '/AniCare/api/Animal/SaveAnimal'
@@ -94,7 +94,6 @@ function RESTAddLivestock(born, color, number, place, actualDate, email) {
 function RESTGetLivestock() {
     var DEBUGIP = localStorage.getItem("settings_ipAdress")
     var endpoint = 'http://' + DEBUGIP + '/AniCare/api/Animal/GetAnimals'
-    alert(endpoint)
     $.ajax({
         url: endpoint,
         contentType: "application/json",
@@ -103,22 +102,11 @@ function RESTGetLivestock() {
         success: function (response) {
             var data = JSON.stringify(response);
             var obj = JSON.parse(data);
-            alert(data)
             //get numbers of entries
             var LivestockNbrs = data.split("id").length - 1;
-
-            for (i = 0; i < LivestockNbrs; i++) {
-                // alert(obj.list[i].id)
-                write2DBLivestockArr(obj.list[i].birthday, obj.list[i].color, obj.list[i].number, "dummy", obj.list[i].creationDate, obj.list[i].createdBy)
-                // write2DBActionArr2(arrType[i], arrCreatedOnDate[i], arrCreatedOnTime[i], arrTextarea[i], result, arrFuture[i], display)
-            };
-
-            
-            // alert(data)
-            // alert(response.success)
-            // var res = data.split('{')
-            // alert(data.split("id").length - 1)
-            //write2DBLivestock()
+            //update livestock view in livestock.js file
+            //save data to local database in second step (wait done)
+            updateLivestockView(obj, LivestockNbrs).done(write2DBServerLivestockData(obj, LivestockNbrs));
         },
         error: function (xhr, status, error) {
             var errorMessage = xhr.status + ': ' + xhr.statusText
@@ -126,11 +114,19 @@ function RESTGetLivestock() {
         }
     });
 }
+ 
+//write Server Data to local database
+function write2DBServerLivestockData(obj, LivestockNbrs) {
+    for (i = 0; i < LivestockNbrs; i++) {
+        write2DBLivestockArr(obj.list[i].id, obj.list[i].birthday, obj.list[i].color, obj.list[i].number, "dummy", obj.list[i].creationDate, obj.list[i].createdBy)
+    };
+}
 
 //User Login
 //username: AniCareAdmin
 //password: anicare
 function RESTLogin() {
+    RESTGetLivestock()
     document.querySelector('#nav1').pushPage('home_splitter.html');
     // var email = document.getElementById("email").value;
     // var psw = document.getElementById("psw").value;
@@ -138,17 +134,20 @@ function RESTLogin() {
     // var endpoint = 'http://' + DEBUGIP + '/anicare/api/authentication/login'
     // $.ajax({
     //     url: endpoint,
-    //     contentType: "application/json",
+    //     contentType: "application/x-www-form-urlencoded",
+    //     // contentType: "application/json",
     //     type: "POST",
     //     data: JSON.stringify({
     //         "userName": email,
     //         "password": psw
     //     }),
     //     success: function (response) {
+    //         alert(response.success)
     //         var data = JSON.stringify(response);
-    //         var obj = JSON.parse(data);
+    //         var obj = JSON.parse(data); 
     //         //check if login is successfull
-    //         if (response.success === true) {
+    //         if (response.success == true) {
+    //             alert("TRUE")
     //             write2DBLogin()
     //         } else {
     //             pushMsg(obj.messages[0].message)
@@ -156,7 +155,7 @@ function RESTLogin() {
     //     },
     //     error: function (xhr, status, error) {
     //         var errorMessage = xhr.status + ': ' + xhr.statusText
-    //         alert('Livestock add failed! Error - ' + errorMessage);
+    //         alert('Login failed! Error - ' + errorMessage);
     //     }
     // });
 }

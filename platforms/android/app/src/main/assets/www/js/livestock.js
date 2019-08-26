@@ -1,13 +1,116 @@
     db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //create 20MB Database
-    var LiveStockNbr = "AT-3-4321056-"
+    var LFBISNbr = "AT-3-4321056-"
     var leavePage = "";
+    var networkConnection = true;
+
+    // const testLivestocDataArray = {
+    //     "list": [{
+    //             "id": 10,
+    //             "creationDate": "2019-07-24T19:33:39",
+    //             "createdBy": "API_DEFAULT",
+    //             "customerId": 0,
+    //             "typeId": 0,
+    //             "number": "5888",
+    //             "color": null,
+    //             "birthday": "0001-01-01T00:00:00",
+    //             "isLocked": false
+    //         },
+    //         {
+    //             "id": 11,
+    //             "creationDate": "2019-07-24T19:34:15",
+    //             "createdBy": "API_DEFAULT",
+    //             "customerId": 0,
+    //             "typeId": 0,
+    //             "number": "1111",
+    //             "color": null,
+    //             "birthday": "0001-01-01T00:00:00",
+    //             "isLocked": false
+    //         },
+    //         {
+    //             "id": 12,
+    //             "creationDate": "2019-07-25T13:46:47",
+    //             "createdBy": "API_DEFAULT",
+    //             "customerId": 0,
+    //             "typeId": 2,
+    //             "number": "6796",
+    //             "color": "blue",
+    //             "birthday": "2019-07-24T00:00:00",
+    //             "isLocked": false
+    //         },
+    //         {
+    //             "id": 13,
+    //             "creationDate": "2019-07-25T13:48:40",
+    //             "createdBy": "API_DEFAULT",
+    //             "customerId": 0,
+    //             "typeId": 0,
+    //             "number": "6436",
+    //             "color": "blue",
+    //             "birthday": "2019-07-24T00:00:00",
+    //             "isLocked": false
+    //         },
+    //         {
+    //             "id": 14,
+    //             "creationDate": "2019-07-25T14:00:34",
+    //             "createdBy": "API_DEFAULT",
+    //             "customerId": 0,
+    //             "typeId": 2,
+    //             "number": "1234",
+    //             "color": "yellow",
+    //             "birthday": "2019-07-25T00:00:00",
+    //             "isLocked": false
+    //         },
+    //         {
+    //             "id": 15,
+    //             "creationDate": "2019-07-25T14:01:46",
+    //             "createdBy": "API_DEFAULT",
+    //             "customerId": 0,
+    //             "typeId": 2,
+    //             "number": "2234",
+    //             "color": "yellow",
+    //             "birthday": "2019-07-25T00:00:00",
+    //             "isLocked": false
+    //         },
+    //         {
+    //             "id": 16,
+    //             "creationDate": "2019-07-25T15:47:59",
+    //             "createdBy": "API_DEFAULT",
+    //             "customerId": 0,
+    //             "typeId": 2,
+    //             "number": "5698",
+    //             "color": "red",
+    //             "birthday": "2019-07-25T00:00:00",
+    //             "isLocked": false
+    //         },
+    //         {
+    //             "id": 17,
+    //             "creationDate": "2019-07-25T15:49:56",
+    //             "createdBy": "API_DEFAULT",
+    //             "customerId": 0,
+    //             "typeId": 2,
+    //             "number": "5896",
+    //             "color": "red",
+    //             "birthday": "2019-07-25T00:00:00",
+    //             "isLocked": false
+    //         }
+    //     ],
+    //     "count": null,
+    //     "messages": [],
+    //     "success": true
+    // };
+
 
     //detect if livestock add is popped, then update livestock view on page livestock
     $(document).on('prepop', '#nav1', function (event) {
         var event = event.originalEvent;
         leavePage = "dummy";
         if (event.enterPage.id === 'livestock') {
-            readDBLivestock()
+            //if networkconnection is valid update view from Server
+            //else use local database
+            if (networkConnection == true) {
+                RESTGetLivestock()
+            } else {
+                readDBLivestock()
+            }
         }
     });
 
@@ -15,9 +118,53 @@
         var event = event.originalEvent;
         leavePage = event.leavePage.id;
         if (event.enterPage.id === 'livestock') {
-            readDBLivestock()
+            //if networkconnection is valid update view from Server
+            //else use local database
+            if (networkConnection == true) {
+                RESTGetLivestock()
+            } else {
+                readDBLivestock()
+            }
         }
     });
+
+    //display results from Server if Networkconnection is valid
+    async function updateLivestockView(obj, LivestockNbrs) {
+        //sort list -> select item to sort and asc/desc
+        obj.list.sort(compareValues('number', 'desc'))
+        var r = $.Deferred();
+        var list = document.getElementById("containerLivestock");
+        while (list.hasChildNodes()) {
+            list.removeChild(list.firstChild);
+        }
+        DisplayResult("", "online", obj, LivestockNbrs)
+        return r;
+    }
+
+    // function for dynamic sorting of Server data list
+    function compareValues(key, order = 'asc') {
+        return function (a, b) {
+            if (!a.hasOwnProperty(key) ||
+                !b.hasOwnProperty(key)) {
+                return 0;
+            }
+            const varA = (typeof a[key] === 'string') ?
+                a[key].toUpperCase() : a[key];
+            const varB = (typeof b[key] === 'string') ?
+                b[key].toUpperCase() : b[key];
+
+            let comparison = 0;
+            if (varA > varB) {
+                comparison = 1;
+            } else if (varA < varB) {
+                comparison = -1;
+            }
+            return (
+                (order == 'desc') ?
+                (comparison * -1) : comparison
+            );
+        };
+    }
 
     function readDBLivestock() {
         var list = document.getElementById("containerLivestock");
@@ -56,8 +203,32 @@
     };
 
     //do not know how to use one or two command in function. this is only a workaround
-    function DisplayResult(results) {
-        for (i = 0; i < results.rows.length; i++) {
+    function DisplayResult(results, updateType, obj, amount) {
+        var LivestockNumber = [];
+        var LivestockPlace = [];
+        var LivestockGroup = [];
+        var LivestockBorn = [];
+        var LivestockColor = [];
+        if (updateType == "online") {
+            var listLength = amount;
+            for (i = 0; i < listLength; i++) {
+                LivestockNumber.push(obj.list[i].number);
+                LivestockPlace.push('dummy');
+                LivestockGroup.push('dummy');
+                LivestockBorn.push(obj.list[i].birthday);
+                LivestockColor.push(obj.list[i].color);
+            }
+        } else {
+            var listLength = results.rows.length;
+            for (i = 0; i < listLength; i++) {
+                LivestockNumber.push(results.rows.item(i).number);
+                LivestockPlace.push(results.rows.item(i).place);
+                LivestockGroup.push(results.rows.item(i).livestock_group);
+                LivestockBorn.push(results.rows.item(i).born);
+                LivestockColor.push(results.rows.item(i).color);
+            }
+        }
+        for (i = 0; i < listLength; i++) {
             list = document.createElement("ons-list-item")
             div_center = document.createElement("div")
             div_center.setAttribute("id", i);
@@ -68,16 +239,15 @@
             span_center2 = document.createElement("span")
             span_center1.setAttribute("class", "list-item__title");
             span_center2.setAttribute("class", "list-item__subtitle");
-            span_center1.innerHTML = LiveStockNbr + results.rows.item(i).number;
-            span_center2.innerHTML = results.rows.item(i).place + "<br>" +
-                "Gruppe " + results.rows.item(i).livestock_group + "<br>" + results.rows.item(i).born;
+            span_center1.innerHTML = LiveStockNbr + LivestockNumber[i];
+            span_center2.innerHTML = LivestockPlace[i] + "<br>" +
+                "Gruppe " + LivestockGroup[i] + "<br>" + LivestockBorn[i];
             div_left = document.createElement("div")
             div_left.setAttribute("class", "left");
             input = document.createElement("input")
             input.setAttribute("id", "livestockColor" + i);
             input.setAttribute("style",
-                "width: 40px; height :40px;margin-right: 5px;border-color : black; border: 2px solid black; border-radius: 10px; background-color:" + results.rows
-                .item(i).color);
+                "width: 40px; height :40px;margin-right: 5px;border-color : black; border: 2px solid black; border-radius: 10px; background-color:" + LivestockColor[i]);
             input.setAttribute("disabled", "true");
             list.setAttribute("tappable", true);
             //modify selection depending on last site --> when last page drug delivery
@@ -116,9 +286,6 @@
         console.log(number)
         //only use livestock 4 digit number
         number = number.slice(number.length - 4, number.length);
-        console.log(number)
-        console.log(id)
-        console.log(tag.checked)
         if (tag.checked == true) {
             tag.checked = false
             db.transaction(function (tx) {
@@ -140,7 +307,7 @@
     function ShowResultDBColorPlaceFilter(Command1, Command2, Command3) {
         db.transaction(function (transaction) {
             transaction.executeSql(Command1, [Command2, Command3], function (tx, results) {
-                DisplayResult(results)
+                DisplayResult(results, "offline", null, null)
             }, null);
         });
     }
@@ -149,18 +316,16 @@
     function ShowResultDBColorFilter(Command1, Command2) {
         db.transaction(function (transaction) {
             transaction.executeSql(Command1, [Command2], function (tx, results) {
-                DisplayResult(results)
+                DisplayResult(results, "offline", null, null)
             }, null);
         });
     }
 
     //Function for sort Database
     function ShowResultDBSort(Command) {
-        console.log("READ DATABASE")
         db.transaction(function (transaction) {
             transaction.executeSql(Command, [], function (tx, results) {
-                console.log(results)
-                DisplayResult(results)
+                DisplayResult(results, "offline", null, null)
             }, null);
         });
     }

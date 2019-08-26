@@ -123,7 +123,7 @@ function deleteActionItem(id, type) {
 }
 
 
-//add livestock to database
+//write single livestock to database
 function write2DBLivestock(born, color, number, place, created, email) {
     db.transaction(function (transaction) {
         var executeQuery =
@@ -138,21 +138,32 @@ function write2DBLivestock(born, color, number, place, created, email) {
     });
 }
 
-async function write2DBLivestockArr(born, color, number, place, created, email) {
-    await db.transaction(async function (transaction) {
-        var livestock_id = String(localStorage.LivestockID)
-        var executeQuery =
-        "INSERT INTO livestock (born, color, number, place, created, user, tagged, sync) VALUES (?,?,?,?,?,?,?,?)";
-        transaction.executeSql(executeQuery, [born, color, number, place, created, email, "false", "true"],
-            function (tx, result) {
-                console.log("success")
-            },
-            function (error) {
-                alert('Error: ' + error.message + ' code: ' + error.code);
-            });
+//write livestock list to Database
+//check first if ID already exists in Database
+//if ID exists than update Database entry else
+//insert entry to Database
+async function write2DBLivestockArr(id, born, color, number, place, created, email) {
+    await db.transaction(function (tx) {
+        tx.executeSql('SELECT * FROM livestock WHERE id = ?', [id], function (tx, results) {
+            if (results.rows.length > 0) {
+                //ID exits in Database
+                tx.executeSql("UPDATE livestock SET born = ?, color = ?, number = ?, place = ?, created = ?, user = ?, tagged = ?, sync = ? WHERE id=?" [born, color, number, place, created, email, "false", "true", id]);
+            } else {
+                //ID does not exits
+                //Note: remove success and error function after development process 
+                var executeQuery =
+                    "INSERT INTO livestock (id, born, color, number, place, created, user, tagged, sync) VALUES (?,?,?,?,?,?,?,?,?)";
+                    tx.executeSql(executeQuery, [id, born, color, number, place, created, email, "false", "true"],
+                    function (tx, result) {
+                        console.log("success")
+                    },
+                    function (error) {
+                        alert('Error: ' + error.message + ' code: ' + error.code);
+                    });
+            }
+        }, null);
     });
 }
-
 
 //add drug delivery to database
 async function write2DBDrugDelivery() {
@@ -194,7 +205,7 @@ async function write2DBDrugDelivery2(id, drug, approval_number, delay, amount) {
         });
 }
 
-//Write to database
+//Write Login Data to Database
 function write2DBLogin() {
     var email = document.getElementById("email").value;
     var psw = document.getElementById("psw").value;
@@ -203,6 +214,7 @@ function write2DBLogin() {
             "INSERT INTO user (email, password) VALUES (?,?)";
         transaction.executeSql(executeQuery, [email, psw],
             function (tx, result) {
+                //get Livestock Database from server
                 RESTGetLivestock()
                 document.querySelector('#nav1').pushPage('home_splitter.html');
             },
