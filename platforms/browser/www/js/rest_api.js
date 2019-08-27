@@ -114,7 +114,7 @@ function RESTGetLivestock() {
         }
     });
 }
- 
+
 //write Server Data to local database
 function write2DBServerLivestockData(obj, LivestockNbrs) {
     for (i = 0; i < LivestockNbrs; i++) {
@@ -126,7 +126,7 @@ function write2DBServerLivestockData(obj, LivestockNbrs) {
 //username: AniCareAdmin
 //password: anicare
 function RESTLogin() {
-    RESTGetLivestock()
+    //    RESTGetLivestock()
     document.querySelector('#nav1').pushPage('home_splitter.html');
     // var email = document.getElementById("email").value;
     // var psw = document.getElementById("psw").value;

@@ -153,7 +153,7 @@ async function write2DBLivestockArr(id, born, color, number, place, created, ema
                 //Note: remove success and error function after development process 
                 var executeQuery =
                     "INSERT INTO livestock (id, born, color, number, place, created, user, tagged, sync) VALUES (?,?,?,?,?,?,?,?,?)";
-                    tx.executeSql(executeQuery, [id, born, color, number, place, created, email, "false", "true"],
+                tx.executeSql(executeQuery, [id, born, color, number, place, created, email, "false", "true"],
                     function (tx, result) {
                         console.log("success")
                     },
@@ -256,8 +256,8 @@ function sampleLivestocks() {
 async function write2DBLivestockTester(born, color, number, place, group, created, email) {
     await db.transaction(function (transaction) {
         var executeQuery =
-            "INSERT INTO livestock (born, color, number, place, created,  livestock_group, user, tagged, sync) VALUES (?,?,?,?,?,?,?,?,?)";
-        transaction.executeSql(executeQuery, [born, color, number, place, created, group, email, "false", "true"],
+            "INSERT INTO livestock (born, color, number, place, created, user, tagged, sync) VALUES (?,?,?,?,?,?,?,?)";
+        transaction.executeSql(executeQuery, [born, color, number, place, created, email, "false", "true"],
             function (tx, result) {
                 console.log("Livestock added")
             },

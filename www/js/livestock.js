@@ -107,7 +107,8 @@
             //if networkconnection is valid update view from Server
             //else use local database
             if (networkConnection == true) {
-                RESTGetLivestock()
+                //                RESTGetLivestock()
+                readDBLivestock()
             } else {
                 readDBLivestock()
             }
@@ -121,7 +122,8 @@
             //if networkconnection is valid update view from Server
             //else use local database
             if (networkConnection == true) {
-                RESTGetLivestock()
+                //                RESTGetLivestock()
+                readDBLivestock()
             } else {
                 readDBLivestock()
             }
@@ -132,6 +134,7 @@
     async function updateLivestockView(obj, LivestockNbrs) {
         //sort list -> select item to sort and asc/desc
         obj.list.sort(compareValues('number', 'desc'))
+
         var r = $.Deferred();
         var list = document.getElementById("containerLivestock");
         while (list.hasChildNodes()) {
@@ -141,7 +144,7 @@
         return r;
     }
 
-    // function for dynamic sorting of Server data list
+    // function for dynamic sorting of livestock data list
     function compareValues(key, order = 'asc') {
         return function (a, b) {
             if (!a.hasOwnProperty(key) ||
@@ -167,6 +170,7 @@
     }
 
     function readDBLivestock() {
+        var livestockData = []
         var list = document.getElementById("containerLivestock");
         while (list.hasChildNodes()) {
             list.removeChild(list.firstChild);
@@ -183,7 +187,14 @@
             document.getElementById("actionCol").setAttribute("onclick", "scan()");
             document.getElementById("actionCol").appendChild(icon);
         }
-        ShowResultDBSort('SELECT * FROM livestock ORDER BY Number DESC')
+        getLivestockDB()
+        //        livestockData.sort(compareValues('number', 'asc'))
+        //        console.log(livestockData)
+        //        console.log(livestockData)
+        //        livestockData.sort(compareValues('number', 'desc'))
+        //                        DisplayResult(results, "offline", null, null)
+        //        console.log(livestockData)
+        //        ShowResultDBSort('SELECT * FROM livestock ORDER BY Number DESC')
     }
 
     function showTemplateDialogView(my_dialog, my_dialog_html) {
@@ -321,11 +332,14 @@
         });
     }
 
-    //Function for sort Database
-    function ShowResultDBSort(Command) {
-        db.transaction(function (transaction) {
-            transaction.executeSql(Command, [], function (tx, results) {
-                DisplayResult(results, "offline", null, null)
+    //Function for get livestock Data from Database
+    async function getLivestockDB() {
+        await db.transaction(function (transaction) {
+            transaction.executeSql('SELECT * FROM livestock', [], function (tx, results) {
+                var data2Arr = Array.from(results.rows);
+                console.log(data2Arr)
+                console.log('hallo2')
+                return data2Arr
             }, null);
         });
     }
