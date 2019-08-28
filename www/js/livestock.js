@@ -1,6 +1,8 @@
     db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //create 20MB Database
     var LFBISNbr = "AT-3-4321056-"
     var leavePage = "";
+    var LivestockList = [];
+    var LivestockListFiltered = [];
     var networkConnection = true;
 
     // const testLivestocDataArray = {
@@ -108,9 +110,9 @@
             //else use local database
             if (networkConnection == true) {
                 //                RESTGetLivestock()
-                readDBLivestock()
+                getLivestockDB()
             } else {
-                readDBLivestock()
+                getLivestockDB()
             }
         }
     });
@@ -123,25 +125,40 @@
             //else use local database
             if (networkConnection == true) {
                 //                RESTGetLivestock()
-                readDBLivestock()
+                getLivestockDB()
             } else {
-                readDBLivestock()
+                getLivestockDB()
             }
         }
     });
 
     //display results from Server if Networkconnection is valid
     async function updateLivestockView(obj, LivestockNbrs) {
+        //make array global
+        LivestockList = obj
+        //make variable global
+        LivestockListLength = LivestockNbrs
+        //reset local storage variables
+        resetLocalStorgageVariables()
+        //check leaved page --> change icon
+        setIconForAction()
+        //sort list
+        sortLivestockView('number', 'asc')
+        return r;
+    }
+
+    //display results from Server if Networkconnection is valid
+    async function sortLivestockView(key, order) {
         //sort list -> select item to sort and asc/desc
-        obj.list.sort(compareValues('number', 'desc'))
+        //obj.list.sort(compareValues('number', 'desc'))
+        LivestockList.sort(compareValues(key, order))
 
         var r = $.Deferred();
         var list = document.getElementById("containerLivestock");
         while (list.hasChildNodes()) {
             list.removeChild(list.firstChild);
         }
-        DisplayResult("", "online", obj, LivestockNbrs)
-        return r;
+        DisplayResult("", "offline", "", "")
     }
 
     // function for dynamic sorting of livestock data list
@@ -169,15 +186,14 @@
         };
     }
 
-    function readDBLivestock() {
-        var livestockData = []
-        var list = document.getElementById("containerLivestock");
-        while (list.hasChildNodes()) {
-            list.removeChild(list.firstChild);
-        }
+    //reset local storage variables
+    function resetLocalStorgageVariables() {
         localStorage.removeItem('ColorFilter');
-        localStorage.setItem('DBSort', "checkSort-1");
         localStorage.removeItem('PlaceFilter');
+    }
+
+    //check leaved page --> change icon
+    function setIconForAction() {
         if (leavePage == "livestock_selector") {
             col = document.getElementById("actionCol").innerHTML = "Scannen"
             icon = document.createElement("ons-icon")
@@ -187,14 +203,6 @@
             document.getElementById("actionCol").setAttribute("onclick", "scan()");
             document.getElementById("actionCol").appendChild(icon);
         }
-        getLivestockDB()
-        //        livestockData.sort(compareValues('number', 'asc'))
-        //        console.log(livestockData)
-        //        console.log(livestockData)
-        //        livestockData.sort(compareValues('number', 'desc'))
-        //                        DisplayResult(results, "offline", null, null)
-        //        console.log(livestockData)
-        //        ShowResultDBSort('SELECT * FROM livestock ORDER BY Number DESC')
     }
 
     function showTemplateDialogView(my_dialog, my_dialog_html) {
@@ -214,14 +222,13 @@
     };
 
     //do not know how to use one or two command in function. this is only a workaround
-    function DisplayResult(results, updateType, obj, amount) {
+    function DisplayResult(results, updateType, LivestockListobj, listLength) {
         var LivestockNumber = [];
         var LivestockPlace = [];
         var LivestockGroup = [];
         var LivestockBorn = [];
         var LivestockColor = [];
         if (updateType == "online") {
-            var listLength = amount;
             for (i = 0; i < listLength; i++) {
                 LivestockNumber.push(obj.list[i].number);
                 LivestockPlace.push('dummy');
@@ -230,16 +237,15 @@
                 LivestockColor.push(obj.list[i].color);
             }
         } else {
-            var listLength = results.rows.length;
-            for (i = 0; i < listLength; i++) {
-                LivestockNumber.push(results.rows.item(i).number);
-                LivestockPlace.push(results.rows.item(i).place);
-                LivestockGroup.push(results.rows.item(i).livestock_group);
-                LivestockBorn.push(results.rows.item(i).born);
-                LivestockColor.push(results.rows.item(i).color);
+            for (i = 0; i < LivestockListLength; i++) {
+                LivestockNumber.push(LivestockList[i].number);
+                LivestockPlace.push(LivestockList[i].place);
+                LivestockGroup.push(LivestockList[i].livestock_group);
+                LivestockBorn.push(LivestockList[i].born);
+                LivestockColor.push(LivestockList[i].color);
             }
         }
-        for (i = 0; i < listLength; i++) {
+        for (i = 0; i < LivestockListLength; i++) {
             list = document.createElement("ons-list-item")
             div_center = document.createElement("div")
             div_center.setAttribute("id", i);
@@ -314,119 +320,7 @@
         }
     }
 
-    //Function for use color and place filter in Database
-    function ShowResultDBColorPlaceFilter(Command1, Command2, Command3) {
-        db.transaction(function (transaction) {
-            transaction.executeSql(Command1, [Command2, Command3], function (tx, results) {
-                DisplayResult(results, "offline", null, null)
-            }, null);
-        });
-    }
-
-    //Function for use color filter in Database
-    function ShowResultDBColorFilter(Command1, Command2) {
-        db.transaction(function (transaction) {
-            transaction.executeSql(Command1, [Command2], function (tx, results) {
-                DisplayResult(results, "offline", null, null)
-            }, null);
-        });
-    }
-
-    //Function for get livestock Data from Database
-    async function getLivestockDB() {
-        await db.transaction(function (transaction) {
-            transaction.executeSql('SELECT * FROM livestock', [], function (tx, results) {
-                var data2Arr = Array.from(results.rows);
-                console.log(data2Arr)
-                console.log('hallo2')
-                return data2Arr
-            }, null);
-        });
-    }
-
-    //Command for Database sort or filter or search
-    function CommandDB() {
-        //delete actual container
-        var list = document.getElementById("containerLivestock");
-        while (list.hasChildNodes()) {
-            list.removeChild(list.firstChild);
-        }
-        console.log(localStorage.ColorFilter)
-        console.log(localStorage.PlaceFilter)
-        var ColorFilter = localStorage.ColorFilter
-        var PlaceFilter = String(localStorage.PlaceFilter)
-        var Checkbox = localStorage.DBSort
-        if (Checkbox == "checkSort-1") {
-            if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("PlaceFilter") === null)) {
-                ShowResultDBSort('SELECT * FROM livestock ORDER BY Number DESC')
-            } else if ((localStorage.getItem("ColorFilter") !== null) && (localStorage.getItem("PlaceFilter") ===
-                    null)) {
-                ShowResultDBColorFilter('SELECT * FROM livestock WHERE Color = ? ORDER BY Number DESC', ColorFilter)
-            } else if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("PlaceFilter") !==
-                    null)) {
-                ShowResultDBColorFilter('SELECT * FROM livestock WHERE Place = ? ORDER BY Number DESC', PlaceFilter)
-            } else {
-                ShowResultDBColorPlaceFilter(
-                    'SELECT * FROM Nutztiere WHERE Color = ? and Place = ? ORDER BY Number DESC', ColorFilter,
-                    PlaceFilter)
-            }
-        } else if (Checkbox == "checkSort-2") {
-            if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("PlaceFilter") === null)) {
-                ShowResultDBSort('SELECT * FROM livestock ORDER BY Number ASC')
-            } else if ((localStorage.getItem("ColorFilter") !== null) && (localStorage.getItem("PlaceFilter") ===
-                    null)) {
-                ShowResultDBColorFilter('SELECT * FROM livestock WHERE Color = ? ORDER BY Number ASC', ColorFilter)
-            } else if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("PlaceFilter") !==
-                    null)) {
-                ShowResultDBColorFilter('SELECT * FROM livestock WHERE Place = ? ORDER BY Number ASC', PlaceFilter)
-            } else {
-                ShowResultDBColorPlaceFilter(
-                    'SELECT * FROM livestock WHERE Color = ? and Place = ? ORDER BY Number ASC', ColorFilter,
-                    PlaceFilter)
-            }
-        } else if (Checkbox == "checkSort-3") {
-            if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("PlaceFilter") === null)) {
-                ShowResultDBSort('SELECT * FROM livestock ORDER BY Color')
-            } else if ((localStorage.getItem("ColorFilter") !== null) && (localStorage.getItem("PlaceFilter") ===
-                    null)) {
-                ShowResultDBColorFilter('SELECT * FROM livestock WHERE Color = ? ORDER BY Color', ColorFilter)
-            } else if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("PlaceFilter") !==
-                    null)) {
-                ShowResultDBColorFilter('SELECT * FROM livestock WHERE Place = ? ORDER BY Color', PlaceFilter)
-            } else {
-                ShowResultDBColorPlaceFilter('SELECT * FROM livestock WHERE Color = ? and Place = ? ORDER BY Color',
-                    ColorFilter, PlaceFilter)
-            }
-        } else if (Checkbox == "checkSort-4") {
-            if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("PlaceFilter") === null)) {
-                ShowResultDBSort('SELECT * FROM livestock ORDER BY Place')
-            } else if ((localStorage.getItem("ColorFilter") !== null) && (localStorage.getItem("PlaceFilter") ===
-                    null)) {
-                ShowResultDBColorFilter('SELECT * FROM livestock WHERE Color = ? ORDER BY Place', ColorFilter)
-            } else if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("PlaceFilter") !==
-                    null)) {
-                ShowResultDBColorFilter('SELECT * FROM livestock WHERE Place = ? ORDER BY Place', PlaceFilter)
-            } else {
-                ShowResultDBColorPlaceFilter('SELECT * FROM livestock WHERE Color = ? and Place = ? ORDER BY Place',
-                    ColorFilter, PlaceFilter)
-            }
-        } else if (Checkbox == "checkSort-5") {
-            if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("PlaceFilter") === null)) {
-                ShowResultDBSort('SELECT * FROM livestock ORDER BY livestock_group')
-            } else if ((localStorage.getItem("ColorFilter") !== null) && (localStorage.getItem("PlaceFilter") ===
-                    null)) {
-                ShowResultDBColorFilter('SELECT * FROM livestock WHERE Color = ? ORDER BY livestock_group', ColorFilter)
-            } else if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("PlaceFilter") !==
-                    null)) {
-                ShowResultDBColorFilter('SELECT * FROM livestock WHERE Place = ? ORDER BY livestock_group', PlaceFilter)
-            } else {
-                ShowResultDBColorPlaceFilter('SELECT * FROM livestock WHERE Color = ? and Place = ? ORDER BY livestock_group',
-                    ColorFilter, PlaceFilter)
-            }
-        }
-    }
-
-    //function for sort Database
+    //function for sort Livestock view
     var hideDialogSort = function (id, checkbox, icon) {
         document.getElementById("checkSort-1").checked = false;
         document.getElementById("checkSort-2").checked = false;
@@ -438,8 +332,17 @@
         //change icon of button
         var SortIcon = document.getElementById("SortIcon");
         SortIcon.setAttribute("icon", icon);
-        localStorage.setItem('DBSort', checkbox);
-        CommandDB()
+        if (checkbox == "checkSort-1") {
+            sortLivestockView('number', 'asc')
+        } else if (checkbox == "checkSort-2") {
+            sortLivestockView('number', 'desc')
+        } else if (checkbox == "checkSort-3") {
+            sortLivestockView('color', 'asc')
+        } else if (checkbox == "checkSort-4") {
+            sortLivestockView('place', 'asc')
+        } else if (checkbox == "checkSort-5") {
+            sortLivestockView('place', 'asc')
+        }
     };
 
     //function for filter database
@@ -462,6 +365,33 @@
         } else {
             localStorage.setItem('ColorFilter', color);
         }
+        if (checkbox == "checkFilter-1") {
+            LivestockListFiltered = LivestockList.filter(function (livestock) {
+                return livestock.color == "yellow";
+            });
+        } else if (checkbox == "checkFilter-2") {
+            LivestockListFiltered = LivestockList.filter(function (livestock) {
+                return livestock.color == "red";
+            });
+        } else if (checkbox == "checkFilter-3") {
+            LivestockListFiltered = LivestockList.filter(function (livestock) {
+                return livestock.color == "blue";
+            });
+        } else if (checkbox == "checkFilter-4") {
+            LivestockListFiltered = LivestockList.filter(function (livestock) {
+                return livestock.color == "green";
+            });
+        } else if (checkbox == "checkFilter-5") {
+            LivestockListFiltered = LivestockList.filter(function (livestock) {
+                return livestock.color == "orange";
+            });
+        } else if (checkbox == "checkFilter-6") {
+            LivestockListFiltered = LivestockList.filter(function (livestock) {
+                return livestock.color == "white";
+            });
+        } else {
+            LivestockListFiltered = LivestockList
+        }
         showTemplateDialogView('FilterPlace', 'FilterPlace.html')
         //            CommandDB()
     };
@@ -482,7 +412,31 @@
         } else {
             localStorage.setItem('PlaceFilter', place);
         }
-        CommandDB()
+        if (checkbox == "checkFilterPlace-1") {
+            LivestockListFiltered = LivestockListFiltered.filter(function (livestock) {
+                return livestock.color == "yellow";
+            });
+        } else if (checkbox == "checkFilterPlace-2") {
+            LivestockListFiltered = LivestockListFiltered.filter(function (livestock) {
+                return livestock.color == "red";
+            });
+        } else if (checkbox == "checkFilterPlace-3") {
+            LivestockListFiltered = LivestockListFiltered.filter(function (livestock) {
+                return livestock.color == "blue";
+            });
+        } else if (checkbox == "checkFilterPlace-4") {
+            LivestockListFiltered = LivestockListFiltered.filter(function (livestock) {
+                return livestock.color == "green";
+            });
+        } else if (checkbox == "checkFilterPlace-5") {
+            LivestockListFiltered = LivestockListFiltered.filter(function (livestock) {
+                return livestock.color == "orange";
+            });
+        } else {
+            LivestockListFiltered = LivestockList
+        }
+        console.log(LivestockListFiltered)
+        // CommandDB()
     };
 
     function UpdateDBResult() {

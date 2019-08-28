@@ -90,11 +90,17 @@ function RESTAddLivestock(born, color, number, place, actualDate, email) {
     });
 }
 
-//REST add Livestock
+//REST get Livestock
 function RESTGetLivestock() {
     var DEBUGIP = localStorage.getItem("settings_ipAdress")
+    var token = localStorage.getItem("bearerToken")
     var endpoint = 'http://' + DEBUGIP + '/AniCare/api/Animal/GetAnimals'
     $.ajax({
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': token
+        },
         url: endpoint,
         contentType: "application/json",
         type: "POST",
@@ -125,39 +131,41 @@ function write2DBServerLivestockData(obj, LivestockNbrs) {
 //User Login
 //username: AniCareAdmin
 //password: anicare
-function RESTLogin() {
-    //    RESTGetLivestock()
-    document.querySelector('#nav1').pushPage('home_splitter.html');
-    // var email = document.getElementById("email").value;
-    // var psw = document.getElementById("psw").value;
-    // var DEBUGIP = localStorage.getItem("settings_ipAdress")
-    // var endpoint = 'http://' + DEBUGIP + '/anicare/api/authentication/login'
-    // $.ajax({
-    //     url: endpoint,
-    //     contentType: "application/x-www-form-urlencoded",
-    //     // contentType: "application/json",
-    //     type: "POST",
-    //     data: JSON.stringify({
-    //         "userName": email,
-    //         "password": psw
-    //     }),
-    //     success: function (response) {
-    //         alert(response.success)
-    //         var data = JSON.stringify(response);
-    //         var obj = JSON.parse(data); 
-    //         //check if login is successfull
-    //         if (response.success == true) {
-    //             alert("TRUE")
-    //             write2DBLogin()
-    //         } else {
-    //             pushMsg(obj.messages[0].message)
-    //         }
-    //     },
-    //     error: function (xhr, status, error) {
-    //         var errorMessage = xhr.status + ': ' + xhr.statusText
-    //         alert('Login failed! Error - ' + errorMessage);
-    //     }
-    // });
+function RESTLogin() { 
+        // RESTGetLivestock()
+    // document.querySelector('#nav1').pushPage('home_splitter.html');
+    var email = document.getElementById("email").value;
+    var psw = document.getElementById("psw").value;
+    var DEBUGIP = localStorage.getItem("settings_ipAdress")
+    var endpoint = 'http://' + DEBUGIP + '/anicare/api/authentication/login'
+    $.ajax({
+        url: endpoint,
+        // contentType: "application/x-www-form-urlencoded",
+        contentType: "application/json",
+        type: "POST",
+        data: JSON.stringify({
+            "userName": email,
+            "password": psw
+        }),
+        success: function (response) {
+            var firstname = response.firstname
+            var lastname = response.lastname
+            var token = "bearer " + response.token
+            localStorage.setItem('bearerToken', token);
+            var data = JSON.stringify(response);
+            var obj = JSON.parse(data); 
+            //check if login is successfull
+            if (response.success == true) {
+                write2DBLogin(firstname, lastname, token)
+            } else {
+                pushMsg(obj.messages[0].message)
+            }
+        },
+        error: function (xhr, status, error) {
+            var errorMessage = xhr.status + ': ' + xhr.statusText
+            alert('Login failed! Error - ' + errorMessage);
+        }
+    });
 }
 
 pushMsg = function (msg) {

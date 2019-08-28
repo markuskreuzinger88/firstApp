@@ -206,13 +206,13 @@ async function write2DBDrugDelivery2(id, drug, approval_number, delay, amount) {
 }
 
 //Write Login Data to Database
-function write2DBLogin() {
+function write2DBLogin(firstname, lastname, token) {
     var email = document.getElementById("email").value;
     var psw = document.getElementById("psw").value;
     db.transaction(function (transaction) {
         var executeQuery =
-            "INSERT INTO user (email, password) VALUES (?,?)";
-        transaction.executeSql(executeQuery, [email, psw],
+            "INSERT INTO user (email, password, firstname, lastname, token) VALUES (?,?,?,?,?)";
+        transaction.executeSql(executeQuery, [email, psw, firstname, lastname, token],
             function (tx, result) {
                 //get Livestock Database from server
                 RESTGetLivestock()
@@ -221,6 +221,16 @@ function write2DBLogin() {
             function (error) {
                 alert('Error: ' + error.message + ' code: ' + error.code);
             });
+    });
+}
+
+//Function for get livestock Data from Database --> show livestock data in view
+function getLivestockDB() {
+    db.transaction(function (transaction) {
+        transaction.executeSql('SELECT * FROM livestock', [], function (tx, results) {
+            var data2Arr = Array.from(results.rows);
+            updateLivestockView(data2Arr, results.rows.length)
+        }, null);
     });
 }
 

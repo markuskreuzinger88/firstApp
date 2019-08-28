@@ -23,7 +23,7 @@
                 tx.executeSql('DROP TABLE IF EXISTS drug_delivery');
                 tx.executeSql('DROP TABLE IF EXISTS livestock_action');
                 tx.executeSql('DROP TABLE IF EXISTS drugs');
-                tx.executeSql('CREATE TABLE IF NOT EXISTS user (email, password)');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS user (email, password, firstname, lastname, token)');
                 tx.executeSql('CREATE TABLE IF NOT EXISTS livestock (id, born, color, number, place, created, user, tagged, sync)');
                 tx.executeSql('CREATE TABLE IF NOT EXISTS drug_delivery (id INTEGER PRIMARY KEY, livestock_id, drug, approval_number, delay, amount, created, DBSyncServer)');
                 tx.executeSql('CREATE TABLE IF NOT EXISTS livestock_action (id INTEGER PRIMARY KEY, livestock_id, type, date, time, result, text, future, display, sync)');
