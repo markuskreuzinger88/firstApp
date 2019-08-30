@@ -124,11 +124,11 @@ function deleteActionItem(id, type) {
 
 
 //write single livestock to database
-function write2DBLivestock(born, color, number, place, created, email) {
+function write2DBLivestock(birthday, color, number, place, created, email) {
     db.transaction(function (transaction) {
         var executeQuery =
-            "INSERT INTO livestock (born, color, number, place, created, user, tagged, sync) VALUES (?,?,?,?,?,?,?,?)";
-        transaction.executeSql(executeQuery, [born, color, number, place, created, email, "false", "true"],
+            "INSERT INTO livestock (birt, color, number, place, created, user, tagged, sync) VALUES (?,?,?,?,?,?,?,?)";
+        transaction.executeSql(executeQuery, [birthday, color, number, place, created, email, "false", "true"],
             function (tx, result) {
                 document.querySelector('#nav1').popPage();
             },
@@ -142,18 +142,18 @@ function write2DBLivestock(born, color, number, place, created, email) {
 //check first if ID already exists in Database
 //if ID exists than update Database entry else
 //insert entry to Database
-async function write2DBLivestockArr(id, born, color, number, place, created, email) {
+async function write2DBLivestockArr(id, birthday, color, number, place, created, email) {
     await db.transaction(function (tx) {
         tx.executeSql('SELECT * FROM livestock WHERE id = ?', [id], function (tx, results) {
             if (results.rows.length > 0) {
                 //ID exits in Database
-                tx.executeSql("UPDATE livestock SET born = ?, color = ?, number = ?, place = ?, created = ?, user = ?, tagged = ?, sync = ? WHERE id=?" [born, color, number, place, created, email, "false", "true", id]);
+                tx.executeSql("UPDATE livestock SET birthday = ?, color = ?, number = ?, place = ?, created = ?, user = ?, tagged = ?, sync = ? WHERE id=?" [birthday, color, number, place, created, email, "false", "true", id]);
             } else {
                 //ID does not exits
                 //Note: remove success and error function after development process 
                 var executeQuery =
-                    "INSERT INTO livestock (id, born, color, number, place, created, user, tagged, sync) VALUES (?,?,?,?,?,?,?,?,?)";
-                tx.executeSql(executeQuery, [id, born, color, number, place, created, email, "false", "true"],
+                    "INSERT INTO livestock (id, birthday, color, number, place, created, user, tagged, sync) VALUES (?,?,?,?,?,?,?,?,?)";
+                tx.executeSql(executeQuery, [id, birthday, color, number, place, created, email, "false", "true"],
                     function (tx, result) {
                         console.log("success")
                     },
@@ -263,11 +263,11 @@ function sampleLivestocks() {
 }
 
 //add livestock to database
-async function write2DBLivestockTester(born, color, number, place, group, created, email) {
+async function write2DBLivestockTester(birthday, color, number, place, group, created, email) {
     await db.transaction(function (transaction) {
         var executeQuery =
-            "INSERT INTO livestock (born, color, number, place, created, user, tagged, sync) VALUES (?,?,?,?,?,?,?,?)";
-        transaction.executeSql(executeQuery, [born, color, number, place, created, email, "false", "true"],
+            "INSERT INTO livestock (birthday, color, number, place, created, user, tagged, sync) VALUES (?,?,?,?,?,?,?,?)";
+        transaction.executeSql(executeQuery, [birthday, color, number, place, created, email, "false", "true"],
             function (tx, result) {
                 console.log("Livestock added")
             },
