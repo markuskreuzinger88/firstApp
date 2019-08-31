@@ -59,9 +59,10 @@ function getDrugDeliveryView() {
     db.transaction(function (transaction) {
         transaction.executeSql('SELECT * FROM user', [], function (tx, results) {
             //get buisness code for requests
-            email = results.rows.item(0).email;
-            //get user token
-            token = results.rows.item(0).bearerToken;
+            console.log(results)
+            // email = results.rows.item(0).email;
+            // //get user token
+            // token = results.rows.item(0).bearerToken;
         }, null);
     });
     GetDBTaggedResult()
@@ -91,7 +92,7 @@ function GetDBTaggedResult() {
     //read out Database
     db.transaction(function (transaction) {
         transaction.executeSql(
-            'SELECT * FROM livestock WHERE tagged = ? ORDER BY livestock_group ASC', ['true'],
+            'SELECT * FROM livestock WHERE tagged = ? ORDER BY number ASC', ['true'],
             function (tx, results) {
                 DisplayResultDrugDelivery(results)
             }, null);

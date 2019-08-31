@@ -24,7 +24,7 @@
     <script type="text/javascript" src="js/database_handler.js"></script>
     <script type="text/javascript" src="js/livestock_open_action.js"></script>
     <script type="text/javascript" src="js/general.js"></script>
-    <script type="text/javascript" src="js/drug.js"></script>#
+    <script type="text/javascript" src="js/drug.js"></script>
     <script type="text/javascript" src="js/scan.js"></script>
     <script type="text/javascript" src="js/debug_settings.js"></script>
     <link rel="stylesheet" type="text/css" href="css/livestock_add.css" />
@@ -44,7 +44,7 @@
                 <ons-icon size="20px" style="margin-left: 10px; margin-top: 10px; color: #008F97;" icon="fa-bug" onclick="nav1.pushPage('debug-settings.html')">
                 </ons-icon>
             </div>
-            <img src="img/logo.png" style="width: 60%; margin-left: 20%; margin-top: 10%;" />
+            <img src="img/logo.svg" style="width: 60%; margin-left: 20%; margin-top: 10%;" />
             <p class="header">Willkommen</p>
             <div class="container">
                 <form action="/menu.html">
@@ -52,7 +52,7 @@
                     <input type="password" id="psw" name="login" placeholder="Passwort">
                     <p class="link" style="text-align: right">Passwort vergessen?</p>
                     <!-- <ons-button modifier="large" style="background-color: #008F97; text-align: center" onclick="checkInputsLogin()"> -->
-                    <ons-button modifier="large" style="background-color: #253148; text-align: center" onclick="RESTLogin()">
+                    <ons-button modifier="large" style="background-color: #2B605A; text-align: center" onclick="RESTLogin()">
                         Anmelden
                     </ons-button>
                     <p class="link" style="text-align: center; margin-top: 10%" onclick="window.location.href='register.html'">
@@ -129,7 +129,7 @@
             <ons-list id="menu-splitter-list" style="background-color: white">
                 <ons-list-item style="margin-top: 20px">
                     <div class="left">
-                        <img class="list-item__thumbnail" src="img/logo.png">
+                        <img class="list-item__thumbnail" src="img/logo.svg">
                     </div>
                     <div class="center">
                         <span class="list-item__title">Stablex</span><span class="list-item__subtitle">www.stablex.at</span>
@@ -140,7 +140,7 @@
                         <ons-icon icon="ion-home" class="list-item__icon"></ons-icon>
                     </div>
                     <div class="center">
-                        Start
+                        Menu
                     </div>
                 </ons-list-item>
                 <!--                    <ons-list-item modifier="nodivider" onclick="fn.load('profil.html')" tappable>-->
@@ -277,15 +277,15 @@
                         <ons-icon icon="fa-sync" style="font-size: 20px; width: 1em;"></ons-icon>
                     </ons-toolbar-button> -->
                 </div>
-                <div class="center" style="text-align: center; font-family: Calibri; font-size: 20px;">Start</div>
+                <div class="center" style="text-align: center; font-family: Calibri; font-size: 20px;">Menu</div>
                 <div class="right">
                 </div>
             </ons-toolbar>
             <ons-card>
-                <div style="margin-top: 30px; margin-left: 50px; text-align: left; font-family: Calibri; font-size: 30px; font-weight: 700">
-                    Stablex</div>
-                <div style="margin-top: 8px; margin-left: 50px; text-align: left; font-family: Calibri; font-size: 15px; font-weight: 700">
-                    Next Digital Farming</div>
+                <div id="welcome" style="margin-top: 30px; margin-left: 30px; text-align: left; font-family: Calibri; font-size: 30px; font-weight: 700">
+                    </div>
+                <div style="margin-top: 8px; margin-left: 30px; text-align: left; font-family: Calibri; font-size: 15px; font-weight: 700">
+                    Bitte wähle eine Funktion</div>
                 <ons-row class="user_cover" style="margin-top: 30px">
                     <ons-col onclick="pushNextPage('livestock_add', 'livestock_add')">
                         <div class="user_thumbnail" id="livestock_add">
@@ -355,9 +355,9 @@
                     text-align: center;
                     margin: auto;
                     /* background-color: #253148; */
-                    background-color: #253148;
+                    background-color: #2B605A;
                     border-radius: 10px;
-                    border: 2px solid #253148;
+                    border: 2px solid #2B605A;
                     /* border: 2px solid #e7e7e7; */
                     /* box-shadow: 10px 10px 5px #888888; */
                 }
@@ -528,7 +528,7 @@
             </ons-toolbar>
             <p>This is the About page...</p>
         </ons-page>
-    </template> -->
+    </template>
 
     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
     <!-- ------------------------------- WURFINDEX PAGE------------------------------- -->
@@ -867,7 +867,7 @@
                     <ons-row style="margin-top: 5px; text-align: center">
                         <ons-col style="border-right: thick solid black">
                             <ons-icon style="margin-right: 3px" icon="fa-search"></ons-icon>
-                            <input id="SearchInput" style="width: 100px; border-right: none; border-left: none; border-top: none" onkeyup="UpdateDBResult()">
+                            <input id="SearchInput" style="width: 100px; border-right: none; border-left: none; border-top: none" onkeyup="searchInputList()">
                         </ons-col>
                         <ons-col id="actionCol" onclick="nav1.pushPage('livestock_add.html')">Hinzufügen
                             <ons-icon id="actionIcon" style="margin-left: 3px" icon="fa-plus"></ons-icon>

@@ -56,7 +56,7 @@
     function sortLivestockView(key, order) {
         //sort list -> select item to sort and asc/desc
         //obj.list.sort(compareValues('number', 'desc'))
-        if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("PlaceFilter") === null)) {
+        if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("PlaceFilter") === null) && (localStorage.getItem("SearchFilter") === null)) {
             var updatedList = LivestockList.sort(compareValues(key, order))
             var updatedListLength = Object.keys(updatedList).length;
         } else {
@@ -85,6 +85,7 @@
     function resetLocalStorgageVariables() {
         localStorage.removeItem('ColorFilter');
         localStorage.removeItem('PlaceFilter');
+        localStorage.removeItem('SearchFilter');
     }
 
     //check leaved page --> change icon
@@ -185,7 +186,12 @@
             LivestockListFiltered = LivestockList
         } else {
             localStorage.setItem('ColorFilter', color);
-            LivestockListFiltered = LivestockList.filter(filterLivestockListColor)
+            // LivestockListFiltered = LivestockList.filter(filterLivestockListColor)
+            if ((localStorage.getItem("PlaceFilter") === null) && (localStorage.getItem("SearchFilter") === null)) {
+                LivestockListFiltered = LivestockList.filter(filterLivestockListColor)
+            } else {
+                LivestockListFiltered = LivestockListFiltered.filter(filterLivestockListColor)
+            }
         }
         showTemplateDialogView('FilterPlace', 'FilterPlace.html')
     };
@@ -208,7 +214,7 @@
             }
         } else {
             localStorage.setItem('PlaceFilter', place);
-            if (localStorage.getItem("ColorFilter") === null) {
+            if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("SearchFilter") === null)) {
                 LivestockListFiltered = LivestockList.filter(filterLivestockListPlace)
             } else {
                 LivestockListFiltered = LivestockListFiltered.filter(filterLivestockListPlace)
@@ -243,6 +249,20 @@
         };
     }
 
+    //search livestock view from input
+    function searchInputList() {
+        // console.log(document.getElementById("SearchInput").value)
+        localStorage.setItem('SearchFilter', document.getElementById("SearchInput").value);
+        if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("PlaceFilter") === null)) {
+            var LivestockListFiltered = LivestockList.filter(filterLivestockListInput)
+            var listLength = Object.keys(LivestockListFiltered).length;
+        } else {
+            var LivestockListFiltered = LivestockListFiltered.filter(filterLivestockListInput)
+            var listLength = Object.keys(LivestockListFiltered).length;
+        }
+               filterLivestockView(LivestockListFiltered, listLength)
+    }
+
     //filter livestock view Color
     function filterLivestockListColor(livestock) {
         return livestock.color == localStorage.getItem('ColorFilter')
@@ -253,19 +273,25 @@
         return livestock.place == localStorage.getItem('PlaceFilter')
     }
 
+    //filter livestock view input
+    function filterLivestockListInput(livestock) {
+        var searchInputlength = localStorage.getItem('SearchFilter').length
+        return livestock.number.substring(0,searchInputlength) == localStorage.getItem('SearchFilter')
+    }
+
     //display livestock list result
     function DisplayResult(livestockList, listLength) {
-        console.log(livestockList)
-        var LivestockNumber = [];
-        var LivestockPlace = [];
-        var LivestockBorn = [];
-        var LivestockColor = [];
-        for (i = 0; i < listLength; i++) {
-            LivestockNumber.push(livestockList[i].number);
-            LivestockPlace.push(livestockList[i].place);
-            LivestockBorn.push(livestockList[i].birthday);
-            LivestockColor.push(livestockList[i].color);
-        }
+        // console.log(livestockList)
+        // var LivestockNumber = [];
+        // var LivestockPlace = [];
+        // var LivestockBorn = [];
+        // var LivestockColor = [];
+        // for (i = 0; i < listLength; i++) {
+        //     LivestockNumber.push(livestockList[i].number);
+        //     LivestockPlace.push(livestockList[i].place);
+        //     LivestockBorn.push(livestockList[i].birthday);
+        //     LivestockColor.push(livestockList[i].color);
+        // }
         for (i = 0; i < listLength; i++) {
             list = document.createElement("ons-list-item")
             div_center = document.createElement("div")
@@ -277,14 +303,14 @@
             span_center2 = document.createElement("span")
             span_center1.setAttribute("class", "list-item__title");
             span_center2.setAttribute("class", "list-item__subtitle");
-            span_center1.innerHTML = LiveStockNbr + LivestockNumber[i];
-            span_center2.innerHTML = LivestockPlace[i] + "<br>" + LivestockBorn[i];
+            span_center1.innerHTML = LiveStockNbr + livestockList[i].number;
+            span_center2.innerHTML = livestockList[i].place + "<br>" + livestockList[i].birthday;
             div_left = document.createElement("div")
             div_left.setAttribute("class", "left");
             input = document.createElement("input")
             input.setAttribute("id", "livestockColor" + i);
             input.setAttribute("style",
-                "width: 40px; height :40px;margin-right: 5px;border-color : black; border: 2px solid black; border-radius: 10px; background-color:" + LivestockColor[i]);
+                "width: 40px; height :40px;margin-right: 5px;border-color : black; border: 2px solid black; border-radius: 10px; background-color:" + livestockList[i].color);
             input.setAttribute("disabled", "true");
             list.setAttribute("tappable", true);
             //modify selection depending on last site --> when last page drug delivery
@@ -295,11 +321,11 @@
                 div_right.setAttribute("class", "right");
                 div_right.setAttribute("id", "tag" + i);
                 div_right.setAttribute("onclick", "livestockTag(" + i + ")");
-                // if (results.rows.item(i).tagged == "true") {
-                //     div_right.checked = true;
-                // } else {
-                //     div_right.checked = false;
-                // }
+                if (livestockList[i].tagged == "true") {
+                    div_right.checked = true;
+                } else {
+                    div_right.checked = false;
+                }
                 list.appendChild(div_right);
                 document.getElementById('livestockFab').style.visibility = 'visible';
             } else {

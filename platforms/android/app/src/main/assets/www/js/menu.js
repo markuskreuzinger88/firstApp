@@ -27,6 +27,13 @@ $(document).on('postpush', '#nav1', function (event) {
         // document.getElementById("wurfindex").style.boxShadow = '10px 10px 5px #888888';
     }
     if (event.enterPage.id === 'home_splitter') {
+            /*read from user table in DB*/
+    db.transaction(function (transaction) {
+        transaction.executeSql('SELECT * FROM user', [], function (tx, results) {
+            document.getElementById("welcome").innerHTML = "Hallo Markus";
+            // document.getElementById("welcome").innerHTML = results.rows.item(0).firstname;
+        }, null);
+    });
         //get window high size to set logout field in sidebar menu
         var h = window.innerHeight;
         logoutButtonMarginTop = parseInt(h) - 470;
