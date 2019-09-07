@@ -117,7 +117,7 @@ function RESTGetLivestock() {
         },
         error: function (xhr, status, error) {
             var errorMessage = xhr.status + ': ' + xhr.statusText
-            alert('Livestock add failed! Error - ' + errorMessage);
+            alert('Livestock get failed! Error - ' + errorMessage);
         }
     });
 }
@@ -133,42 +133,42 @@ function write2DBServerLivestockData(obj, LivestockNbrs) {
 //username: AniCareAdmin
 //password: anicare
 function RESTLogin() { 
-    // document.querySelector('#nav1').pushPage('home_splitter.html');
-    var email = document.getElementById("email").value;
-    var psw = document.getElementById("psw").value;
-    var DEBUGIP = localStorage.getItem("settings_ipAdress")
-    // var endpoint = 'http://' + DEBUGIP + '/anicare/api/authentication/login'
-    var endpoint = 'http://' + DEBUGIP + '/api/authentication/login'
-    $.ajax({
-        url: endpoint,
-        // contentType: "application/x-www-form-urlencoded",
-        contentType: "application/json",
-        type: "POST",
-        data: JSON.stringify({
-            "userName": email,
-            "password": psw
-        }),
-        success: function (response) {
-            console.log(response)
-            var firstname = response.user.firstName
-            var lastname = response.user.lastName
-            var lfbis = response.customer.lfbisId
-            var token = "bearer " + response.token
-            localStorage.setItem('bearerToken', token);
-            var data = JSON.stringify(response);
-            var obj = JSON.parse(data); 
-            // check if login is successfull
-            if (response.success == true) {
-                write2DBLogin(firstname, lastname, token, lfbis)
-            } else {
-                pushMsg(obj.messages[0].message)
-            }
-        },
-        error: function (xhr, status, error) {
-            var errorMessage = xhr.status + ': ' + xhr.statusText
-            alert('Login failed! Error - ' + errorMessage);
-        }
-    });
+    document.querySelector('#nav1').pushPage('home_splitter.html');
+    // var email = document.getElementById("email").value;
+    // var psw = document.getElementById("psw").value;
+    // var DEBUGIP = localStorage.getItem("settings_ipAdress")
+    // // var endpoint = 'http://' + DEBUGIP + '/anicare/api/authentication/login'
+    // var endpoint = 'http://' + DEBUGIP + '/api/authentication/login'
+    // $.ajax({
+    //     url: endpoint,
+    //     // contentType: "application/x-www-form-urlencoded",
+    //     contentType: "application/json",
+    //     type: "POST",
+    //     data: JSON.stringify({
+    //         "userName": email,
+    //         "password": psw
+    //     }),
+    //     success: function (response) {
+    //         console.log(response)
+    //         var firstname = response.user.firstName
+    //         var lastname = response.user.lastName
+    //         var lfbis = response.customer.lfbisId
+    //         var token = "bearer " + response.token
+    //         localStorage.setItem('bearerToken', token);
+    //         var data = JSON.stringify(response);
+    //         var obj = JSON.parse(data); 
+    //         // check if login is successfull
+    //         if (response.success == true) {
+    //             write2DBLogin(firstname, lastname, token, lfbis)
+    //         } else {
+    //             pushMsg(obj.messages[0].message)
+    //         }
+    //     },
+    //     error: function (xhr, status, error) {
+    //         var errorMessage = xhr.status + ': ' + xhr.statusText
+    //         alert('Login failed! Error - ' + errorMessage);
+    //     }
+    // });
 }
 
 function RESTGetLocation() { 
@@ -196,7 +196,7 @@ function RESTGetLocation() {
         },
         error: function (xhr, status, error) {
             var errorMessage = xhr.status + ': ' + xhr.statusText
-            alert('Livestock add failed! Error - ' + errorMessage);
+            alert('Get Location failed! Error - ' + errorMessage);
         }
     });
 }
@@ -226,7 +226,7 @@ function RESTGetDrugs() {
         },
         error: function (xhr, status, error) {
             var errorMessage = xhr.status + ': ' + xhr.statusText
-            alert('Livestock add failed! Error - ' + errorMessage);
+            alert('Get Drugs failed! Error - ' + errorMessage);
         }
     });
 }
@@ -287,7 +287,7 @@ function RESTAddDrug(bearerToken) {
         },
         error: function (xhr, status, error) {
             var errorMessage = xhr.status + ': ' + xhr.statusText
-            alert('Livestock add failed! Error - ' + errorMessage);
+            alert('Add Drugs failed! Error - ' + errorMessage);
         }
     });
 }

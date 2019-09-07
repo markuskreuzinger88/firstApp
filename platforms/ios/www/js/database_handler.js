@@ -226,16 +226,15 @@ function write2DBLogin(firstname, lastname, token, lfbis) {
     });
 }
 
+//Get livestock Locations from Database 
 function getLocationDB() {
-db.transaction(function (transaction) {
-    transaction.executeSql('SELECT * FROM animal_location', [], function (tx, results) {
-        var data2Arr = Array.from(results.rows);
-        console.log('TESTTESTTEST')
-        console.log(data2Arr)
-        console.log(result.rows.length)
-    }, null);
-});
-
+    db.transaction(function (transaction) {
+        transaction.executeSql('SELECT * FROM animal_location', [], function (tx, results) {
+            var data2Arr = Array.from(results.rows);
+            updateLivestockLocations(data2Arr, results.rows.length)
+        }, null);
+    });
+}
 
 //write animal location to Database
 function write2DBLocation(id, location) {
@@ -244,12 +243,35 @@ function write2DBLocation(id, location) {
             "INSERT INTO animal_location (id, location) VALUES (?,?)";
         transaction.executeSql(executeQuery, [id, location],
             function (tx, result) {
-                alert("success")
+                getLocationDB()
             },
             function (error) {
                 alert('Error: ' + error.message + ' code: ' + error.code);
             });
     });
+}
+
+//delete animal location from Database
+function deleteDBLocation(location) {
+    ons.notification.confirm({
+        title: '',
+        message: "Möchtest du " + location + " löschen?",
+        cancelable: true,
+        buttonLabels: ['Ja', 'Nein'],
+        callback: function (index) {
+            if (index == 0) {
+                    db.transaction(function (tx) {
+                        tx.executeSql('DELETE FROM animal_location WHERE location = ?', [location]);
+                    },
+                    function (error) {
+                        alert('Error: ' + error.message + ' code: ' + error.code);
+                    },
+                    function () {
+                        getLocationDB()
+                    });
+            }
+        }
+    })
 }
 
 //Function for get livestock Data from Database --> show livestock data in view
@@ -261,6 +283,14 @@ function getLivestockDB() {
         }, null);
     });
 }
+
+function sampleLocations() {
+    write2DBLivestockLocationTester('1', 'Deckzentrum')
+    write2DBLivestockLocationTester('2', 'Wartestall')
+    write2DBLivestockLocationTester('3', 'Abferkelbox')
+    write2DBLivestockLocationTester('4', 'Futterventile')
+}
+
 
 function sampleDrugs() {
     write2DBDrug('Aconitum', '838031', '0', 'Homöopathika', 'ml', '', 'false')
@@ -288,6 +318,21 @@ function sampleLivestocks() {
     write2DBLivestockTester('2019-05-19', 'blue', '4567', 'Wartestall', 'D', '2019-02-24', 'example@example.com')
     write2DBLivestockTester('2019-05-15', 'yellow', '1238', 'Dekzentrum', 'B', '2019-01-16', 'example@example.com')
     write2DBLivestockTester('2019-05-29', 'red', '9805', 'Dekzentrum', 'A', '2019-03-12', 'example@example.com')
+}
+
+//add locations to database
+async function write2DBLivestockLocationTester(id, location) {
+    await db.transaction(function (transaction) {
+        var executeQuery =
+            "INSERT INTO animal_location (id, location) VALUES (?,?)";
+        transaction.executeSql(executeQuery, [id, location],
+            function (tx, result) {
+                console.log("Animal location added")
+            },
+            function (error) {
+                alert('Error: ' + error.message + ' code: ' + error.code);
+            });
+    });
 }
 
 //add livestock to database

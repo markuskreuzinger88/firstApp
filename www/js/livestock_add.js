@@ -11,15 +11,33 @@ var createdOn = "";
 var switchState = "";
 var networkConnection = true;
 
+$(document).on('postpush', '#nav1', function (event) {
+    var event = event.originalEvent;
+    leavePage = event.leavePage.id;
+    if (event.enterPage.id === 'livestock_add') {
+
+        // create element before use --> to update list in elemnt dynamically
+        ons.createElement("locationAdd.html", {
+            append: true
+        });
+
+        //set last selected place for livestock
+        document.getElementById("livestockPlace").value = localStorage.getItem("livestockPlace")
+
+        //if networkconnection is valid update view from Server
+        //else use local database
+        if (networkConnection == true) {
+            // RESTGetLocation()
+            getLocationDB()
+        } else {
+            // getLocationDB()
+        }
+    }
+});
+
 document.addEventListener("init", function (event) {
     var page = event.target;
     if (page.id === 'livestock_add') {
-        if (networkConnection == true) {
-            RESTGetLocation()
-        } else {
-            getLocationDB()
-        }
-        
         BornOn.max = new Date().toISOString().split("T")[0];
         switchState = localStorage.getItem("settings_request")
         ipAdress = localStorage.getItem("settings_ipAdress")
@@ -47,7 +65,7 @@ document.addEventListener("init", function (event) {
             document.getElementById("Color").style.backgroundColor = localStorage.getItem("MarkColor");
             document.getElementById("rect1").style.fill = localStorage.getItem("MarkColor");
             document.getElementById("rect2").style.fill = localStorage.getItem("MarkColor");
-            document.getElementById("circle1").style.fill = localStorage.getItem("MarkColor"); 
+            document.getElementById("circle1").style.fill = localStorage.getItem("MarkColor");
         }
         let today = new Date().toISOString().substr(0, 10);
         document.querySelector("#BornOn").value = today;
@@ -90,7 +108,7 @@ document.addEventListener("init", function (event) {
 var showTemplateDialogAdd = function (my_dialog, my_dialog_html) {
 
     var dialog = document.getElementById(my_dialog);
-
+    console.log(dialog)
     if (dialog) {
         dialog.show();
     } else {
@@ -138,6 +156,108 @@ var hideDialogColorAdd = function (id, checkbox, color) {
     localStorage.setItem("MarkColor", color);
     document.getElementById(id).hide();
 };
+
+//update livestock location list
+function updateLivestockLocations(livestockLocationList, listLength) {
+    //remove current items in view
+    var list = document.getElementById("containerLivestockAdd");
+    while (list.hasChildNodes()) {
+        list.removeChild(list.firstChild);
+    }
+    for (i = 0; i < listLength; i++) {
+        var location = livestockLocationList[i].location
+        list = document.createElement("ons-list-item")
+        list.setAttribute("onchange", "hideDialogLocationAdd('" + location + "')");
+        //label left
+        label_left = document.createElement("label")
+        label_left.setAttribute("class", "left");
+        checkbox = document.createElement("ons-checkbox")
+        checkbox.setAttribute("input-id", "checkbox" + location);
+        label_left.appendChild(checkbox);
+        //label center
+        label_center = document.createElement("label")
+        label_center.setAttribute("class", "center");
+        label_center.innerHTML = location;
+        //label right
+        label_right = document.createElement("label")
+        label_right.setAttribute("class", "right");
+        trash = document.createElement("ons-icon")
+        trash.setAttribute("icon", "fa-trash");
+        trash.setAttribute("style", "color: #802000; display: none");
+        trash.setAttribute("id", "livestockPlaceTrashIcon" + i);
+        trash.setAttribute("onclick", "deleteDBLocation('" + location + "')");
+        label_right.appendChild(trash);
+        //append labels to list
+        list.appendChild(label_left);
+        list.appendChild(label_center);
+        list.appendChild(label_right);
+        document.getElementById("containerLivestockAdd").appendChild(list);
+    }
+}
+
+//toggle livestock place trash icon
+function showDeletePlaceIcon() {
+    list = document.getElementById("containerLivestockAdd")
+    for (i = 0; i < list.childElementCount; i++) {
+        var icon = document.getElementById("livestockPlaceTrashIcon" + i);
+        if (window.getComputedStyle(icon).display === "none") {
+            icon.style.display = "block";
+        } else {
+            icon.style.display = "none";
+        }
+    }
+}
+
+//show prompt to enter new livestock place
+var showPrompt = function () {
+    ons.notification.prompt({
+            title: '',
+            message: 'neuen Standort anlegen',
+            cancelable: true,
+        })
+        .then(function (input) {
+            var input = input.trim()
+            var message = input ? 'Neuer Standort: ' + input : 'Du hast keinen Standort eingegeben';
+            ons.notification.confirm({
+                title: '',
+                message: message,
+                cancelable: true,
+                buttonLabels: ['OK'],
+                callback: function (index) {
+                    if (index == 0) {
+                        if (input !== "") {
+                            write2DBLocation("", input)
+                        }
+                    }
+                }
+            })
+        });
+};
+
+//select color
+var hideDialogLocationAdd = function (location) {
+    list = document.getElementById("containerLivestockAdd")
+    console.log(list.childElementCount)
+    var elements = [];
+    //first get all items
+    for (var i = 1; i <= list.childElementCount; i++) {
+        var text = document.querySelector("#containerLivestockAdd > ons-list-item:nth-child(" + i + ") > label.center.list-item__center")
+        elements.push(text.innerHTML)
+        console.log(text.innerHTML)
+    }
+    //uncheck all checkboxes and check selected checkbox
+    for (i = 0; i < elements.length; i++) {
+        if (elements[i] != location) {
+            document.getElementById("checkbox" + elements[i]).checked = false;
+        } else {
+            document.getElementById("checkbox" + elements[i]).checked = true;
+        }
+    }
+    localStorage.setItem("livestockPlace", location);
+    document.getElementById("livestockPlace").value = location;
+    document.getElementById("locationAdd").hide();
+};
+
 
 function checkInputs() {
     let today = new Date().toISOString().substr(0, 10);

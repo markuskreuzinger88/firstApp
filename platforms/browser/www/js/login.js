@@ -3,7 +3,7 @@ db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //
 //set first ons page
 ons.ready(function () {
     if (localStorage.getItem("login") == 'true') {
-        RESTGetLivestock()
+        // RESTGetLivestock()
         document.querySelector('#nav1').pushPage('home_splitter.html');
     } else {
         document.querySelector('#nav1').pushPage('login.html');
