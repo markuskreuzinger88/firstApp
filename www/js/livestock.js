@@ -13,8 +13,8 @@
             //if networkconnection is valid update view from Server
             //else use local database
             if (networkConnection == true) {
-                // RESTGetLivestock()
-                getLivestockDB()
+                RESTGetLivestock()
+                //getLivestockDB()
             } else {
                 getLivestockDB()
             }
@@ -28,8 +28,8 @@
             //if networkconnection is valid update view from Server
             //else use local database
             if (networkConnection == true) {
-                // RESTGetLivestock()
-                getLivestockDB()
+                RESTGetLivestock()
+                //getLivestockDB()
             } else {
                 getLivestockDB()
             }
@@ -304,7 +304,7 @@
             span_center1.setAttribute("class", "list-item__title");
             span_center2.setAttribute("class", "list-item__subtitle");
             span_center1.innerHTML = LiveStockNbr + livestockList[i].number;
-            span_center2.innerHTML = livestockList[i].place + "<br>" + livestockList[i].birthday;
+            span_center2.innerHTML = livestockList[i].animalLocationName + "<br>" + livestockList[i].birthday.substring(0, 10);
             div_left = document.createElement("div")
             div_left.setAttribute("class", "left");
             input = document.createElement("input")

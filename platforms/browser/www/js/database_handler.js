@@ -206,17 +206,45 @@ async function write2DBDrugDelivery2(id, drug, approval_number, delay, amount) {
 }
 
 //Write Login Data to Database
-function write2DBLogin(firstname, lastname, token) {
+function write2DBLogin(firstname, lastname, token, lfbis) {
     var email = document.getElementById("email").value;
     var psw = document.getElementById("psw").value;
     db.transaction(function (transaction) {
         var executeQuery =
-            "INSERT INTO user (email, password, firstname, lastname, token) VALUES (?,?,?,?,?)";
-        transaction.executeSql(executeQuery, [email, psw, firstname, lastname, token],
+            "INSERT INTO user (email, password, firstname, lastname, token, lfbis) VALUES (?,?,?,?,?,?)";
+        transaction.executeSql(executeQuery, [email, psw, firstname, lastname, token, lfbis],
             function (tx, result) {
                 //get Livestock Database from server
                 RESTGetLivestock()
+                //get Livestock location
+                RESTGetLocation()
                 document.querySelector('#nav1').pushPage('home_splitter.html');
+            },
+            function (error) {
+                alert('Error: ' + error.message + ' code: ' + error.code);
+            });
+    });
+}
+
+function getLocationDB() {
+db.transaction(function (transaction) {
+    transaction.executeSql('SELECT * FROM animal_location', [], function (tx, results) {
+        var data2Arr = Array.from(results.rows);
+        console.log('TESTTESTTEST')
+        console.log(data2Arr)
+        console.log(result.rows.length)
+    }, null);
+});
+
+
+//write animal location to Database
+function write2DBLocation(id, location) {
+    db.transaction(function (transaction) {
+        var executeQuery =
+            "INSERT INTO animal_location (id, location) VALUES (?,?)";
+        transaction.executeSql(executeQuery, [id, location],
+            function (tx, result) {
+                alert("success")
             },
             function (error) {
                 alert('Error: ' + error.message + ' code: ' + error.code);

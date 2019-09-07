@@ -4,7 +4,7 @@
 <head>
     <title>Index Page</title>
     <!--    <button onclick="ClearDB()">Click me</button>-->
-    <!--    <script src="http://192.168.0.105:8080/target/target-script-min.js#anonymous"></script>-->
+    <script src="http://192.168.1.10:1234/target/target-script-min.js#anonymous"></script>
     <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
     <script type="text/javascript" charset="utf-8">
         db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //create 20MB Database
@@ -18,16 +18,18 @@
             db.transaction(function(tx) {
                 tx.executeSql('DROP TABLE IF EXISTS Nutztiere');
                 tx.executeSql('DROP TABLE IF EXISTS Arzneimittelvergabe');
-                tx.executeSql('DROP TABLE IF EXISTS user');
+                // tx.executeSql('DROP TABLE IF EXISTS user');
                 tx.executeSql('DROP TABLE IF EXISTS livestock');
                 tx.executeSql('DROP TABLE IF EXISTS drug_delivery');
                 tx.executeSql('DROP TABLE IF EXISTS livestock_action');
                 tx.executeSql('DROP TABLE IF EXISTS drugs');
-                tx.executeSql('CREATE TABLE IF NOT EXISTS user (email, password, firstname, lastname, token)');
+                tx.executeSql('DROP TABLE IF EXISTS animal_location');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS user (email, password, firstname, lastname, token, lfbis)');
                 tx.executeSql('CREATE TABLE IF NOT EXISTS livestock (id, birthday, color, number, place, created, user, tagged, sync)');
                 tx.executeSql('CREATE TABLE IF NOT EXISTS drug_delivery (id INTEGER PRIMARY KEY, livestock_id, drug, approval_number, delay, amount, created, DBSyncServer)');
                 tx.executeSql('CREATE TABLE IF NOT EXISTS livestock_action (id INTEGER PRIMARY KEY, livestock_id, type, date, time, result, text, future, display, sync)');
                 tx.executeSql('CREATE TABLE IF NOT EXISTS drugs (id INTEGER PRIMARY KEY, name, number, delay, category, drug_unit, barcode, tagged)');
+                tx.executeSql('CREATE TABLE IF NOT EXISTS animal_location (id, location)');
             }, function(error) {
                 alert('Error: ' + error.message + ' code: ' + error.code);
             }, function() {

@@ -9,10 +9,17 @@ var color = "";
 var born = "";
 var createdOn = "";
 var switchState = "";
+var networkConnection = true;
 
 document.addEventListener("init", function (event) {
     var page = event.target;
     if (page.id === 'livestock_add') {
+        if (networkConnection == true) {
+            RESTGetLocation()
+        } else {
+            getLocationDB()
+        }
+        
         BornOn.max = new Date().toISOString().split("T")[0];
         switchState = localStorage.getItem("settings_request")
         ipAdress = localStorage.getItem("settings_ipAdress")
@@ -44,15 +51,6 @@ document.addEventListener("init", function (event) {
         }
         let today = new Date().toISOString().substr(0, 10);
         document.querySelector("#BornOn").value = today;
-        db.transaction(function (transaction) {
-            transaction.executeSql('SELECT * FROM user', [], function (tx, results) {
-                //get email
-                email = results.rows.item(0).email;
-                //get user token
-                bearerToken = results.rows.item(0).bearerToken;
-            }, null);
-        });
-
         //select between inputs
         $("#CodeDigit0").keyup(function () {
             if (document.getElementById("CodeDigit0").value != '') {

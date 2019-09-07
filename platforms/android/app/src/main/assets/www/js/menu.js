@@ -1,4 +1,5 @@
 window.fn = {};
+db = window.openDatabase("Database", "1.0", "Nutztier db", 20 * 1024 * 1024); //create 20MB Database
 
 window.fn.open = function () {
     var menu = document.getElementById('menu-splitter');
@@ -30,8 +31,10 @@ $(document).on('postpush', '#nav1', function (event) {
             /*read from user table in DB*/
     db.transaction(function (transaction) {
         transaction.executeSql('SELECT * FROM user', [], function (tx, results) {
-            document.getElementById("welcome").innerHTML = "Hallo Markus";
-            // document.getElementById("welcome").innerHTML = results.rows.item(0).firstname;
+            console.log(results)
+            alert(results.rows.item(0).firstname)
+            // document.getElementById("welcome").innerHTML = "Hallo Markus";
+            document.getElementById("welcome").innerHTML = "Hallo " + results.rows.item(0).firstname;
         }, null);
     });
         //get window high size to set logout field in sidebar menu

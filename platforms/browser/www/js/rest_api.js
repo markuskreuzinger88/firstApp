@@ -94,7 +94,8 @@ function RESTAddLivestock(born, color, number, place, actualDate, email) {
 function RESTGetLivestock() {
     var DEBUGIP = localStorage.getItem("settings_ipAdress")
     var token = localStorage.getItem("bearerToken")
-    var endpoint = 'http://' + DEBUGIP + '/AniCare/api/Animal/GetAnimals'
+    // var endpoint = 'http://' + DEBUGIP + '/AniCare/api/Animal/GetAnimals'
+    var endpoint = 'http://' + DEBUGIP + '/api/Animal/GetAnimals'
     $.ajax({
         headers: {
             'Accept': 'application/json',
@@ -132,39 +133,102 @@ function write2DBServerLivestockData(obj, LivestockNbrs) {
 //username: AniCareAdmin
 //password: anicare
 function RESTLogin() { 
-    document.querySelector('#nav1').pushPage('home_splitter.html');
-//     var email = document.getElementById("email").value;
-//     var psw = document.getElementById("psw").value;
-//     var DEBUGIP = localStorage.getItem("settings_ipAdress")
-//     var endpoint = 'http://' + DEBUGIP + '/anicare/api/authentication/login'
-//     $.ajax({
-//         url: endpoint,
-//         // contentType: "application/x-www-form-urlencoded",
-//         contentType: "application/json",
-//         type: "POST",
-//         data: JSON.stringify({
-//             "userName": email,
-//             "password": psw
-//         }),
-//         success: function (response) {
-//             var firstname = response.firstname
-//             var lastname = response.lastname
-//             var token = "bearer " + response.token
-//             localStorage.setItem('bearerToken', token);
-//             var data = JSON.stringify(response);
-//             var obj = JSON.parse(data); 
-//             //check if login is successfull
-//             if (response.success == true) {
-//                 write2DBLogin(firstname, lastname, token)
-//             } else {
-//                 pushMsg(obj.messages[0].message)
-//             }
-//         },
-//         error: function (xhr, status, error) {
-//             var errorMessage = xhr.status + ': ' + xhr.statusText
-//             alert('Login failed! Error - ' + errorMessage);
-//         }
-//     });
+    // document.querySelector('#nav1').pushPage('home_splitter.html');
+    var email = document.getElementById("email").value;
+    var psw = document.getElementById("psw").value;
+    var DEBUGIP = localStorage.getItem("settings_ipAdress")
+    // var endpoint = 'http://' + DEBUGIP + '/anicare/api/authentication/login'
+    var endpoint = 'http://' + DEBUGIP + '/api/authentication/login'
+    $.ajax({
+        url: endpoint,
+        // contentType: "application/x-www-form-urlencoded",
+        contentType: "application/json",
+        type: "POST",
+        data: JSON.stringify({
+            "userName": email,
+            "password": psw
+        }),
+        success: function (response) {
+            console.log(response)
+            var firstname = response.user.firstName
+            var lastname = response.user.lastName
+            var lfbis = response.customer.lfbisId
+            var token = "bearer " + response.token
+            localStorage.setItem('bearerToken', token);
+            var data = JSON.stringify(response);
+            var obj = JSON.parse(data); 
+            // check if login is successfull
+            if (response.success == true) {
+                write2DBLogin(firstname, lastname, token, lfbis)
+            } else {
+                pushMsg(obj.messages[0].message)
+            }
+        },
+        error: function (xhr, status, error) {
+            var errorMessage = xhr.status + ': ' + xhr.statusText
+            alert('Login failed! Error - ' + errorMessage);
+        }
+    });
+}
+
+function RESTGetLocation() { 
+    var DEBUGIP = localStorage.getItem("settings_ipAdress")
+    var token = localStorage.getItem("bearerToken")
+    // var endpoint = 'http://' + DEBUGIP + '/AniCare/api/Animal/GetAnimals'
+    var endpoint = 'http://' + DEBUGIP + '/api/Animallocation/Getanimallocations'
+    $.ajax({
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': token
+        },
+        url: endpoint,
+        contentType: "application/json",
+        type: "POST",
+        data: JSON.stringify({}),
+        success: function (response) {
+            var id = response.list.id
+            var locations = response.list.name
+            console.log('HHHHHHHH')
+            console.log(response)
+            alert(response.list.name)
+            write2DBLocation(id, locations)
+        },
+        error: function (xhr, status, error) {
+            var errorMessage = xhr.status + ': ' + xhr.statusText
+            alert('Livestock add failed! Error - ' + errorMessage);
+        }
+    });
+}
+
+function RESTGetDrugs() { 
+    var DEBUGIP = localStorage.getItem("settings_ipAdress")
+    var token = localStorage.getItem("bearerToken")
+    // var endpoint = 'http://' + DEBUGIP + '/AniCare/api/Animal/GetAnimals'
+    var endpoint = 'http://' + DEBUGIP + '/api/Animallocation/Getanimallocations'
+    $.ajax({
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': token
+        },
+        url: endpoint,
+        contentType: "application/json",
+        type: "POST",
+        data: JSON.stringify({}),
+        success: function (response) {
+            var id = response.list.id
+            var locations = response.list.name
+            console.log('HHHHHHHH')
+            console.log(response)
+            alert(response.list.name)
+            write2DBLocation(id, locations)
+        },
+        error: function (xhr, status, error) {
+            var errorMessage = xhr.status + ': ' + xhr.statusText
+            alert('Livestock add failed! Error - ' + errorMessage);
+        }
+    });
 }
 
 pushMsg = function (msg) {
