@@ -1212,7 +1212,7 @@
                     <section style="margin-left: 10%; margin-right: 10%; margin-top: 10%;  margin-bottom: 10%">
                         <ons-button style=" border-radius: 10px;background-color: #2B605A" modifier="large"
                             onclick="checkInputs()"> Erledigt
-                            <ons-icon size="15px" style="margin-left: 5px" icon="fa-check"></ons-icon>
+                            <!-- <ons-icon size="15px" style="margin-left: 5px" icon="fa-check"></ons-icon> -->
                         </ons-button>
                     </section>
                 </form>
@@ -1229,58 +1229,58 @@
                     </b>
                 </p>
             </div>
-            <ons-list>
-                <ons-list-item onchange="hideDialogColorAdd('colorAdd', 'checkColor-1', 'yellow')" tappable>
+            <ons-list> 
+                <ons-list-item id="1+#ffff00" onchange="hideDialogColorAdd(this.id)" tappable>
                     <label class="left">
-                        <ons-checkbox input-id="checkColor-1"></ons-checkbox>
+                        <ons-checkbox id="checkbox-1"></ons-checkbox>
                     </label>
-                    <label for="check-1" class="center">
-                        <ons-icon style="margin-right: 10px; color: yellow;" icon="fa-square-full"></ons-icon>
+                    <label class="center">
+                        <ons-icon style="margin-right: 10px; color: #ffff00;" icon="fa-square-full"></ons-icon>
                         Gelb
                     </label>
                 </ons-list-item>
-                <ons-list-item onchange="hideDialogColorAdd('colorAdd', 'checkColor-2', 'red')" tappable>
+                <ons-list-item id="2+#b30000" onchange="hideDialogColorAdd(this.id)" tappable>
                     <label class="left">
-                        <ons-checkbox input-id="checkColor-2"></ons-checkbox>
+                        <ons-checkbox input-id="checkbox-2"></ons-checkbox>
                     </label>
                     <label for="check-1" class="center">
-                        <ons-icon style="margin-right: 10px; color: red;" icon="fa-square-full"></ons-icon>
+                        <ons-icon style="margin-right: 10px; color: #b30000;" icon="fa-square-full"></ons-icon>
                         Rot
                     </label>
                 </ons-list-item>
-                <ons-list-item onchange="hideDialogColorAdd('colorAdd', 'checkColor-3', 'blue')" tappable>
+                <ons-list-item id="3+#000099" onchange="hideDialogColorAdd(this.id)" tappable>
                     <label class="left">
-                        <ons-checkbox input-id="checkColor-3"></ons-checkbox>
+                        <ons-checkbox input-id="checkbox-3"></ons-checkbox>
                     </label>
                     <label for="check-2" class="center">
-                        <ons-icon style="margin-right: 10px; color: blue;" icon="fa-square-full"></ons-icon>
+                        <ons-icon style="margin-right: 10px; color: #000099;" icon="fa-square-full"></ons-icon>
                         Blau
                     </label>
                 </ons-list-item>
-                <ons-list-item onchange="hideDialogColorAdd('colorAdd', 'checkColor-4', 'green')" tappable>
+                <ons-list-item id="4+#008000" onchange="hideDialogColorAdd(this.id)" tappable>
                     <label class="left">
-                        <ons-checkbox input-id="checkColor-4"></ons-checkbox>
+                        <ons-checkbox input-id="checkbox-4"></ons-checkbox>
                     </label>
                     <label for="check-2" class="center">
-                        <ons-icon style="margin-right: 10px; color: green;" icon="fa-square-full"></ons-icon>
+                        <ons-icon style="margin-right: 10px; color: #008000;" icon="fa-square-full"></ons-icon>
                         Grün
                     </label>
                 </ons-list-item>
-                <ons-list-item onchange="hideDialogColorAdd('colorAdd', 'checkColor-5', 'orange')" tappable>
+                <ons-list-item id="5+#b34700" onchange="hideDialogColorAdd(this.id)" tappable>
                     <label class="left">
-                        <ons-checkbox input-id="checkColor-5"></ons-checkbox>
+                        <ons-checkbox input-id="checkbox-5"></ons-checkbox>
                     </label>
                     <label for="check-2" class="center">
-                        <ons-icon style="margin-right: 10px; color: orange;" icon="fa-square-full"></ons-icon>
+                        <ons-icon style="margin-right: 10px; color: #b34700;" icon="fa-square-full"></ons-icon>
                         Orange
                     </label>
                 </ons-list-item>
-                <ons-list-item onchange="hideDialogColorAdd('colorAdd', 'checkColor-6', 'white')" tappable>
+                <ons-list-item id="6+#e6e6e6" onchange="hideDialogColorAdd(this.id)" tappable>
                     <label class="left">
-                        <ons-checkbox input-id="checkColor-6"></ons-checkbox>
+                        <ons-checkbox input-id="checkbox-6"></ons-checkbox>
                     </label>
                     <label for="check-2" class="center">
-                        <ons-icon style="margin-right: 10px;  color: whitesmoke;" icon="fa-square"></ons-icon>
+                        <ons-icon style="margin-right: 10px;  color: #e6e6e6;" icon="fa-square"></ons-icon>
                         Weiß
                     </label>
                 </ons-list-item>
@@ -1298,8 +1298,8 @@
                 </p>
             </div>
             <ons-list>
-            <div id="containerLivestockAdd">
-            </div> 
+                <div id="containerLivestockAdd">
+                </div>
             </ons-list>
             <div style="text-align: center; padding: 5px;">
                 <p>

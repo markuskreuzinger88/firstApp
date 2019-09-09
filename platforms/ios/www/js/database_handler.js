@@ -253,14 +253,21 @@ function write2DBLocation(id, location) {
 
 //delete animal location from Database
 function deleteDBLocation(location) {
+    var lastSelectedPlace = localStorage.getItem("livestockPlace");
     ons.notification.confirm({
         title: '',
-        message: "Möchtest du " + location + " löschen?",
+        message: "Möchtest du " + '<b>' + location + '</b>' + " löschen?",
         cancelable: true,
         buttonLabels: ['Ja', 'Nein'],
         callback: function (index) {
             if (index == 0) {
-                    db.transaction(function (tx) {
+                //delete local storage if last selected place is place to be deleted
+                if (lastSelectedPlace == location) {
+                    localStorage.removeItem('livestockPlace');
+                    document.getElementById("livestockPlace").value = "Auswählen"
+                }
+                //remove from database
+                db.transaction(function (tx) {
                         tx.executeSql('DELETE FROM animal_location WHERE location = ?', [location]);
                     },
                     function (error) {

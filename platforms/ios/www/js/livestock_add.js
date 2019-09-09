@@ -21,8 +21,25 @@ $(document).on('postpush', '#nav1', function (event) {
             append: true
         });
 
-        //set last selected place for livestock
-        document.getElementById("livestockPlace").value = localStorage.getItem("livestockPlace")
+        //set the last selected place for livestock
+        if ("livestockPlace" in localStorage) {
+            document.getElementById("livestockPlace").value = localStorage.getItem("livestockPlace")
+        } else {
+            document.getElementById("livestockPlace").value = "Auswählen"
+        }
+
+        //set color of livestock mark and color selector
+        if ("livestockColor" in localStorage) {
+            document.getElementById("Color").style.backgroundColor = localStorage.getItem("livestockColor");
+            document.getElementById("rect1").style.fill = localStorage.getItem("livestockColor");
+            document.getElementById("rect2").style.fill = localStorage.getItem("livestockColor");
+            document.getElementById("circle1").style.fill = localStorage.getItem("livestockColor");
+        } else {
+            document.getElementById("Color").style.backgroundColor = "#ffff00";
+            document.getElementById("rect1").style.fill = "#ffff00";
+            document.getElementById("rect2").style.fill = "#ffff00";
+            document.getElementById("circle1").style.fill = "#ffff00";
+        }
 
         //if networkconnection is valid update view from Server
         //else use local database
@@ -58,15 +75,6 @@ document.addEventListener("init", function (event) {
         document.getElementById("Svgtext1").setAttribute("x", OffsestWidthX + 40);
         document.getElementById("Svgtext2").setAttribute("x", OffsestWidthX + 190);
         document.getElementById("Svgtext3").setAttribute("x", OffsestWidthX + 70);
-        if (localStorage.getItem("ChooseSelPlaceStorage") !== null) {
-            document.getElementById("ChooseSelPlace").value = localStorage.getItem("ChooseSelPlaceStorage");
-        }
-        if (localStorage.getItem("MarkColor") !== null) {
-            document.getElementById("Color").style.backgroundColor = localStorage.getItem("MarkColor");
-            document.getElementById("rect1").style.fill = localStorage.getItem("MarkColor");
-            document.getElementById("rect2").style.fill = localStorage.getItem("MarkColor");
-            document.getElementById("circle1").style.fill = localStorage.getItem("MarkColor");
-        }
         let today = new Date().toISOString().substr(0, 10);
         document.querySelector("#BornOn").value = today;
         //select between inputs
@@ -141,24 +149,34 @@ var showInfo = function (code) {
 };
 
 //select color
-var hideDialogColorAdd = function (id, checkbox, color) {
-    document.getElementById("checkColor-1").checked = false;
-    document.getElementById("checkColor-2").checked = false;
-    document.getElementById("checkColor-3").checked = false;
-    document.getElementById("checkColor-4").checked = false;
-    document.getElementById("checkColor-5").checked = false;
-    document.getElementById("checkColor-6").checked = false;
-    document.getElementById(checkbox).checked = true;
-    document.getElementById("Color").style.backgroundColor = color;
-    document.getElementById("rect1").style.fill = color;
-    document.getElementById("rect2").style.fill = color;
-    document.getElementById("circle1").style.fill = color;
-    localStorage.setItem("MarkColor", color);
-    document.getElementById(id).hide();
+var hideDialogColorAdd = function (color) {
+    //get index and color from parameter
+    var res = color.split("+");
+    var setIndex = res[0]
+    var setColor = res[1]
+    list = document.querySelector("#colorAdd > div.dialog > div > ons-list")
+    //set selected checbox and unset all other checkboxes
+    for (var i = 1; i <= list.childElementCount; i++) {
+        var checkboxID = "checkbox-" + i
+        if (setIndex == i) {
+            document.getElementById(checkboxID).checked = true;
+            localStorage.setItem("livestockColorCheckbox", checkboxID);
+        } else {
+            document.getElementById(checkboxID).checked = false;
+        }
+    }
+    localStorage.setItem("livestockColor", setColor);
+    document.getElementById("Color").style.backgroundColor = setColor;
+    document.getElementById("rect1").style.fill = setColor;
+    document.getElementById("rect2").style.fill = setColor;
+    document.getElementById("circle1").style.fill = setColor;
+    localStorage.setItem("MarkColor", setColor);
+    document.getElementById("colorAdd").hide();
 };
 
 //update livestock location list
 function updateLivestockLocations(livestockLocationList, listLength) {
+    var lastSelectedPlace = localStorage.getItem("livestockPlace");
     //remove current items in view
     var list = document.getElementById("containerLivestockAdd");
     while (list.hasChildNodes()) {
@@ -168,16 +186,22 @@ function updateLivestockLocations(livestockLocationList, listLength) {
         var location = livestockLocationList[i].location
         list = document.createElement("ons-list-item")
         list.setAttribute("onchange", "hideDialogLocationAdd('" + location + "')");
+        list.setAttribute("tappable");
         //label left
         label_left = document.createElement("label")
         label_left.setAttribute("class", "left");
         checkbox = document.createElement("ons-checkbox")
         checkbox.setAttribute("input-id", "checkbox" + location);
+        //check checkbox if last selected place = current list place 
+        if (lastSelectedPlace == livestockLocationList[i].location) {
+            checkbox.setAttribute("checked"); 
+        }
         label_left.appendChild(checkbox);
         //label center
         label_center = document.createElement("label")
         label_center.setAttribute("class", "center");
         label_center.innerHTML = location;
+        label_center.setAttribute("onclick", "hideDialogLocationAdd('" + location + "')");
         //label right
         label_right = document.createElement("label")
         label_right.setAttribute("class", "right");
@@ -217,7 +241,7 @@ var showPrompt = function () {
         })
         .then(function (input) {
             var input = input.trim()
-            var message = input ? 'Neuer Standort: ' + input : 'Du hast keinen Standort eingegeben';
+            var message = input ? 'Neuer Standort: ' + '<b>' + input + '</b>' : 'Du hast keinen Standort eingegeben';
             ons.notification.confirm({
                 title: '',
                 message: message,
@@ -239,7 +263,7 @@ var hideDialogLocationAdd = function (location) {
     list = document.getElementById("containerLivestockAdd")
     console.log(list.childElementCount)
     var elements = [];
-    //first get all items
+    //first get all place items
     for (var i = 1; i <= list.childElementCount; i++) {
         var text = document.querySelector("#containerLivestockAdd > ons-list-item:nth-child(" + i + ") > label.center.list-item__center")
         elements.push(text.innerHTML)
