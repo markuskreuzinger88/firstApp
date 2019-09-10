@@ -10,10 +10,12 @@ var born = "";
 var createdOn = "";
 var switchState = "";
 var networkConnection = true;
+var eventEnterPageId = "";
 
 $(document).on('postpush', '#nav1', function (event) {
     var event = event.originalEvent;
     leavePage = event.leavePage.id;
+    eventEnterPageId = event.enterPage.id;
     if (event.enterPage.id === 'livestock_add') {
 
         // create element before use --> to update list in elemnt dynamically
@@ -171,14 +173,19 @@ var hideDialogColorAdd = function (color) {
     document.getElementById("rect2").style.fill = setColor;
     document.getElementById("circle1").style.fill = setColor;
     localStorage.setItem("MarkColor", setColor);
-    document.getElementById("colorAdd").hide();
+    document.getElementById("colorAdd").hide();S
 };
 
 //update livestock location list
 function updateLivestockLocations(livestockLocationList, listLength) {
     var lastSelectedPlace = localStorage.getItem("livestockPlace");
+    //REMOVE CODE FORM LIVESTOCK ADD PAGE BECAUSE IT IS USED IN ANOTHER FILEs
+    if (eventEnterPageId === 'livestock_add') {
+        var list = document.getElementById("containerLivestockAdd");
+    } else if (eventEnterPageId === 'livestock'){
+        var list = document.getElementById("containerLivestockFilter");
+    }
     //remove current items in view
-    var list = document.getElementById("containerLivestockAdd");
     while (list.hasChildNodes()) {
         list.removeChild(list.firstChild);
     }
@@ -193,9 +200,12 @@ function updateLivestockLocations(livestockLocationList, listLength) {
         checkbox = document.createElement("ons-checkbox")
         checkbox.setAttribute("input-id", "checkbox" + location);
         //check checkbox if last selected place = current list place 
+        //only in livestock add page
+        if (eventEnterPageId === 'livestock_add') {
         if (lastSelectedPlace == livestockLocationList[i].location) {
             checkbox.setAttribute("checked"); 
         }
+    }
         label_left.appendChild(checkbox);
         //label center
         label_center = document.createElement("label")
@@ -215,7 +225,34 @@ function updateLivestockLocations(livestockLocationList, listLength) {
         list.appendChild(label_left);
         list.appendChild(label_center);
         list.appendChild(label_right);
+
+        //REMOVE CODE FORM LIVESTOCK ADD PAGE BECAUSE IT IS USED IN ANOTHER FILEs
+        if (eventEnterPageId === 'livestock_add') {
         document.getElementById("containerLivestockAdd").appendChild(list);
+        } else if (eventEnterPageId === 'livestock'){
+            document.getElementById("containerLivestockFilter").appendChild(list);
+        }
+    }
+    //add no filter checkbox in livestock page
+    if (eventEnterPageId === 'livestock'){
+        console.log("JOJOJOJOJO2222")
+        //label left
+        label_left = document.createElement("label")
+        label_left.setAttribute("class", "left");
+        checkbox = document.createElement("ons-checkbox")
+        label_left.appendChild(checkbox);
+        // checkbox.setAttribute("input-id", "checkbox" + location);
+                //label center
+                label_center = document.createElement("label")
+                label_center.setAttribute("class", "center");
+                label_center.innerHTML = "kein Standort Filter";
+                label_center.setAttribute("onclick", "hideDialogLocationAdd()");
+                        //append labels to list
+                        list2 = document.createElement("ons-list-item")
+                        list2.setAttribute("tappable");
+        list2.appendChild(label_left);
+        list2.appendChild(label_center);
+                document.getElementById("containerLivestockFilter").appendChild(list2);
     }
 }
 

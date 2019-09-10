@@ -935,7 +935,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkSort-1" checked></ons-checkbox>
                     </label>
-                    <label for="check-1" class="center">
+                    <label orclass="center" onclick="hideDialogSort('sort', 'checkSort-1', 'fa-sort-numeric-up')">
                         <ons-icon style="margin-right: 10px" icon="fa-sort-numeric-up"></ons-icon>
                         Nummer
                     </label>
@@ -944,7 +944,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkSort-2"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label  class="center" onclick="hideDialogSort('sort', 'checkSort-2', 'fa-sort-numeric-down')">
                         <ons-icon style="margin-right: 10px" icon="fa-sort-numeric-down"></ons-icon>
                         Nummer
                     </label>
@@ -953,7 +953,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkSort-3"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogSort('sort', 'checkSort-3', 'fa-palette')">
                         <ons-icon style="margin-right: 10px" icon="fa-palette"></ons-icon>
                         Farbe
                     </label>
@@ -962,20 +962,20 @@
                     <label class="left">
                         <ons-checkbox input-id="checkSort-4"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogSort('sort', 'checkSort-4', 'fa-map-marker-alt')">
                         <ons-icon style="margin-right: 10px" icon="fa-map-marker-alt"></ons-icon>
                         Standort
                     </label>
                 </ons-list-item>
-                <ons-list-item onchange="hideDialogSort('sort', 'checkSort-5', 'fa-users')" tappable>
+                <!-- <ons-list-item onchange="hideDialogSort('sort', 'checkSort-5', 'fa-users')" tappable>
                     <label class="left">
                         <ons-checkbox input-id="checkSort-5"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogSort('sort', 'checkSort-5', 'fa-users')">
                         <ons-icon style="margin-right: 10px" icon="fa-users"></ons-icon>
                         Gruppe
                     </label>
-                </ons-list-item>
+                </ons-list-item> -->
             </ons-list>
         </ons-dialog>
     </template>
@@ -994,7 +994,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilter-1"></ons-checkbox>
                     </label>
-                    <label for="check-1" class="center">
+                    <label class="center" onclick="hideDialogFilter('filter', 'checkFilter-1', 'yellow')">
                         <ons-icon style="margin-right: 10px; color: yellow;" icon="fa-square-full"></ons-icon>
                         Gelb
                     </label>
@@ -1003,7 +1003,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilter-2"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label  class="center" onclick="hideDialogFilter('filter', 'checkFilter-2', 'red')">
                         <ons-icon style="margin-right: 10px; color: red;" icon="fa-square-full"></ons-icon>
                         Rot
                     </label>
@@ -1012,7 +1012,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilter-3"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label  class="center" onclick="hideDialogFilter('filter', 'checkFilter-3', 'blue')">
                         <ons-icon style="margin-right: 10px; color: blue;" icon="fa-square-full"></ons-icon>
                         Blau
                     </label>
@@ -1021,7 +1021,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilter-4"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogFilter('filter', 'checkFilter-4', 'green')">
                         <ons-icon style="margin-right: 10px; color: lightgreen;" icon="fa-square-full"></ons-icon>
                         Grün
                     </label>
@@ -1030,7 +1030,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilter-5"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogFilter('filter', 'checkFilter-5', 'orange')">
                         <ons-icon style="margin-right: 10px; color: orange;" icon="fa-square-full"></ons-icon>
                         Orange
                     </label>
@@ -1039,7 +1039,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilter-6"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogFilter('filter', 'checkFilter-6', 'white')">
                         <ons-icon style="margin-right: 10px;  color: whitesmoke;" icon="fa-square"></ons-icon>
                         Weiß
                     </label>
@@ -1048,16 +1048,32 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilter-7" checked></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogFilter('filter', 'checkFilter-7', 'black')">
                         <ons-icon style="margin-right: 10px;" icon="fa-ban"></ons-icon>
-                        Kein Filter
+                        Kein Farb Filter
                     </label>
                 </ons-list-item>
             </ons-list>
         </ons-dialog>
     </template>
 
-    <template id="FilterPlace.html">
+    <template id="locationFilter.html">
+        <ons-dialog id="locationFilter" cancelable>
+            <div style="text-align: center; padding: 5px;">
+                <p>
+                    <b>
+                        Filtern nach Standort
+                    </b>
+                </p>
+            </div>
+            <ons-list>
+                <div id="containerLivestockFilter">
+                </div>
+            </ons-list>
+        </ons-dialog>
+    </template>
+
+    <!-- <template id="FilterPlace.html">
         <ons-dialog id="FilterPlace" cancelable>
             <div style="text-align: center; padding: 5px;">
                 <p>
@@ -1072,7 +1088,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilterPlace-1"></ons-checkbox>
                     </label>
-                    <label for="check-1" class="center">
+                    <label class="center" onclick="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-1', 'Dekzentrum')">
                         <ons-icon style="margin-right: 10px;" icon="fa-heart"></ons-icon>
                         Dekzentrum
                     </label>
@@ -1082,7 +1098,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilterPlace-2"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-2', 'Wartestall')">
                         <ons-icon style="margin-right: 10px;" icon="fa-clock"></ons-icon>
                         Wartestall
                     </label>
@@ -1092,7 +1108,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilterPlace-3"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-3', 'Abferkelbox')">
                         <ons-icon style="margin-right: 10px;" icon="fa-birthday-cake"></ons-icon>
                         Abferkelbox
                     </label>
@@ -1102,7 +1118,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilterPlace-4"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-4', 'Quarantäne Stall')">
                         <ons-icon style="margin-right: 10px;" icon="fa-pills"></ons-icon>
                         Quarantäne Stall
                     </label>
@@ -1112,7 +1128,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilterPlace-5"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-5', 'Futterventil')">
                         <ons-icon style="margin-right: 10px;" icon="fa-utensils"></ons-icon>
                         Futterventil
                     </label>
@@ -1121,14 +1137,14 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilterPlace-6" checked></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-6', '')">
                         <ons-icon style="margin-right: 10px;" icon="fa-ban"></ons-icon>
                         Kein Filter
                     </label>
                 </ons-list-item>
             </ons-list>
         </ons-dialog>
-    </template>
+    </template> -->
 
     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
     <!-- ----------------------------- LIVESTOCK ADD PAGE ---------------------------- -->
