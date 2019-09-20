@@ -122,15 +122,17 @@ function deleteActionItem(id, type) {
     });
 }
 
-
-//write single livestock to database
-function write2DBLivestock(birthday, color, number, place, created, email) {
+//write a single new livestock to database
+function writeLivestockDatabaseAndServer(id, birthday, color, number, place, created, user, tagged, guid) {
     db.transaction(function (transaction) {
         var executeQuery =
-            "INSERT INTO livestock (birt, color, number, place, created, user, tagged, sync) VALUES (?,?,?,?,?,?,?,?)";
-        transaction.executeSql(executeQuery, [birthday, color, number, place, created, email, "false", "true"],
+            "INSERT INTO livestock (id, birthday, color, number, place, created, user, tagged, guid) VALUES (?,?,?,?,?,?,?,?,?)";
+        transaction.executeSql(executeQuery, [id, birthday, color, number, place, created, user, tagged, guid],
             function (tx, result) {
-                document.querySelector('#nav1').popPage();
+                //if data is successfully stored in DB and Networkconnection is valid --> write Data to Server DB
+                if (networkConnection == true) {
+                    RESTAddLivestock(birthday, color, number, place, created, email, guid)
+                }
             },
             function (error) {
                 alert('Error: ' + error.message + ' code: ' + error.code);
@@ -138,22 +140,39 @@ function write2DBLivestock(birthday, color, number, place, created, email) {
     });
 }
 
+//update DB LIvestock ID after sync with Server
+function updateDBLivestockID(id, color, number) {
+    alert("ID = " + id)
+    db.transaction(function (tx) {
+        tx.executeSql("UPDATE livestock SET id = ? WHERE color = ? and number = ?" [id, color, number]);
+    });
+}
+
+//delete Livestock from DB
+function deleteDBLivestock(color, number) {
+    alert("delete Livestock")
+    db.transaction(function (tx) {
+        tx.executeSql("DELETE FROM livestock WHERE color = ? and number = ?", [color, number]);
+    });
+}
+
 //write livestock list to Database
 //check first if ID already exists in Database
 //if ID exists than update Database entry else
 //insert entry to Database
-async function write2DBLivestockArr(id, birthday, color, number, place, created, email) {
+async function write2DBLivestockArr(id, birthday, color, number, place, created, email, guid) {
     await db.transaction(function (tx) {
+        //search livestock in database
         tx.executeSql('SELECT * FROM livestock WHERE id = ?', [id], function (tx, results) {
             if (results.rows.length > 0) {
                 //ID exits in Database
-                tx.executeSql("UPDATE livestock SET birthday = ?, color = ?, number = ?, place = ?, created = ?, user = ?, tagged = ?, sync = ? WHERE id=?" [birthday, color, number, place, created, email, "false", "true", id]);
+                tx.executeSql("UPDATE livestock SET birthday = ?, color = ?, number = ?, place = ?, created = ?, user = ?, tagged = ?, guid = ? WHERE id=?" [birthday, color, number, place, created, email, "false", guid, id]);
             } else {
                 //ID does not exits
                 //Note: remove success and error function after development process 
                 var executeQuery =
-                    "INSERT INTO livestock (id, birthday, color, number, place, created, user, tagged, sync) VALUES (?,?,?,?,?,?,?,?,?)";
-                tx.executeSql(executeQuery, [id, birthday, color, number, place, created, email, "false", "true"],
+                    "INSERT INTO livestock (id, birthday, color, number, place, created, user, tagged, guid) VALUES (?,?,?,?,?,?,?,?,?)";
+                tx.executeSql(executeQuery, [id, birthday, color, number, place, created, email, "false", guid],
                     function (tx, result) {
                         console.log("success")
                     },
@@ -290,6 +309,24 @@ function getLivestockDB() {
         }, null);
     });
 }
+
+//Function for get livestock unsafed items from database
+function checkLivestockUnsafedIems() {
+    db.transaction(function (transaction) {
+        transaction.executeSql('SELECT * FROM livestock WHERE id = ?', ['-1'], function (tx, results) {
+            var data2Arr = Array.from(results.rows);
+            alert("Unsafed ITEMS = " + results.rows.length)
+            for (i = 0; i < results.rows.length; i++) {
+                alert(data2Arr[i].birthday + " " + data2Arr[i].color + " " + data2Arr[i].number + " " + data2Arr[i].created + " " + data2Arr[i].user + " " + data2Arr[i].guid)
+                RESTAddLivestock(data2Arr[i].birthday, data2Arr[i].color, data2Arr[i].number, "place_dummy", data2Arr[i].created, data2Arr[i].user, data2Arr[i].guid)
+            };
+        }, null);
+    });
+}
+
+
+
+
 
 function sampleLocations() {
     write2DBLivestockLocationTester('1', 'Deckzentrum')

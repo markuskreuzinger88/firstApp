@@ -207,7 +207,7 @@ var TabElement = function (_BaseElement) {
             return icon.attributeChangedCallback('icon', last, _this2.getAttribute('icon'));
           };
         }(icon.getAttribute('icon'));
-        icon.setAttribute('icon', this.getAttribute('icon'));
+        icon.setAttribute('icon', this.getAttribute(this.isActive() ? 'active-icon' : 'icon'));
         iconWrapper.parentElement !== button && button.insertBefore(iconWrapper, button.firstChild);
 
         // dirty fix for https://github.com/OnsenUI/OnsenUI/issues/1654
@@ -281,8 +281,6 @@ var TabElement = function (_BaseElement) {
     value: function disconnectedCallback() {
       this.removeEventListener('click', this._onClick, false);
       if (this._loadedPage) {
-        this._pageLoader.unload(this._loadedPage);
-        this._loadedPage = null;
         this._hasLoaded = false;
         this.loaded = null;
       }

@@ -20,6 +20,8 @@ var pushNextPage = function (id, page) {
 }
 
 $(document).on('postpush', '#nav1', function (event) {
+    $("#menu .page__background").css("background","linear-gradient(156deg, rgba(43,96,90,1) 0%, rgba(102,141,138,1) 40%, rgba(241,241,241,1) 40%)");
+    // document.getElementById("livestock_add").style.boxShadow = '10px 10px 5px #888888';
     var event = event.originalEvent;
     if ((event.enterPage.id === 'drug_action_delivery') || (event.enterPage.id === 'livestock') || (event.enterPage.id === 'livestock_add') || (event.enterPage.id === 'wurfindex')) {
         // document.getElementById("livestock_add").style.boxShadow = '10px 10px 5px #888888';
@@ -32,17 +34,17 @@ $(document).on('postpush', '#nav1', function (event) {
     db.transaction(function (transaction) {
         transaction.executeSql('SELECT * FROM user', [], function (tx, results) {
             console.log(results)
-            alert(results.rows.item(0).firstname)
+            //alert(results.rows.item(0).firstname)
             // document.getElementById("welcome").innerHTML = "Hallo Markus";
-            document.getElementById("welcome").innerHTML = "Hallo " + results.rows.item(0).firstname;
+            //document.getElementById("welcome").innerHTML = "Hallo " + results.rows.item(0).firstname;
         }, null);
     });
         //get window high size to set logout field in sidebar menu
         var h = window.innerHeight;
         logoutButtonMarginTop = parseInt(h) - 470;
         // alert(h + " "+ logoutButtonMarginTop)
-        // $("#menu-splitter .page__background").css("background","rgba(255, 255, 255, .7)");
-        $("#menu-splitter .page__background").css("background","white");
+        //  $("#menu-splitter .page__background").css("background","rgba(255, 255, 255, .7)");
+        //$("#menu-splitter .page__background").css("background","white");
         // $("#menu-splitter .page__background").css("background", "white");
         // document.getElementById("logoutButton").style.marginTop = logoutButtonMarginTop + 'px';
     }

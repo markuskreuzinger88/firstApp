@@ -31,6 +31,7 @@
     <script type="text/javascript" src="js/jquery.qrcode.js"></script>
     <script type="text/javascript" src="js/qrcode2.js"></script>
     <script type="text/javascript" src="js/rest_api.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Acme' rel='stylesheet'>
 
     <!-- <ons-navigator id="nav1" page="login.html"> </ons-navigator> -->
     <ons-navigator id="nav1"> </ons-navigator>
@@ -274,73 +275,75 @@
 
     <template id="menu.html">
         <ons-page id="menu">
-            <ons-toolbar>
+            <!-- <ons-toolbar>
                 <div class="left">
-                    <ons-toolbar-button onclick="fn.open()">
-                        <ons-icon icon="md-menu" style="font-size: 32px; width: 1em;"></ons-icon>
-                    </ons-toolbar-button>
+                    <ons-toolbar-button onclick="fn.open()"> -->
+            <ons-icon icon="md-menu" onclick="fn.open()"
+                style="font-size: 32px; width: 1em; color: white; margin-top: 30px; margin-left: 30px"></ons-icon>
+            <!-- </ons-toolbar-button>
                 </div>
-                <div class="right">
-                    <!-- <ons-toolbar-button onclick="syncDataServer()">
+                <div class="right"> -->
+            <!-- <ons-toolbar-button onclick="syncDataServer()">
                         <ons-icon icon="fa-sync" style="font-size: 20px; width: 1em;"></ons-icon>
                     </ons-toolbar-button> -->
-                </div>
+            <!-- </div>
                 <div class="center" style="text-align: center; font-family: Calibri; font-size: 20px;">Menu</div>
                 <div class="right">
                 </div>
-            </ons-toolbar>
-            <ons-card>
-                <div id="welcome"
-                    style="margin-top: 30px; margin-left: 30px; text-align: left; font-family: Calibri; font-size: 30px; font-weight: 700">
-                </div>
-                <div
-                    style="margin-top: 8px; margin-left: 30px; text-align: left; font-family: Calibri; font-size: 15px; font-weight: 700">
-                    Bitte wähle eine Funktion</div>
-                <ons-row class="user_cover" style="margin-top: 30px">
-                    <ons-col onclick="pushNextPage('livestock_add', 'livestock_add')">
-                        <div class="user_thumbnail" id="livestock_add">
-                            <ons-icon icon="fa-file-medical"></ons-icon>
-                        </div>
-                        <div class="title">Tier anlegen</div>
-                    </ons-col>
-                    <ons-col onclick="pushNextPage('livestock', 'livestock')">
-                        <div class="user_thumbnail" id="livestock">
-                            <ons-icon icon="fa-folder-open"></ons-icon>
-                        </div>
-                        <div class="title">Tierkartei</div>
-                    </ons-col>
-                </ons-row>
-                <ons-row class="user_cover">
-                    <!-- <ons-col onclick="nav1.pushPage('drug_delivery.html')"> -->
-                    <ons-col onclick="pushNextPage('drug_delivery', 'drug_action_delivery')">
-                        <div class="user_thumbnail" id="drug_delivery">
-                            <ons-icon icon="fa-syringe"></ons-icon>
-                        </div>
-                        <div class="title" id="user_2_name">Behandlung</div>
-                    </ons-col>
-                    <ons-col onclick="pushNextPage('wurfindex', 'wurfindex')">
-                        <div class="user_thumbnail" id="wurfindex">
-                            <ons-icon icon="fa-calendar-alt"></ons-icon>
-                        </div>
-                        <div class="title">Ereignisse</div>
-                    </ons-col>
-                </ons-row>
-                <ons-row class="user_cover">
-                    <ons-col onclick="scan()">
-                        <div class="user_thumbnail">
-                            <ons-icon icon="fa-qrcode"></ons-icon>
-                        </div>
-                        <div class="title" id="user_2_name">Scanner</div>
-                    </ons-col>
-                    <ons-col onclick="underConstruction()">
-                        <div class="user_thumbnail">
-                            <ons-icon icon="fa-chart-line"></ons-icon>
-                        </div>
-                        <div class="title">Auswertungen</div>
-                    </ons-col>
-                </ons-row>
-                </div>
-            </ons-card>
+            </ons-toolbar> -->
+            <!-- <ons-card> -->
+            <div id="welcome"
+                style="margin-top: 30px; margin-left: 30px; text-align: left; font-family: Calibri; font-size: 30px; font-weight: 700">
+                Willkommen, Markus!
+            </div>
+            <div
+                style="margin-top: 8px; margin-left: 30px; text-align: left; font-family: Calibri; font-size: 15px; font-weight: 700">
+                Bitte wähle eine Funktion</div>
+            <ons-row class="user_cover" style="margin-top: 30px">
+                <ons-col onclick="pushNextPage('livestock_add', 'livestock_add')">
+                    <div class="user_thumbnail" id="livestock_add">
+                        <ons-icon icon="fa-paperclip"></ons-icon>
+                    </div>
+                    <div class="title">Tier anlegen</div>
+                </ons-col>
+                <ons-col onclick="pushNextPage('livestock', 'livestock')">
+                    <div class="user_thumbnail" id="livestock">
+                        <ons-icon icon="fa-folder-open"></ons-icon>
+                    </div>
+                    <div class="title">Tierkartei</div>
+                </ons-col>
+            </ons-row>
+            <ons-row class="user_cover">
+                <!-- <ons-col onclick="nav1.pushPage('drug_delivery.html')"> -->
+                <ons-col onclick="pushNextPage('drug_delivery', 'drug_action_delivery')">
+                    <div class="user_thumbnail" id="drug_delivery">
+                        <ons-icon icon="fa-syringe"></ons-icon>
+                    </div>
+                    <div class="title" id="user_2_name">Behandlung</div>
+                </ons-col>
+                <ons-col onclick="pushNextPage('wurfindex', 'wurfindex')">
+                    <div class="user_thumbnail" id="wurfindex">
+                        <ons-icon icon="fa-calendar-alt"></ons-icon>
+                    </div>
+                    <div class="title">Ereignisse</div>
+                </ons-col>
+            </ons-row>
+            <ons-row class="user_cover">
+                <ons-col onclick="scan()">
+                    <div class="user_thumbnail">
+                        <ons-icon icon="fa-qrcode"></ons-icon>
+                    </div>
+                    <div class="title" id="user_2_name">Scanner</div>
+                </ons-col>
+                <ons-col onclick="underConstruction()">
+                    <div class="user_thumbnail">
+                        <ons-icon icon="fa-chart-line"></ons-icon>
+                    </div>
+                    <div class="title">Auswertungen</div>
+                </ons-col>
+            </ons-row>
+            </div>
+            <!-- </ons-card> -->
             <style type="text/css">
                 .user_cover {
                     padding: 0px 20px;
@@ -603,7 +606,7 @@
                     font: 16px Arial;
                 }
 
-                input[type=text] {
+                /* input[type=text] {
                     border: 1px solid transparent;
                     background-color: #f1f1f1;
                     border-radius: 10px;
@@ -611,7 +614,7 @@
                     font-size: 16px;
                     background-color: #f1f1f1;
                     width: 100%;
-                }
+                } */
 
                 input[type=number] {
                     border: 1px solid transparent;
@@ -623,7 +626,7 @@
                     width: 100%;
                 }
 
-                input[type=date] {
+                /* input[type=date] {
                     border: 1px solid transparent;
                     background-color: #f1f1f1;
                     border-radius: 10px;
@@ -631,7 +634,7 @@
                     font-size: 16px;
                     background-color: #f1f1f1;
                     width: 100%;
-                }
+                } */
 
                 input[type=time] {
                     border: 1px solid transparent;
@@ -935,7 +938,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkSort-1" checked></ons-checkbox>
                     </label>
-                    <label for="check-1" class="center">
+                    <label orclass="center" onclick="hideDialogSort('sort', 'checkSort-1', 'fa-sort-numeric-up')">
                         <ons-icon style="margin-right: 10px" icon="fa-sort-numeric-up"></ons-icon>
                         Nummer
                     </label>
@@ -944,7 +947,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkSort-2"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogSort('sort', 'checkSort-2', 'fa-sort-numeric-down')">
                         <ons-icon style="margin-right: 10px" icon="fa-sort-numeric-down"></ons-icon>
                         Nummer
                     </label>
@@ -953,7 +956,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkSort-3"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogSort('sort', 'checkSort-3', 'fa-palette')">
                         <ons-icon style="margin-right: 10px" icon="fa-palette"></ons-icon>
                         Farbe
                     </label>
@@ -962,20 +965,20 @@
                     <label class="left">
                         <ons-checkbox input-id="checkSort-4"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogSort('sort', 'checkSort-4', 'fa-map-marker-alt')">
                         <ons-icon style="margin-right: 10px" icon="fa-map-marker-alt"></ons-icon>
                         Standort
                     </label>
                 </ons-list-item>
-                <ons-list-item onchange="hideDialogSort('sort', 'checkSort-5', 'fa-users')" tappable>
+                <!-- <ons-list-item onchange="hideDialogSort('sort', 'checkSort-5', 'fa-users')" tappable>
                     <label class="left">
                         <ons-checkbox input-id="checkSort-5"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogSort('sort', 'checkSort-5', 'fa-users')">
                         <ons-icon style="margin-right: 10px" icon="fa-users"></ons-icon>
                         Gruppe
                     </label>
-                </ons-list-item>
+                </ons-list-item> -->
             </ons-list>
         </ons-dialog>
     </template>
@@ -994,7 +997,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilter-1"></ons-checkbox>
                     </label>
-                    <label for="check-1" class="center">
+                    <label class="center" onclick="hideDialogFilter('filter', 'checkFilter-1', 'yellow')">
                         <ons-icon style="margin-right: 10px; color: yellow;" icon="fa-square-full"></ons-icon>
                         Gelb
                     </label>
@@ -1003,7 +1006,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilter-2"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogFilter('filter', 'checkFilter-2', 'red')">
                         <ons-icon style="margin-right: 10px; color: red;" icon="fa-square-full"></ons-icon>
                         Rot
                     </label>
@@ -1012,7 +1015,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilter-3"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogFilter('filter', 'checkFilter-3', 'blue')">
                         <ons-icon style="margin-right: 10px; color: blue;" icon="fa-square-full"></ons-icon>
                         Blau
                     </label>
@@ -1021,7 +1024,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilter-4"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogFilter('filter', 'checkFilter-4', 'green')">
                         <ons-icon style="margin-right: 10px; color: lightgreen;" icon="fa-square-full"></ons-icon>
                         Grün
                     </label>
@@ -1030,7 +1033,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilter-5"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogFilter('filter', 'checkFilter-5', 'orange')">
                         <ons-icon style="margin-right: 10px; color: orange;" icon="fa-square-full"></ons-icon>
                         Orange
                     </label>
@@ -1039,7 +1042,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilter-6"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogFilter('filter', 'checkFilter-6', 'white')">
                         <ons-icon style="margin-right: 10px;  color: whitesmoke;" icon="fa-square"></ons-icon>
                         Weiß
                     </label>
@@ -1048,16 +1051,32 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilter-7" checked></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogFilter('filter', 'checkFilter-7', 'black')">
                         <ons-icon style="margin-right: 10px;" icon="fa-ban"></ons-icon>
-                        Kein Filter
+                        Kein Farb Filter
                     </label>
                 </ons-list-item>
             </ons-list>
         </ons-dialog>
     </template>
 
-    <template id="FilterPlace.html">
+    <template id="locationFilter.html">
+        <ons-dialog id="locationFilter" cancelable>
+            <div style="text-align: center; padding: 5px;">
+                <p>
+                    <b>
+                        Filtern nach Standort
+                    </b>
+                </p>
+            </div>
+            <ons-list>
+                <div id="containerLivestockFilter">
+                </div>
+            </ons-list>
+        </ons-dialog>
+    </template>
+
+    <!-- <template id="FilterPlace.html">
         <ons-dialog id="FilterPlace" cancelable>
             <div style="text-align: center; padding: 5px;">
                 <p>
@@ -1072,7 +1091,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilterPlace-1"></ons-checkbox>
                     </label>
-                    <label for="check-1" class="center">
+                    <label class="center" onclick="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-1', 'Dekzentrum')">
                         <ons-icon style="margin-right: 10px;" icon="fa-heart"></ons-icon>
                         Dekzentrum
                     </label>
@@ -1082,7 +1101,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilterPlace-2"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-2', 'Wartestall')">
                         <ons-icon style="margin-right: 10px;" icon="fa-clock"></ons-icon>
                         Wartestall
                     </label>
@@ -1092,7 +1111,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilterPlace-3"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-3', 'Abferkelbox')">
                         <ons-icon style="margin-right: 10px;" icon="fa-birthday-cake"></ons-icon>
                         Abferkelbox
                     </label>
@@ -1102,7 +1121,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilterPlace-4"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-4', 'Quarantäne Stall')">
                         <ons-icon style="margin-right: 10px;" icon="fa-pills"></ons-icon>
                         Quarantäne Stall
                     </label>
@@ -1112,7 +1131,7 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilterPlace-5"></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-5', 'Futterventil')">
                         <ons-icon style="margin-right: 10px;" icon="fa-utensils"></ons-icon>
                         Futterventil
                     </label>
@@ -1121,14 +1140,14 @@
                     <label class="left">
                         <ons-checkbox input-id="checkFilterPlace-6" checked></ons-checkbox>
                     </label>
-                    <label for="check-2" class="center">
+                    <label class="center" onclick="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-6', '')">
                         <ons-icon style="margin-right: 10px;" icon="fa-ban"></ons-icon>
                         Kein Filter
                     </label>
                 </ons-list-item>
             </ons-list>
         </ons-dialog>
-    </template>
+    </template> -->
 
     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
     <!-- ----------------------------- LIVESTOCK ADD PAGE ---------------------------- -->
@@ -1136,17 +1155,20 @@
 
     <template id="livestock_add.html">
         <ons-page id="livestock_add">
-            <ons-toolbar>
+            <ons-toolbar modifier="transparent" style="background-color: white">
                 <div class="left">
-                    <ons-back-button></ons-back-button>
+                   <!-- <ons-back-button></ons-back-button> -->
+                     <ons-toolbar-button icon="fa-chevron-left" onclick="checkInputsUnsaved()"></ons-toolbar-button>
                 </div>
-                <div class="center">Nutztier anlegen</div>
-                <div class="right"></div>
+                <div class="center">Nutztier hinzufügen</div>
+                <div class="right">
+                    <ons-toolbar-button icon="fa-check" onclick="checkInputs()"></ons-toolbar-button>
+                </div>
             </ons-toolbar>
             <ons-card>
                 <form>
-                    <p style="margin-top: 20px; margin-left: 10%; width:200px; font-weight: 500;">Nutztier Kennzeichnung
-                    </p>
+                    <!-- <p style="margin-top: 20px; margin-left: 10%; width:200px; font-weight: 500;">Nutztier Kennzeichnung
+                    </p> -->
                     <svg id="SvgObj" width="480" height="280">
                         <clipPath id="cut-off-bottom">
                             <rect x="0" y="0" width="500" height="100" />
@@ -1186,37 +1208,91 @@
                                 onfocus="this.value=''" />
                         </foreignObject>
                     </svg>
-                    <hr>
-                    <ons-row id="RowColor">
-                        <ons-col id="Col1Color" style="margin-left: 10%; margin-top: 30px">Farbe</ons-col>
-                        <ons-col id="Col2Color">
-                            <ons-button id="Color"
-                                style="margin-top: 20px; padding: 19px; border-radius: 10px; background-color: red; border-color : black; border-width: medium; width: 140px"
-                                onclick="showTemplateDialogAdd('colorAdd', 'colorAdd.html')"></ons-button>
-                        </ons-col>
-                    </ons-row>
-                    <ons-row>
-                        <ons-col style="margin-left: 10%; margin-top: 30px">Standort</ons-col>
-                        <ons-col>
-                            <input id="livestockPlace" type="text" value="" style="width:140px; margin-top: 20px"
-                                onclick="showTemplateDialogAdd('locationAdd', 'locationAdd.html')" readonly><br><br>
-                        </ons-col>
-                    </ons-row>
-                    <ons-row>
-                        <ons-col style="margin-left: 10%; margin-top: 30px">Geboren am</ons-col>
-                        <ons-col>
-                            <input id="BornOn" type="date" value="tt.mm.jjjj "
-                                style="width:140px; margin-top: 20px"><br><br>
-                        </ons-col>
-                    </ons-row>
-                    <section style="margin-left: 10%; margin-right: 10%; margin-top: 10%;  margin-bottom: 10%">
-                        <ons-button style=" border-radius: 10px;background-color: #2B605A" modifier="large"
-                            onclick="checkInputs()"> Erledigt
-                            <!-- <ons-icon size="15px" style="margin-left: 5px" icon="fa-check"></ons-icon> -->
-                        </ons-button>
-                    </section>
-                </form>
-            </ons-card>
+                    <!-- <hr> -->
+                    <ons-list>
+                        <ons-list-header class="ons_list_header">Allgemeine Infos</ons-list-header>
+                        <ons-list-item onclick="showTemplateDialogAdd('colorAdd', 'colorAdd.html')">
+                            <div class="center">
+                                Ohrmarken Farbe <span style="color: red;"> *</span>
+                            </div>
+                            <div id="livestockColorAdd" class="right"> Rot
+                            </div>
+                        </ons-list-item>
+
+                        <ons-list-item onclick="showTemplateDialogAdd('locationAdd', 'locationAdd.html')">
+                            <div class="center">
+                                Standort <span style="color: red;"> *</span>
+                            </div>
+                            <div id="livestockPlaceAdd" class="right"> Bitte wählen
+                            </div>
+                        </ons-list-item>
+
+                        <ons-list-item>
+                            <div class="center">
+                                Geboren am <span style="color: red;"> *</span>
+                            </div>
+                            <div class="right">
+                                <input id="BornOn" type="date">
+                            </div>
+                        </ons-list-item>
+                        <ons-list-header class="ons_list_header">Zusätzliche Infos</ons-list-header>
+                        <ons-list-item modifier="longdivider">
+                            <div class="center">
+                                Rasse
+                            </div>
+                            <div class="right"> Duroc
+                            </div>
+                        </ons-list-item>
+
+                        <ons-list-item modifier="longdivider">
+                            <div class="center">
+                                Geschlecht
+                            </div>
+                            <div class="right"> Weiblich
+                            </div>
+                        </ons-list-item>
+
+                        <ons-list-item modifier="longdivider">
+                            <div class="center">
+                                Spitzname
+                            </div>
+                            <div class="right"> Rosa
+                            </div>
+                        </ons-list-item>
+        </ons-page>
+        </form>
+        </ons-card>
+        <style type="text/css">
+            /* .ons_list_header {
+                background-color: #F4F4F4;
+                font-family: 'Muli', Light;
+                font-size: 14px;
+                margin-left: 3px;
+                color: black;
+                padding: 3px; 
+                border-radius: 15px;
+            } */
+
+            input[type=date] {
+                background-color: transparent;
+                border: none;
+                width: 120px;
+                font-size: 14px;
+                margin-left: 3px;
+                color: grey;
+                /* appearance: none; */
+            }
+
+            .right {
+                color: grey;
+            }
+
+            span {
+                font-family: Calibri;
+                font-size: 18px;
+                margin-left: 3px;
+            }
+        </style>
         </ons-page>
     </template>
 
@@ -1229,8 +1305,8 @@
                     </b>
                 </p>
             </div>
-            <ons-list> 
-                <ons-list-item id="1+#ffff00" onchange="hideDialogColorAdd(this.id)" tappable>
+            <ons-list>
+                <ons-list-item id="1+#ffff00" onchange="hideDialogColorAdd(this.id, 'Gelb')" tappable>
                     <label class="left">
                         <ons-checkbox id="checkbox-1"></ons-checkbox>
                     </label>
@@ -1239,7 +1315,7 @@
                         Gelb
                     </label>
                 </ons-list-item>
-                <ons-list-item id="2+#b30000" onchange="hideDialogColorAdd(this.id)" tappable>
+                <ons-list-item id="2+#b30000" onchange="hideDialogColorAdd(this.id, 'Rot')" tappable>
                     <label class="left">
                         <ons-checkbox input-id="checkbox-2"></ons-checkbox>
                     </label>
@@ -1248,7 +1324,7 @@
                         Rot
                     </label>
                 </ons-list-item>
-                <ons-list-item id="3+#000099" onchange="hideDialogColorAdd(this.id)" tappable>
+                <ons-list-item id="3+#000099" onchange="hideDialogColorAdd(this.id, 'Blau')" tappable>
                     <label class="left">
                         <ons-checkbox input-id="checkbox-3"></ons-checkbox>
                     </label>
@@ -1257,7 +1333,7 @@
                         Blau
                     </label>
                 </ons-list-item>
-                <ons-list-item id="4+#008000" onchange="hideDialogColorAdd(this.id)" tappable>
+                <ons-list-item id="4+#008000" onchange="hideDialogColorAdd(this.id, 'Grün')" tappable>
                     <label class="left">
                         <ons-checkbox input-id="checkbox-4"></ons-checkbox>
                     </label>
@@ -1266,7 +1342,7 @@
                         Grün
                     </label>
                 </ons-list-item>
-                <ons-list-item id="5+#b34700" onchange="hideDialogColorAdd(this.id)" tappable>
+                <ons-list-item id="5+#b34700" onchange="hideDialogColorAdd(this.id, 'Orange')" tappable>
                     <label class="left">
                         <ons-checkbox input-id="checkbox-5"></ons-checkbox>
                     </label>
@@ -1275,7 +1351,7 @@
                         Orange
                     </label>
                 </ons-list-item>
-                <ons-list-item id="6+#e6e6e6" onchange="hideDialogColorAdd(this.id)" tappable>
+                <ons-list-item id="6+#e6e6e6" onchange="hideDialogColorAdd(this.id, 'Weiß')" tappable>
                     <label class="left">
                         <ons-checkbox input-id="checkbox-6"></ons-checkbox>
                     </label>
@@ -1346,7 +1422,7 @@
                     font: 16px Arial;
                 }
 
-                input[type=text] {
+                /* input[type=text] {
                     border: 1px solid transparent;
                     background-color: #f1f1f1;
                     border-radius: 10px;
@@ -1354,7 +1430,7 @@
                     font-size: 16px;
                     background-color: #f1f1f1;
                     width: 100%;
-                }
+                } */
 
                 input[type=number] {
                     border: 1px solid transparent;
@@ -1366,7 +1442,7 @@
                     width: 100%;
                 }
 
-                input[type=date] {
+                /* input[type=date] {
                     border: 1px solid transparent;
                     background-color: #f1f1f1;
                     border-radius: 10px;
@@ -1374,9 +1450,9 @@
                     font-size: 16px;
                     background-color: #f1f1f1;
                     width: 100%;
-                }
+                } */
 
-                input[type=time] {
+                /* input[type=time] {
                     border: 1px solid transparent;
                     background-color: #f1f1f1;
                     border-radius: 10px;
@@ -1384,7 +1460,7 @@
                     font-size: 16px;
                     background-color: #f1f1f1;
                     width: 100%;
-                }
+                } */
 
                 input[type=color] {
                     border: 1px solid transparent;
@@ -2519,14 +2595,14 @@
                     display: inline-block;
                 }
 
-                input[type=text] {
+                /* input[type=text] {
                     border: 1px solid transparent;
                     background-color: #f1f1f1;
                     border-radius: 10px;
                     padding: 10px;
                     font-size: 16px;
                     width: 100%;
-                }
+                } */
 
                 input[type=number] {
                     border: 1px solid transparent;
@@ -2546,7 +2622,7 @@
                     height: 40px;
                 }
 
-                input[type=date] {
+                /* input[type=date] {
                     border: 1px solid transparent;
                     background-color: #f1f1f1;
                     border-radius: 10px;
@@ -2554,7 +2630,7 @@
                     font-size: 16px;
                     background-color: #f1f1f1;
                     width: 100%;
-                }
+                } */
 
                 .autocomplete-items {
                     position: absolute;
