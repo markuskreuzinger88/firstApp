@@ -197,7 +197,6 @@ var hideDialogColorAdd = function (color, colorText) {
 function updateLivestockLocations(livestockLocationList, listLength) {
     var lastSelectedPlace = localStorage.getItem("livestockPlaceAdd");
     //remove current items in view
-    var list = document.getElementById("containerLivestockAdd");
     while (list.hasChildNodes()) {
         list.removeChild(list.firstChild);
     }
@@ -212,9 +211,12 @@ function updateLivestockLocations(livestockLocationList, listLength) {
         checkbox = document.createElement("ons-checkbox")
         checkbox.setAttribute("input-id", "checkbox" + location);
         //check checkbox if last selected place = current list place 
+        //only in livestock add page
+        if (eventEnterPageId === 'livestock_add') {
         if (lastSelectedPlace == livestockLocationList[i].location) {
             checkbox.setAttribute("checked");
         }
+    }
         label_left.appendChild(checkbox);
         //label center
         label_center = document.createElement("label")
@@ -234,7 +236,34 @@ function updateLivestockLocations(livestockLocationList, listLength) {
         list.appendChild(label_left);
         list.appendChild(label_center);
         list.appendChild(label_right);
+
+        //REMOVE CODE FORM LIVESTOCK ADD PAGE BECAUSE IT IS USED IN ANOTHER FILEs
+        if (eventEnterPageId === 'livestock_add') {
         document.getElementById("containerLivestockAdd").appendChild(list);
+        } else if (eventEnterPageId === 'livestock'){
+            document.getElementById("containerLivestockFilter").appendChild(list);
+        }
+    }
+    //add no filter checkbox in livestock page
+    if (eventEnterPageId === 'livestock'){
+        console.log("JOJOJOJOJO2222")
+        //label left
+        label_left = document.createElement("label")
+        label_left.setAttribute("class", "left");
+        checkbox = document.createElement("ons-checkbox")
+        label_left.appendChild(checkbox);
+        // checkbox.setAttribute("input-id", "checkbox" + location);
+                //label center
+                label_center = document.createElement("label")
+                label_center.setAttribute("class", "center");
+                label_center.innerHTML = "kein Standort Filter";
+                label_center.setAttribute("onclick", "hideDialogLocationAdd()");
+                        //append labels to list
+                        list2 = document.createElement("ons-list-item")
+                        list2.setAttribute("tappable");
+        list2.appendChild(label_left);
+        list2.appendChild(label_center);
+                document.getElementById("containerLivestockFilter").appendChild(list2);
     }
 }
 

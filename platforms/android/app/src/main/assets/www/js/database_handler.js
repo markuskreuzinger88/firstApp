@@ -247,6 +247,7 @@ function write2DBLogin(firstname, lastname, token, lfbis) {
 
 //Get livestock Locations from Database 
 function getLocationDB() {
+    console.log("JOJOJO")
     db.transaction(function (transaction) {
         transaction.executeSql('SELECT * FROM animal_location', [], function (tx, results) {
             var data2Arr = Array.from(results.rows);

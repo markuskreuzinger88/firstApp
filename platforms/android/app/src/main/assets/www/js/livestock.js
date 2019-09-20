@@ -13,8 +13,8 @@
             //if networkconnection is valid update view from Server
             //else use local database
             if (networkConnection == true) {
-                RESTGetLivestock()
-                //getLivestockDB()
+                // RESTGetLivestock()
+                getLivestockDB()
             } else {
                 getLivestockDB()
             }
@@ -25,13 +25,22 @@
         var event = event.originalEvent;
         leavePage = event.leavePage.id;
         if (event.enterPage.id === 'livestock') {
+
+                    // create element before use --> to update list in elemnt dynamically
+        ons.createElement("locationFilter.html", {
+            append: true
+        });
+
             //if networkconnection is valid update view from Server
             //else use local database
             if (networkConnection == true) {
-                RESTGetLivestock()
-                //getLivestockDB()
+                // RESTGetLivestock()
+                getLivestockDB()
+                            // RESTGetLocation()
+                getLocationDB()
             } else {
                 getLivestockDB()
+                getLocationDB()
             }
         }
     });
@@ -147,7 +156,7 @@
         document.getElementById("checkSort-2").checked = false;
         document.getElementById("checkSort-3").checked = false;
         document.getElementById("checkSort-4").checked = false;
-        document.getElementById("checkSort-5").checked = false;
+        // document.getElementById("checkSort-5").checked = false;
         document.getElementById(checkbox).checked = true;
         document.getElementById(id).hide();
         //change icon of button
@@ -160,8 +169,6 @@
         } else if (checkbox == "checkSort-3") {
             sortLivestockView('color', 'asc')
         } else if (checkbox == "checkSort-4") {
-            sortLivestockView('place', 'asc')
-        } else if (checkbox == "checkSort-5") {
             sortLivestockView('place', 'asc')
         }
     };
@@ -193,7 +200,7 @@
                 LivestockListFiltered = LivestockListFiltered.filter(filterLivestockListColor)
             }
         }
-        showTemplateDialogView('FilterPlace', 'FilterPlace.html')
+        showTemplateDialogView('locationFilter', 'locationFilter.html')
     };
 
     //function for filter database
