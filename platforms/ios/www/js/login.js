@@ -1,13 +1,16 @@
 db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //create 20MB Database
 
 //set first ons page
-ons.ready(function () {
+ons.ready(async function () {
     //use only IOS styling
     ons.disableAutoStyling()
 
     //only for debugging
     //RESTGetLivestock()
     //checkLivestockUnsafedIems()
+
+    //get min max ID from all Databases
+    getMinIDDB();
 
     if (localStorage.getItem("login") == 'true') {
         RESTGetLivestock()

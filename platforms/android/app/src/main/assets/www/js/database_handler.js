@@ -1,5 +1,7 @@
 db = window.openDatabase("Database", "1.0", "Nutztier db", 20 * 1024 * 1024); //create 20MB Database
 var enterPage = ""
+var MinLocationIDDB = "";
+var MinAnimalIDDB = "";
 
 $(document).on('postpush', '#nav1', function (event) {
     var event = event.originalEvent;
@@ -247,7 +249,6 @@ function write2DBLogin(firstname, lastname, token, lfbis) {
 
 //Get livestock Locations from Database 
 function getLocationDB() {
-    console.log("JOJOJO")
     db.transaction(function (transaction) {
         transaction.executeSql('SELECT * FROM animal_location', [], function (tx, results) {
             var data2Arr = Array.from(results.rows);
@@ -325,9 +326,42 @@ function checkLivestockUnsafedIems() {
     });
 }
 
+//Function get min ID from database
+function getMinIDDB() {
+    var DatabaseTables = ["animal_location", "livestock"];
+    for (i = 0; i < DatabaseTables.length; i++) {
+        console.log(DatabaseTables[i]); 
+        var testString = toString(DatabaseTables[i])
+        db.transaction(function (transaction) {
+            transaction.executeSql("SELECT MIN(id) FROM " + testString + "", [], function (tx, results) {
+                var minID = (results.rows[0]["MIN(id)"]);
+                //check if ID is negative
+                if (Math.sign(minID) == "-1") {
+                    MinLocationIDDB = minID;
+                } else {
+                    MinLocationIDDB = "0";
+                }
+                console.log("LocationID: " + MinLocationIDDB);
+                return MinLocationIDDB;
+            }, null);
+            // transaction.executeSql('SELECT MIN(id) FROM livestock', [], function (tx, results) {
+            //     var minID = (results.rows[0]["MIN(id)"]);
+            //     MinAnimalIDDB = minID;
+            //     console.log("AnimalID: " + MinAnimalIDDB);
+            // }, null);
+        });
+    }
+}
 
-
-
+//Function get max ID from database
+function getMaxIDDB() {
+    db.transaction(function (transaction) {
+        console.log("MAX")
+        transaction.executeSql('SELECT MAX(id) FROM animal_location', [], function (tx, results) {
+            console.log(results.rows[0]["MAX(id)"]);
+        }, null);
+    });
+}
 
 function sampleLocations() {
     write2DBLivestockLocationTester('1', 'Deckzentrum')
@@ -353,16 +387,16 @@ function sampleDrugs() {
 }
 
 function sampleLivestocks() {
-    write2DBLivestockTester('2019-05-31', 'yellow', '1234', 'Dekzentrum', 'A', '2019-06-01', 'example@example.com')
-    write2DBLivestockTester('2019-05-02', 'red', '4567', 'Wartestall', 'A', '2019-04-01', 'example@example.com')
-    write2DBLivestockTester('2019-05-01', 'green', '8743', 'Abferkelbox', 'D', '2019-05-21', 'example@example.com')
-    write2DBLivestockTester('2019-05-30', 'blue', '1256', 'Futterventile', 'A', '2019-06-26', 'example@example.com')
-    write2DBLivestockTester('2019-05-27', 'orange', '7890', 'Abferkelbox', 'C', '2019-04-12', 'example@example.com')
-    write2DBLivestockTester('2019-05-09', 'white', '3456', 'Abferkelbox', 'C', '2019-03-01', 'example@example.com')
-    write2DBLivestockTester('2019-05-03', 'red', '4390', 'Futterventile', 'A', '2019-01-01', 'example@example.com')
-    write2DBLivestockTester('2019-05-19', 'blue', '4567', 'Wartestall', 'D', '2019-02-24', 'example@example.com')
-    write2DBLivestockTester('2019-05-15', 'yellow', '1238', 'Dekzentrum', 'B', '2019-01-16', 'example@example.com')
-    write2DBLivestockTester('2019-05-29', 'red', '9805', 'Dekzentrum', 'A', '2019-03-12', 'example@example.com')
+    write2DBLivestockTester('1', '2019-05-31', 'yellow', '1234', 'Dekzentrum', 'A', '2019-06-01', 'example@example.com', "123456789")
+    write2DBLivestockTester('2', '2019-05-02', 'red', '4567', 'Wartestall', 'A', '2019-04-01', 'example@example.com', "123456789")
+    write2DBLivestockTester('3', '2019-05-01', 'green', '8743', 'Abferkelbox', 'D', '2019-05-21', 'example@example.com', "123456789")
+    write2DBLivestockTester('4', '2019-05-30', 'blue', '1256', 'Futterventile', 'A', '2019-06-26', 'example@example.com', "123456789")
+    write2DBLivestockTester('5', '2019-05-27', 'orange', '7890', 'Abferkelbox', 'C', '2019-04-12', 'example@example.com', "123456789")
+    write2DBLivestockTester('6', '2019-05-09', 'white', '3456', 'Abferkelbox', 'C', '2019-03-01', 'example@example.com', "123456789")
+    write2DBLivestockTester('7', '2019-05-03', 'red', '4390', 'Futterventile', 'A', '2019-01-01', 'example@example.com', "123456789")
+    write2DBLivestockTester('8', '2019-05-19', 'blue', '4567', 'Wartestall', 'D', '2019-02-24', 'example@example.com', "123456789")
+    write2DBLivestockTester('9', '2019-05-15', 'yellow', '1238', 'Dekzentrum', 'B', '2019-01-16', 'example@example.com', "123456789")
+    write2DBLivestockTester('10', '2019-05-29', 'red', '9805', 'Dekzentrum', 'A', '2019-03-12', 'example@example.com', "123456789")
 }
 
 //add locations to database
@@ -381,11 +415,11 @@ async function write2DBLivestockLocationTester(id, location) {
 }
 
 //add livestock to database
-async function write2DBLivestockTester(birthday, color, number, place, group, created, email) {
+async function write2DBLivestockTester(id, birthday, color, number, place, created, email, guid) {
     await db.transaction(function (transaction) {
         var executeQuery =
-            "INSERT INTO livestock (birthday, color, number, place, created, user, tagged, sync) VALUES (?,?,?,?,?,?,?,?)";
-        transaction.executeSql(executeQuery, [birthday, color, number, place, created, email, "false", "true"],
+            "INSERT INTO livestock (id, birthday, color, number, place, created, user, tagged, guid) VALUES (?,?,?,?,?,?,?,?,?)";
+        transaction.executeSql(executeQuery, [id, birthday, color, number, place, created, email, "false", guid],
             function (tx, result) {
                 console.log("Livestock added")
             },
