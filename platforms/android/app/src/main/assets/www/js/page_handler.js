@@ -1,16 +1,6 @@
 //global variables
 var eventEnterPageId = ""
 
-
-
-// $(document).on('postpush', '#nav1', function (event) {
-//     var event = event.originalEvent;
-//     leavePage = event.leavePage.id;
-//     if (event.enterPage.id === 'livestock_add') {
-//         //updateLivestockAddView()
-//     }
-// });
-
 //on init page
 document.addEventListener("init", function (event) {
     var page = event.target;
@@ -18,8 +8,29 @@ document.addEventListener("init", function (event) {
     eventEnterPageId = page.id;
     //livestock add page
     if (page.id === 'livestock_add') {
-        updateLivestockAddView()
-        //TODO: CHECK NETWORK CONNECTION!!!!
-        getLocationDB()
+        updateLivestockAddView();
+    } else if (page.id === 'livestock') {
+        updateLivestockView()
+    }
+});
+
+//on page postpush
+$(document).on('postpush', '#nav1', function (event) {
+    var event = event.originalEvent;
+    leavePage = event.leavePage.id;
+    if (event.enterPage.id === 'livestock_add') {
+        //update livestock locations after page load
+        updateLivestockLocations()
+    } else if (event.enterPage.id === 'livestock') {
+        //update livestock locations for Filter after page load
+        updateLivestockLocationsFilter()
+    }
+});
+
+//on page prepop
+$(document).on('prepop', '#nav1', function (event) {
+    var event = event.originalEvent;
+    if (event.enterPage.id === 'livestock') {
+
     }
 });

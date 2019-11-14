@@ -150,41 +150,41 @@ function updateDBLivestockID(id, color, number) {
     });
 }
 
-//delete Livestock from DB
-function deleteDBLivestock(color, number) {
-    alert("delete Livestock")
-    db.transaction(function (tx) {
-        tx.executeSql("DELETE FROM livestock WHERE color = ? and number = ?", [color, number]);
-    });
-}
+// //delete Livestock from DB
+// function deleteDBLivestock(color, number) {
+//     alert("delete Livestock")
+//     db.transaction(function (tx) {
+//         tx.executeSql("DELETE FROM livestock WHERE color = ? and number = ?", [color, number]);
+//     });
+// }
 
-//write livestock list to Database
-//check first if ID already exists in Database
-//if ID exists than update Database entry else
-//insert entry to Database
-async function write2DBLivestockArr(id, birthday, color, number, place, created, email, guid) {
-    await db.transaction(function (tx) {
-        //search livestock in database
-        tx.executeSql('SELECT * FROM livestock WHERE id = ?', [id], function (tx, results) {
-            if (results.rows.length > 0) {
-                //ID exits in Database
-                tx.executeSql("UPDATE livestock SET birthday = ?, color = ?, number = ?, place = ?, created = ?, user = ?, tagged = ?, guid = ? WHERE id=?" [birthday, color, number, place, created, email, "false", guid, id]);
-            } else {
-                //ID does not exits
-                //Note: remove success and error function after development process 
-                var executeQuery =
-                    "INSERT INTO livestock (id, birthday, color, number, place, created, user, tagged, guid) VALUES (?,?,?,?,?,?,?,?,?)";
-                tx.executeSql(executeQuery, [id, birthday, color, number, place, created, email, "false", guid],
-                    function (tx, result) {
-                        console.log("success")
-                    },
-                    function (error) {
-                        alert('Error: ' + error.message + ' code: ' + error.code);
-                    });
-            }
-        }, null);
-    });
-}
+// //write livestock list to Database
+// //check first if ID already exists in Database
+// //if ID exists than update Database entry else
+// //insert entry to Database
+// async function write2DBLivestockArr(id, birthday, color, number, place, created, email, guid) {
+//     await db.transaction(function (tx) {
+//         //search livestock in database
+//         tx.executeSql('SELECT * FROM livestock WHERE id = ?', [id], function (tx, results) {
+//             if (results.rows.length > 0) {
+//                 //ID exits in Database
+//                 tx.executeSql("UPDATE livestock SET birthday = ?, color = ?, number = ?, place = ?, created = ?, user = ?, tagged = ?, guid = ? WHERE id=?" [birthday, color, number, place, created, email, "false", guid, id]);
+//             } else {
+//                 //ID does not exits
+//                 //Note: remove success and error function after development process 
+//                 var executeQuery =
+//                     "INSERT INTO livestock (id, birthday, color, number, place, created, user, tagged, guid) VALUES (?,?,?,?,?,?,?,?,?)";
+//                 tx.executeSql(executeQuery, [id, birthday, color, number, place, created, email, "false", guid],
+//                     function (tx, result) {
+//                         console.log("success")
+//                     },
+//                     function (error) {
+//                         alert('Error: ' + error.message + ' code: ' + error.code);
+//                     });
+//             }
+//         }, null);
+//     });
+// }
 
 //add drug delivery to database
 async function write2DBDrugDelivery() {
@@ -226,26 +226,26 @@ async function write2DBDrugDelivery2(id, drug, approval_number, delay, amount) {
         });
 }
 
-//Write Login Data to Database
-function write2DBLogin(firstname, lastname, token, lfbis) {
-    var email = document.getElementById("email").value;
-    var psw = document.getElementById("psw").value;
-    db.transaction(function (transaction) {
-        var executeQuery =
-            "INSERT INTO user (email, password, firstname, lastname, token, lfbis) VALUES (?,?,?,?,?,?)";
-        transaction.executeSql(executeQuery, [email, psw, firstname, lastname, token, lfbis],
-            function (tx, result) {
-                //get Livestock Database from server
-                RESTGetLivestock()
-                //get Livestock location
-                RESTGetLocation()
-                document.querySelector('#nav1').pushPage('home_splitter.html');
-            },
-            function (error) {
-                alert('Error: ' + error.message + ' code: ' + error.code);
-            });
-    });
-}
+// //Write Login Data to Database
+// function write2DBLogin(firstname, lastname, token, lfbis) {
+//     var email = document.getElementById("email").value;
+//     var psw = document.getElementById("psw").value;
+//     db.transaction(function (transaction) {
+//         var executeQuery =
+//             "INSERT INTO user (email, password, firstname, lastname, token, lfbis) VALUES (?,?,?,?,?,?)";
+//         transaction.executeSql(executeQuery, [email, psw, firstname, lastname, token, lfbis],
+//             function (tx, result) {
+//                 //get Livestock Database from server
+//                 RESTGetLivestock()
+//                 //get Livestock location
+//                 RESTGetLocation()
+//                 document.querySelector('#nav1').pushPage('home_splitter.html');
+//             },
+//             function (error) {
+//                 alert('Error: ' + error.message + ' code: ' + error.code);
+//             });
+//     });
+// }
 
 //Get livestock Locations from Database 
 function getLocationDB() {
@@ -326,32 +326,32 @@ function checkLivestockUnsafedIems() {
     });
 }
 
-//Function get min ID from database
-function getMinIDDB() {
-    var DatabaseTables = ["animal_location", "livestock"];
-    for (i = 0; i < DatabaseTables.length; i++) {
-        console.log(DatabaseTables[i]); 
-        var testString = toString(DatabaseTables[i])
-        db.transaction(function (transaction) {
-            transaction.executeSql("SELECT MIN(id) FROM " + testString + "", [], function (tx, results) {
-                var minID = (results.rows[0]["MIN(id)"]);
-                //check if ID is negative
-                if (Math.sign(minID) == "-1") {
-                    MinLocationIDDB = minID;
-                } else {
-                    MinLocationIDDB = "0";
-                }
-                console.log("LocationID: " + MinLocationIDDB);
-                return MinLocationIDDB;
-            }, null);
-            // transaction.executeSql('SELECT MIN(id) FROM livestock', [], function (tx, results) {
-            //     var minID = (results.rows[0]["MIN(id)"]);
-            //     MinAnimalIDDB = minID;
-            //     console.log("AnimalID: " + MinAnimalIDDB);
-            // }, null);
-        });
-    }
-}
+// //Function get min ID from database
+// function getMinIDDB() {
+//     var DatabaseTables = ["animal_location", "livestock"];
+//     for (i = 0; i < DatabaseTables.length; i++) {
+//         console.log(DatabaseTables[i]); 
+//         var testString = toString(DatabaseTables[i])
+//         db.transaction(function (transaction) {
+//             transaction.executeSql("SELECT MIN(id) FROM " + testString + "", [], function (tx, results) {
+//                 var minID = (results.rows[0]["MIN(id)"]);
+//                 //check if ID is negative
+//                 if (Math.sign(minID) == "-1") {
+//                     MinLocationIDDB = minID;
+//                 } else {
+//                     MinLocationIDDB = "0";
+//                 }
+//                 console.log("LocationID: " + MinLocationIDDB);
+//                 return MinLocationIDDB;
+//             }, null);
+//             // transaction.executeSql('SELECT MIN(id) FROM livestock', [], function (tx, results) {
+//             //     var minID = (results.rows[0]["MIN(id)"]);
+//             //     MinAnimalIDDB = minID;
+//             //     console.log("AnimalID: " + MinAnimalIDDB);
+//             // }, null);
+//         });
+//     }
+// }
 
 //Function get max ID from database
 function getMaxIDDB() {

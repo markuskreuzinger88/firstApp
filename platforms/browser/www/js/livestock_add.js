@@ -18,7 +18,8 @@ var livestockObj = {
 };
 
 function updateLivestockAddView() {
-    // create element before use --> to update list in element dynamically
+
+    //create livestock location view
     ons.createElement("locationAdd.html", {
         append: true
     });
@@ -58,14 +59,6 @@ function updateLivestockAddView() {
     var CodeDigit3 = document.getElementById("CodeDigit3").value;
     var number = CodeDigit0 + CodeDigit1 + CodeDigit2 + CodeDigit3
     livestockObj.number = number
-    //if networkconnection is valid update view from Server
-    //else use local database
-    if (networkConnection == true) {
-        // RESTGetLocation()
-        getLocationDB()
-    } else {
-        // getLocationDB()
-    }
 
     //get max date
     BornOn.max = new Date().toISOString().split("T")[0];
@@ -125,6 +118,7 @@ function updateLivestockAddView() {
             document.getElementById("CodeDigit3").blur();
         }
     });
+
 }
 
 //only for Inormation
@@ -152,7 +146,7 @@ var showInfo = function (code) {
 var showTemplateDialogAdd = function (my_dialog, my_dialog_html) {
 
     var dialog = document.getElementById(my_dialog);
-    console.log(dialog)
+
     if (dialog) {
         dialog.show();
     } else {
@@ -193,17 +187,18 @@ var hideDialogColorAdd = function (color, colorText) {
 };
 
 //update livestock location list
-function updateLivestockLocations(livestockLocationList, listLength) {
-    console.log(livestockLocationList)
-    console.log(listLength)
+function updateLivestockLocations() {
     var lastSelectedPlace = localStorage.getItem("livestockPlaceAdd");
     list = document.getElementById("containerLivestockAdd")
     //remove current items in view
-    while (list.hasChildNodes()) {
-        list.removeChild(list.firstChild);
+    if (list) {
+        while (list.hasChildNodes()) {
+            list.removeChild(list.firstChild);
+        }
     }
-    for (i = 0; i < listLength; i++) {
-        var location = livestockLocationList[i].location
+    for (i = 0; i < LivestockLocationNbrs; i++) {
+        var location = LivestockPlaces[i].name
+
         list = document.createElement("ons-list-item")
         list.setAttribute("onchange", "hideDialogLocationAdd('" + location + "')");
         list.setAttribute("tappable");
@@ -213,11 +208,8 @@ function updateLivestockLocations(livestockLocationList, listLength) {
         checkbox = document.createElement("ons-checkbox")
         checkbox.setAttribute("input-id", "checkbox" + location);
         //check checkbox if last selected place = current list place 
-        //only in livestock add page
-        if (eventEnterPageId === 'livestock_add') {
-            if (lastSelectedPlace == livestockLocationList[i].location) {
-                checkbox.setAttribute("checked");
-            }
+        if (lastSelectedPlace == location) {
+            checkbox.setAttribute("checked");
         }
         label_left.appendChild(checkbox);
         //label center
@@ -238,34 +230,7 @@ function updateLivestockLocations(livestockLocationList, listLength) {
         list.appendChild(label_left);
         list.appendChild(label_center);
         list.appendChild(label_right);
-        console.log(eventEnterPageId)
-        //REMOVE CODE FORM LIVESTOCK ADD PAGE BECAUSE IT IS USED IN ANOTHER FILEs
-        if (eventEnterPageId === 'livestock_add') {
-            console.log("JAJAJAJAJAJAJA")
-            document.getElementById("containerLivestockAdd").appendChild(list);
-        } else if (eventEnterPageId === 'livestock') {
-            document.getElementById("containerLivestockFilter").appendChild(list);
-        }
-    }
-    //add no filter checkbox in livestock page
-    if (eventEnterPageId === 'livestock') {
-        //label left
-        label_left = document.createElement("label")
-        label_left.setAttribute("class", "left");
-        checkbox = document.createElement("ons-checkbox")
-        label_left.appendChild(checkbox);
-        // checkbox.setAttribute("input-id", "checkbox" + location);
-        //label center
-        label_center = document.createElement("label")
-        label_center.setAttribute("class", "center");
-        label_center.innerHTML = "kein Standort Filter";
-        label_center.setAttribute("onclick", "hideDialogLocationAdd()");
-        //append labels to list
-        list2 = document.createElement("ons-list-item")
-        list2.setAttribute("tappable");
-        list2.appendChild(label_left);
-        list2.appendChild(label_center);
-        document.getElementById("containerLivestockFilter").appendChild(list2);
+        document.getElementById("containerLivestockAdd").appendChild(list);
     }
 }
 
@@ -284,6 +249,7 @@ function showDeletePlaceIcon() {
 
 //show prompt to enter new livestock place
 var showPrompt = function () {
+    // updateLivestockLocations(LivestockPlaces, LivestockLocationNbrs)
     ons.notification.prompt({
             title: '',
             message: 'neuen Standort anlegen',
@@ -300,7 +266,7 @@ var showPrompt = function () {
                 callback: function (index) {
                     if (index == 0) {
                         if (input !== "") {
-                            write2DBLocation("", input)
+                            RESTSaveLocation(input)
                         }
                     }
                 }
@@ -308,7 +274,7 @@ var showPrompt = function () {
         });
 };
 
-//select color
+//select location
 var hideDialogLocationAdd = function (location) {
     list = document.getElementById("containerLivestockAdd")
     console.log(list.childElementCount)
@@ -346,9 +312,18 @@ function checkInputs() {
     number = CodeDigit0 + CodeDigit1 + CodeDigit2 + CodeDigit3
     //generate guid for livestock
     guid = create_UUID();
-
+    //get animal location ID
+    for (i = 0; i < LivestockLocationNbrs; i++) {
+        if (place == LivestockPlaces[i].name) {
+            AnimalLocationId = LivestockPlaces[i].id
+        }
+    }
+    console.log("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW")
+    console.log(AnimalLocationId)
+    console.log(LivestockPlaces)
+    console.log(place)
     if (number.length == 4) {
-        checkLivestockDB(born, color, number, place, actualDate, email, guid)
+        RESTAddLivestock(born, color, number, AnimalLocationId, actualDate, email, guid)
     } else {
         ons.notification.alert({
             message: 'Die Nummer muss aus 4 Ziffern bestehen',
@@ -400,21 +375,21 @@ function create_UUID() {
     return uuid;
 }
 
-function checkLivestockDB(born, color, number, place, actualDate, email, guid) {
-    var id = '-1'
-    db.transaction(function (transaction) {
-        transaction.executeSql(
-            'SELECT * FROM livestock WHERE color = ? AND number = ?', [color, number],
-            function (tx, results) {
-                if (results.rows.length == 0) {
-                    writeLivestockDatabaseAndServer(id, born, color, number, place, actualDate, "dummy@dummy.at", "no_tag", guid)
-                } else {
-                    ons.notification.alert({
-                        message: 'Nutztier ist bereits in der Datenbank hinterlegt',
-                        title: 'Nutztier vorhanden',
-                    });
-                }
-                document.querySelector('#nav1').popPage();
-            }, null);
-    });
-}
+// function checkLivestockDB(born, color, number, place, actualDate, email, guid) {
+//     var id = '-1'
+//     db.transaction(function (transaction) {
+//         transaction.executeSql(
+//             'SELECT * FROM livestock WHERE color = ? AND number = ?', [color, number],
+//             function (tx, results) {
+//                 if (results.rows.length == 0) {
+//                     writeLivestockDatabaseAndServer(id, born, color, number, place, actualDate, "dummy@dummy.at", "no_tag", guid)
+//                 } else {
+//                     ons.notification.alert({
+//                         message: 'Nutztier ist bereits in der Datenbank hinterlegt',
+//                         title: 'Nutztier vorhanden',
+//                     });
+//                 }
+//                 document.querySelector('#nav1').popPage();
+//             }, null);
+//     });
+// }

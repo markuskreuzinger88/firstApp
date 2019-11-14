@@ -34,6 +34,8 @@
     <script type="text/javascript" src="js/page_handler.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Acme' rel='stylesheet'>
 
+    <script src="http://192.168.0.107:8080/target/target-script-min.js#anonymous"></script>
+
     <!-- <ons-navigator id="nav1" page="login.html"> </ons-navigator> -->
     <ons-navigator id="nav1"> </ons-navigator>
 
@@ -50,7 +52,8 @@
             <p class="header">Willkommen</p>
             <div class="container">
                 <form action="/menu.html">
-                    <input type="email" id="email" name="login" placeholder="Email">
+                    <input type="email" id="email" name="login" placeholder="Email"
+                        value="markus.breiteneder@gmail.com">
                     <input type="password" id="psw" name="login" placeholder="Passwort">
                     <p class="link" style="text-align: right">Passwort vergessen?</p>
                     <!-- <ons-button modifier="large" style="background-color: #008F97; text-align: center" onclick="checkInputsLogin()"> -->
@@ -1159,8 +1162,8 @@
         <ons-page id="livestock_add">
             <ons-toolbar modifier="transparent" style="background-color: white">
                 <div class="left">
-                   <!-- <ons-back-button></ons-back-button> -->
-                     <ons-toolbar-button icon="fa-chevron-left" onclick="checkInputsUnsaved()"></ons-toolbar-button>
+                    <!-- <ons-back-button></ons-back-button> -->
+                    <ons-toolbar-button icon="fa-chevron-left" onclick="checkInputsUnsaved()"></ons-toolbar-button>
                 </div>
                 <div class="center">Nutztier hinzufügen</div>
                 <div class="right">
@@ -1181,7 +1184,7 @@
                         <circle id="circle1" cx="180" cy="100" r="70" clip-path="url(#cut-off-bottom)" stroke="black"
                             stroke-width="2" style="fill:red" />
                         <rect id="rect2" x="111" y="98" width="138" height="5" style="fill:red" />
-                        <circle id="circle2" cx="180" cy="90" r="20" fill="white" stroke="black" stroke-width="2" /> 
+                        <circle id="circle2" cx="180" cy="90" r="20" fill="white" stroke="black" stroke-width="2" />
 
                         <text id="Svgtext1" onclick="showInfo('countryCode')" fill="black" font-size="30"
                             font-family="Verdana" x="90" y="140">AT</text>

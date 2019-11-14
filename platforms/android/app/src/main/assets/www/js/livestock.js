@@ -5,60 +5,18 @@
     var LivestockListFiltered = [];
     var networkConnection = true;
 
-    //detect if livestock add is popped, then update livestock view on page livestock
-    $(document).on('prepop', '#nav1', function (event) {
-        var event = event.originalEvent;
-        leavePage = "dummy";
-        if (event.enterPage.id === 'livestock') {
-            //if networkconnection is valid update view from Server
-            //else use local database
-            if (networkConnection == true) {
-                // RESTGetLivestock()
-                getLivestockDB()
-            } else {
-                getLivestockDB()
-            }
-        }
-    });
-
-    $(document).on('postpush', '#nav1', function (event) {
-        var event = event.originalEvent;
-        leavePage = event.leavePage.id;
-        if (event.enterPage.id === 'livestock') {
-
-                    // create element before use --> to update list in elemnt dynamically
+    //display Livestocks
+    function updateLivestockView() {
+        // create element before use --> to update list in elemnt dynamically
         ons.createElement("locationFilter.html", {
             append: true
         });
-
-            //if networkconnection is valid update view from Server
-            //else use local database
-            if (networkConnection == true) {
-                // RESTGetLivestock()
-                getLivestockDB()
-                            // RESTGetLocation()
-                getLocationDB()
-            } else {
-                getLivestockDB()
-                getLocationDB()
-            }
-        }
-    });
-
-    //display results from Server if Networkconnection is valid
-    async function updateLivestockView(obj, LivestockNbrs) {
-        var r = $.Deferred();
-        //make array global
-        LivestockList = obj
-        //make variable global
-        LivestockListLength = LivestockNbrs
         //reset local storage variables
         resetLocalStorgageVariables()
         //check leaved page --> change icon
         setIconForAction()
         //sort list
         sortLivestockView('number', 'asc')
-        return r;
     }
 
     //display sorted livestock list
@@ -203,33 +161,72 @@
         showTemplateDialogView('locationFilter', 'locationFilter.html')
     };
 
-    //function for filter database
-    var hideDialogFilterPlace = function (id, checkbox, place) {
-        document.getElementById("checkFilterPlace-1").checked = false;
-        document.getElementById("checkFilterPlace-2").checked = false;
-        document.getElementById("checkFilterPlace-3").checked = false;
-        document.getElementById("checkFilterPlace-4").checked = false;
-        document.getElementById("checkFilterPlace-5").checked = false;
-        document.getElementById("checkFilterPlace-6").checked = false;
-        document.getElementById(checkbox).checked = true;
-        document.getElementById(id).hide();
-        //remove Color Filter Storage if use disable filter
-        if (checkbox == "checkFilterPlace-6") {
+
+
+    //select location filter
+    var hideDialogFilterPlace = function (location) {
+        list = document.getElementById("containerLivestockFilter")
+        var elements = [];
+        //first get all place items
+        for (var i = 1; i <= list.childElementCount; i++) {
+            var text = document.querySelector("#containerLivestockFilter > ons-list-item:nth-child(" + i + ") > label.center.list-item__center")
+            elements.push(text.innerHTML)
+        }
+        //uncheck all checkboxes and check selected checkbox
+        for (i = 0; i < elements.length; i++) {
+            if (elements[i] != location) {
+                document.getElementById("checkboxFilter" + elements[i]).checked = false;
+            } else {
+                document.getElementById("checkboxFilter" + elements[i]).checked = true;
+            }
+        }
+        if (location == "kein Standort Filter") {
             localStorage.removeItem('PlaceFilter');
             if (localStorage.getItem("ColorFilter") === null) {
                 LivestockListFiltered = LivestockList
             }
         } else {
-            localStorage.setItem('PlaceFilter', place);
+            localStorage.setItem('PlaceFilter', location);
             if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("SearchFilter") === null)) {
                 LivestockListFiltered = LivestockList.filter(filterLivestockListPlace)
             } else {
                 LivestockListFiltered = LivestockListFiltered.filter(filterLivestockListPlace)
             }
         }
+        document.getElementById("locationFilter").hide();
         var listLength = Object.keys(LivestockListFiltered).length;
+        console.log(LivestockListFiltered)
         filterLivestockView(LivestockListFiltered, listLength)
     };
+
+
+    // //function for filter database
+    // var hideDialogFilterPlace = function (location) {
+    //     document.getElementById("checkFilterPlace-1").checked = false;
+    //     document.getElementById("checkFilterPlace-2").checked = false;
+    //     document.getElementById("checkFilterPlace-3").checked = false;
+    //     document.getElementById("checkFilterPlace-4").checked = false;
+    //     document.getElementById("checkFilterPlace-5").checked = false;
+    //     document.getElementById("checkFilterPlace-6").checked = false;
+    //     document.getElementById(checkbox).checked = true;
+    //     document.getElementById("locationFilter").hide();
+    //     //remove Color Filter Storage if use disable filter
+    //     if (location == "noFilter") {
+    //         localStorage.removeItem('PlaceFilter');
+    //         if (localStorage.getItem("ColorFilter") === null) {
+    //             LivestockListFiltered = LivestockList
+    //         }
+    //     } else {
+    //         localStorage.setItem('PlaceFilter', location);
+    //         if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("SearchFilter") === null)) {
+    //             LivestockListFiltered = LivestockList.filter(filterLivestockListPlace)
+    //         } else {
+    //             LivestockListFiltered = LivestockListFiltered.filter(filterLivestockListPlace)
+    //         }
+    //     }
+    //     var listLength = Object.keys(LivestockListFiltered).length;
+    //     filterLivestockView(LivestockListFiltered, listLength)
+    // };
 
     // function for dynamic sorting of livestock data list
     function compareValues(key, order = 'asc') {
@@ -267,7 +264,7 @@
             var LivestockListFiltered = LivestockListFiltered.filter(filterLivestockListInput)
             var listLength = Object.keys(LivestockListFiltered).length;
         }
-               filterLivestockView(LivestockListFiltered, listLength)
+        filterLivestockView(LivestockListFiltered, listLength)
     }
 
     //filter livestock view Color
@@ -283,7 +280,7 @@
     //filter livestock view input
     function filterLivestockListInput(livestock) {
         var searchInputlength = localStorage.getItem('SearchFilter').length
-        return livestock.number.substring(0,searchInputlength) == localStorage.getItem('SearchFilter')
+        return livestock.number.substring(0, searchInputlength) == localStorage.getItem('SearchFilter')
     }
 
     //display livestock list result
@@ -371,4 +368,42 @@
                     document.querySelector('#nav1').pushPage('livestock_detail.html');
                 }, null);
         });
+    }
+
+    //update livestock location list
+    function updateLivestockLocationsFilter() {
+        list = document.getElementById("containerLivestockFilter")
+        noFilterParamter = "kein Standort Filter";
+        //remove current items in view
+        if (list) {
+            while (list.hasChildNodes()) {
+                list.removeChild(list.firstChild);
+            }
+        }
+        for (i = 0; i <= LivestockLocationNbrs; i++) {
+            if (i != LivestockLocationNbrs) {
+                var location = LivestockPlaces[i].name
+            } else {
+                //last item -> no filter
+                var location = noFilterParamter
+            }
+            list = document.createElement("ons-list-item")
+            list.setAttribute("onchange", "hideDialogFilterPlace('" + location + "')");
+            list.setAttribute("tappable");
+            //label left
+            label_left = document.createElement("label")
+            label_left.setAttribute("class", "left");
+            checkbox = document.createElement("ons-checkbox")
+            checkbox.setAttribute("input-id", "checkboxFilter" + location);
+            label_left.appendChild(checkbox);
+            //label center
+            label_center = document.createElement("label")
+            label_center.setAttribute("class", "center");
+            label_center.innerHTML = location;
+            label_center.setAttribute("onclick", "hideDialogFilterPlace('" + location + "')");
+            //append labels to list
+            list.appendChild(label_left);
+            list.appendChild(label_center);
+            document.getElementById("containerLivestockFilter").appendChild(list);
+        }
     }
