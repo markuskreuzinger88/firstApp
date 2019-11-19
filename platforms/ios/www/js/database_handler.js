@@ -324,7 +324,7 @@ function checkLivestockUnsafedIems() {
             };
         }, null);
     });
-}
+} 
 
 // //Function get min ID from database
 // function getMinIDDB() {
@@ -356,7 +356,7 @@ function checkLivestockUnsafedIems() {
 //Function get max ID from database
 function getMaxIDDB() {
     db.transaction(function (transaction) {
-        console.log("MAX")
+        console.log("MAX") 
         transaction.executeSql('SELECT MAX(id) FROM animal_location', [], function (tx, results) {
             console.log(results.rows[0]["MAX(id)"]);
         }, null);

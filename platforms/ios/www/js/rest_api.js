@@ -19,6 +19,7 @@ function RESTLogin() {
     var psw = document.getElementById("psw").value;
     var DEBUGIP = localStorage.getItem("settings_ipAdress")
     var endpoint = 'http://' + DEBUGIP + '/stablex/api/authentication/login'
+    alert(endpoint) 
     $.ajax({
         url: endpoint,
         // contentType: "application/x-www-form-urlencoded",
@@ -27,7 +28,7 @@ function RESTLogin() {
         data: JSON.stringify({
             "userName": email,
             "password": psw
-        }),
+        }), 
         success: function (response) {
             var token = "bearer " + response.token
             var data = JSON.stringify(response);
@@ -45,7 +46,7 @@ function RESTLogin() {
                 RESTGetLivestock()
                 //get Livestock location
                 RESTGetLocation()
-                //get Drugs
+                //get Drugs 
                 RESTGetDrugs()
                 document.querySelector('#nav1').pushPage('home_splitter.html');
             } else {
