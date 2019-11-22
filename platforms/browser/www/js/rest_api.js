@@ -3,6 +3,8 @@ var LivestockLocationNbrs = "";
 var LivestockPlaces = "";
 var LivestockListLength = "";
 var LivestockList = "";
+var DrugNbrs = "";
+var Drugs = "";
 
 document.addEventListener('init', function (event) {
     eventTarget = event.target
@@ -19,7 +21,6 @@ function RESTLogin() {
     var psw = document.getElementById("psw").value;
     var DEBUGIP = localStorage.getItem("settings_ipAdress")
     var endpoint = 'http://' + DEBUGIP + '/stablex/api/authentication/login'
-    alert(endpoint) 
     $.ajax({
         url: endpoint,
         // contentType: "application/x-www-form-urlencoded",
@@ -28,7 +29,7 @@ function RESTLogin() {
         data: JSON.stringify({
             "userName": email,
             "password": psw
-        }), 
+        }),
         success: function (response) {
             var token = "bearer " + response.token
             var data = JSON.stringify(response);
@@ -85,18 +86,17 @@ function RESTGetLivestock() {
         },
         error: function (xhr, status, error) {
             var errorMessage = xhr.status + ': ' + xhr.statusText
-            alert('Livestock get failed! Error - ' + errorMessage); 
+            alert('Livestock get failed! Error - ' + errorMessage);
         }
-    }); 
+    });
 }
 
 //REST add Livestock 
-async function RESTAddLivestock(birthday, color, number, AnimalLocationId, creationDate, createdBy, guid) {
-    alert(AnimalLocationId)
+function RESTAddLivestock(birthday, color, number, AnimalLocationId) {
     var DEBUGIP = localStorage.getItem("settings_ipAdress")
     var token = localStorage.getItem("bearerToken")
     var endpoint = 'http://' + DEBUGIP + '/stablex/api/Animal/SaveAnimal'
-    await $.ajax({
+    $.ajax({
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -107,15 +107,11 @@ async function RESTAddLivestock(birthday, color, number, AnimalLocationId, creat
         type: "POST",
         data: JSON.stringify({
             "model": {
-                "id": 0,
                 "animalLocationId": AnimalLocationId,
-                "creationDate": creationDate,
-                "createdBy": createdBy,
                 "typeId": 2,
                 "number": number,
                 "color": color,
-                "birthday": birthday,
-                "isLocked": false
+                "birthday": birthday
             }
         }),
         success: function (response) {
@@ -123,7 +119,7 @@ async function RESTAddLivestock(birthday, color, number, AnimalLocationId, creat
             var obj = JSON.parse(data);
             //check if livestock add is OK
             if (response.success === true) {
-                RESTGetLivestock() 
+                RESTGetLivestock()
                 document.querySelector('#nav1').popPage();
             } else {
                 //check if current page is livestock_add page
@@ -228,9 +224,12 @@ function RESTGetDrugs() {
             var data = JSON.stringify(response);
             var obj = JSON.parse(data);
             //get numbers of entries
-            var DrugNbrs = data.split("id").length - 1;
+            DrugNbrs = data.split("id").length - 1;
+            //save drugs in global variable
+            Drugs = obj.list;
+            console.log("WWWWWWWWWWWWWWWWWWWWW")
             console.log(obj.list)
-            console.log(DrugNbrs)
+            console.log(DrugNbrs)   
         },
         error: function (xhr, status, error) {
             var errorMessage = xhr.status + ': ' + xhr.statusText

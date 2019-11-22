@@ -34,7 +34,7 @@
     <script type="text/javascript" src="js/page_handler.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Acme' rel='stylesheet'>
 
-    <script src="http://192.168.0.107:8080/target/target-script-min.js#anonymous"></script>
+    <!-- <script src="http://192.168.0.107:8080/target/target-script-min.js#anonymous"></script> -->
 
     <!-- <ons-navigator id="nav1" page="login.html"> </ons-navigator> -->
     <ons-navigator id="nav1"> </ons-navigator>
@@ -145,7 +145,7 @@
                 </ons-list-item>
                 <ons-list-item modifier="nodivider" style="margin-top: 30px" onclick="fn.load('menu.html')" tappable>
                     <div class="left">
-                        <ons-icon icon="ion-home" class="list-item__icon"></ons-icon>
+                        <ons-icon icon="fa-home" class="list-item__icon"></ons-icon>
                     </div>
                     <div class="center">
                         Menu
@@ -154,7 +154,7 @@
                 <!--                    <ons-list-item modifier="nodivider" onclick="fn.load('profil.html')" tappable>-->
                 <ons-list-item modifier="nodivider" onclick="fn.load('profil.html')" tappable>
                     <div class="left">
-                        <ons-icon icon="ion-person" class="list-item__icon"></ons-icon>
+                        <ons-icon icon="fa-user" class="list-item__icon" style="margin-left: 3px;"></ons-icon>
                     </div>
                     <div class="center">
                         Profil
@@ -165,17 +165,16 @@
                     <div class="left">
                         <ons-icon icon="fa-cog" class="list-item__icon"></ons-icon>
                     </div>
-                    <div class="center">
-                        Einstellungen
+                    <div class="center">Einstellungen
                     </div>
                 </ons-list-item>
                 <!--                    <ons-list-item modifier="nodivider" onclick="fn.load('about.html')" tappable>-->
                 <ons-list-item modifier="nodivider" onclick="fn.load('about.html')" tappable>
                     <div class="left">
-                        <ons-icon icon="fa-info" class="list-item__icon"></ons-icon>
+                        <ons-icon icon="fa-info" class="list-item__icon" style="margin-left: 7px;"></ons-icon>
                     </div>
-                    <div class="center">
-                        Über
+                    <div class="center" style="margin-left: 4px;">
+                        Über Stablex
                     </div>
                 </ons-list-item>
                 <!--                    <ons-list-item modifier="nodivider" onclick="openBrowser()" tappable>-->
@@ -189,7 +188,7 @@
                 </ons-list-item>
                 <ons-list-item id="logoutButton" modifier="nodivider" onclick="logout()" tappable>
                     <div class="left">
-                        <ons-icon icon="ion-log-out" class="list-item__icon"></ons-icon>
+                        <ons-icon icon="fa-sign-out-alt" class="list-item__icon"></ons-icon>
                     </div>
                     <div class="center">
                         Abmelden
@@ -207,11 +206,13 @@
                     padding: 0 0 0 16px !important;
                 }
 
-                #logoutButton {
+                /* #logoutButton {
                     position: fixed;
                     bottom: 5px;
                     /* left: 10px; */
                 }
+
+                */
             </style>
         </ons-page>
     </template>
@@ -228,15 +229,6 @@
                 <div class="right"></div>
             </ons-toolbar>
             <ons-card>
-                <ons-list-header>request</ons-list-header>
-                <ons-list-item>
-                    <div class="center">
-                        switch on
-                    </div>
-                    <div class="right" onchange="switchFunc()">
-                        <ons-switch id="switch"></ons-switch>
-                    </div>
-                </ons-list-item>
                 <ons-list-header>Server IP Adresse</ons-list-header>
                 <ons-list-item>
                     <div class="center">
@@ -244,38 +236,9 @@
                             size="50" value="192.168.1.8">
                     </div>
                 </ons-list-item>
-                <ons-list-header>Default credentials</ons-list-header>
-                <ons-list-item>
-                    <div class="center">
-                        switch on
-                    </div>
-                    <div class="right" onchange="switchFuncCredentials()">
-                        <ons-switch id="switchCredentials"></ons-switch>
-                    </div>
-                </ons-list-item>
-                <ons-list-item>
-                    <div class="center">
-                        User: AniCareAdmin
-                    </div>
-                </ons-list-item>
-                <ons-list-item>
-                    <div class="center">
-                        PWD: anicare
-                    </div>
-                </ons-list-item>
-                <ons-button style="margin-top: 20px; border-radius: 10px;background-color: #2BA1E1" modifier="large"
-                    onclick="sampleDrugs()"> Load Drug Sample to DB
-                </ons-button>
-                <ons-button style="margin-top: 20px; border-radius: 10px;background-color: #2BA1E1" modifier="large"
-                    onclick="sampleLivestocks()"> Load Livestock Sample to DB
-                </ons-button>
-                <ons-button style="margin-top: 20px; border-radius: 10px;background-color: #2BA1E1" modifier="large"
-                    onclick="sampleLocations()"> Load Livestock Location Sample to DB
-                </ons-button>
             </ons-card>
         </ons-page>
     </template>
-
 
     <template id="menu.html">
         <ons-page id="menu">
@@ -2519,16 +2482,17 @@
                     <ons-back-button></ons-back-button>
                 </div>
                 <div id="drugAndActionPageTitle" class="center">Arzneimittelvergabe</div>
-                <div class="right"></div>
+                <div class="right">
+                    <ons-toolbar-button icon="fa-check" onclick="DoneButton()"></ons-toolbar-button>
+                </div>
             </ons-toolbar>
             <ons-card>
-                <p id="livestockDrugDeliveryText"
-                    style="margin-top: 20px; margin-bottom: 30px; margin-left: 5%; font-weight: 1000;">Nutztier
-                    auswählen
-                    <ons-icon size="20px" style="color: black; margin-left: 5px" rotate="90" icon="fa-search">
-                    </ons-icon>
-                </p>
-                <ons-list id="drugDeliveryContainer" modifier="inset">
+                <ons-list>
+                    <ons-list-header modifier="nodivider" class="ons_list_header">Nutztier
+                        auswählen</ons-list-header>
+                </ons-list>
+                <ons-list onclick="nav1.pushPage('livestock_selector.html')" id="livestockContainer" modifier="inset"
+                    style="padding: 10px; margin-top: 10px"> Kein Nutztier ausgewählt
                 </ons-list>
                 <ons-row style="margin-top: 5%; margin-left: 5%; margin-bottom: 10%">
                     <ons-col>
@@ -2539,18 +2503,16 @@
                     </ons-col>
                     <ons-col style="text-align: center;">
                         <p onclick="nav1.pushPage('livestock_selector.html')" style="margin-top: -5px"> Hinzufügen
-                            <!-- <p onclick="nextPage()" style="margin-top: -5px"> Hinzufügen -->
                             <ons-icon style="margin-left: 3px" icon="fa-plus"></ons-icon>
                         </p>
                     </ons-col>
                 </ons-row>
-                <!-- <hr> -->
-                <p id="drugDrugDeliveryText"
-                    style="margin-top: 20px; margin-bottom: 30px; margin-left: 5%; font-weight: 1000;">
-                    Arzneimittel
-                    <ons-icon size="20px" style="color: black; margin-left: 3%;" icon="fa-syringe"></ons-icon>
-                </p>
-                <ons-list id="drugContainer" modifier="inset">
+                <ons-list>
+                    <ons-list-header modifier="nodivider" class="ons_list_header">Arzneimittel
+                        auswählen</ons-list-header>
+                </ons-list>
+                <ons-list onclick="nav1.pushPage('drug.html')" id="drugContainer" modifier="inset"
+                    style="padding: 10px; margin-top: 10px"> Kein Arzneimittel ausgewählt
                 </ons-list>
                 <ons-row style="margin-top: 5%; margin-left: 5%; margin-bottom: 10%">
                     <ons-col>
@@ -2560,29 +2522,23 @@
                         </p>
                     </ons-col>
                     <ons-col style="text-align: center;">
-                        <p onclick="selectNextPage()" style="margin-top: -5px"> Hinzufügen
+                        <p onclick="nav1.pushPage('drug.html')" style="margin-top: -5px"> Hinzufügen
                             <ons-icon style="margin-left: 3px" icon="fa-plus"></ons-icon>
                         </p>
                     </ons-col>
                 </ons-row>
-                <ons-row>
-                    <ons-col style="margin-top: 20px; margin-bottom: 30px; margin-left: 5%;">
-                        <p style="font-weight: 1000;">
-                            Erstellt am
-                            <ons-icon size="20px" style="color: black; margin-left: 3%;" icon="fa-calendar-alt">
-                            </ons-icon>
-                        </p>
-                    </ons-col>
-                    <ons-col class="Input" style="margin-top: 20px; margin-bottom: 30px;">
-                        <input id="CreatedOn" type="date" value="tt.mm.jjjj " style="width:170px;"><br><br>
-                    </ons-col>
-                </ons-row>
-                <section style="margin-left: 10%; margin-right: 10%; margin-top: 30px; margin-bottom: 30px;">
-                    <ons-button style=" border-radius: 10px;background-color: #2BA1E1" modifier="large"
-                        onclick="DoneButton()"> Erledigt
-                        <ons-icon size="15px" style="margin-left: 5px" icon="fa-check"></ons-icon>
-                    </ons-button>
-                </section>
+                <ons-list>
+                    <ons-list-header modifier="nodivider" class="ons_list_header">Erstellt am</ons-list-header>
+
+                    <ons-list-item>
+                        <div class="center">
+                            Datum
+                        </div>
+                        <div class="right">
+                            <input id="CreatedOn" type="date">
+                        </div>
+                    </ons-list-item>
+                </ons-list>
             </ons-card>
             <style type="text/css">
                 * {
@@ -2627,15 +2583,15 @@
                     height: 40px;
                 }
 
-                /* input[type=date] {
-                    border: 1px solid transparent;
-                    background-color: #f1f1f1;
-                    border-radius: 10px;
-                    padding: 10px;
-                    font-size: 16px;
-                    background-color: #f1f1f1;
-                    width: 100%;
-                } */
+                input[type=date] {
+                    background-color: transparent;
+                    border: none;
+                    width: 120px;
+                    font-size: 14px;
+                    margin-left: 3px;
+                    color: grey;
+                    /* appearance: none; */
+                }
 
                 .autocomplete-items {
                     position: absolute;
@@ -2844,10 +2800,11 @@
             <ons-toolbar>
                 <div class="left">
                     <ons-back-button></ons-back-button>
-                    <!-- <ons-back-button onclick="clickBackButtonDrugs()"></ons-back-button> -->
                 </div>
                 <div class="center">Arzneimittel</div>
-                <div class="right"></div>
+                <div class="right">
+                    <ons-toolbar-button icon="fa-check" onclick="nav1.popPage()"></ons-toolbar-button>
+                </div>
             </ons-toolbar>
             <ons-list style="position: sticky; top: 0; background-color: white; z-index: 1;">
                 <ons-list-item>
@@ -2879,9 +2836,9 @@
             </ons-list>
             <ons-list style="margin-top: 5px; margin-bottom: 20%" id="ContainerDrugs">
             </ons-list>
-            <ons-fab onclick="nav1.popPage()" position="bottom right">
+            <!-- <ons-fab onclick="nav1.popPage()" position="bottom right">
                 <ons-icon size="30px" icon="fa-arrow-right"></ons-icon>
-            </ons-fab>
+            </ons-fab> -->
         </ons-page>
     </template>
 

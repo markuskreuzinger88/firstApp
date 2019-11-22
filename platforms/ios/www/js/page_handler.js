@@ -3,6 +3,9 @@ var eventEnterPageId = ""
 
 //on init page
 document.addEventListener("init", function (event) {
+    //set menu background
+    $("#menu .page__background").css("background", "linear-gradient(156deg, rgba(43,96,90,1) 0%, rgba(102,141,138,1) 40%, rgba(241,241,241,1) 40%)");
+    //get page object
     var page = event.target;
     //set global page variable
     eventEnterPageId = page.id;
@@ -11,8 +14,14 @@ document.addEventListener("init", function (event) {
         updateLivestockAddView();
     } else if (page.id === 'livestock') {
         updateLivestockView()
+    } else if (page.id === 'drug') {
+        DisplayResultDrug()
+    } else if (page.id === 'drug_action_delivery') {
+        getDrugDeliveryView()
     }
 });
+
+
 
 //on page postpush
 $(document).on('postpush', '#nav1', function (event) {
@@ -30,7 +39,7 @@ $(document).on('postpush', '#nav1', function (event) {
 //on page prepop
 $(document).on('prepop', '#nav1', function (event) {
     var event = event.originalEvent;
-    if (event.enterPage.id === 'livestock') {
-
+    if (event.enterPage.id === 'drug_action_delivery') {
+        getDrugDeliveryView()
     }
 });

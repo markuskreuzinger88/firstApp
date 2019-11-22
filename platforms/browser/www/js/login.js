@@ -5,11 +5,11 @@ ons.ready(async function () {
     //use only IOS styling
     ons.disableAutoStyling()
 
-    if (localStorage.getItem("login") == 'true') {
-        document.querySelector('#nav1').pushPage('home_splitter.html');
-    } else {
+    // if (localStorage.getItem("login") == 'true') {
+    //     document.querySelector('#nav1').pushPage('home_splitter.html');
+    // } else {
         document.querySelector('#nav1').pushPage('login.html');
-    }
+    // }
 });
 
 $(document).on('postpush', '#nav1', function (event) {

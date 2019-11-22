@@ -20,7 +20,7 @@ var pushNextPage = function (id, page) {
 }
 
 $(document).on('postpush', '#nav1', function (event) {
-    $("#menu .page__background").css("background","linear-gradient(156deg, rgba(43,96,90,1) 0%, rgba(102,141,138,1) 40%, rgba(241,241,241,1) 40%)");
+    // $("#menu .page__background").css("background","linear-gradient(156deg, rgba(43,96,90,1) 0%, rgba(102,141,138,1) 40%, rgba(241,241,241,1) 40%)");
     // document.getElementById("livestock_add").style.boxShadow = '10px 10px 5px #888888';
     var event = event.originalEvent;
     if ((event.enterPage.id === 'drug_action_delivery') || (event.enterPage.id === 'livestock') || (event.enterPage.id === 'livestock_add') || (event.enterPage.id === 'wurfindex')) {

@@ -283,7 +283,6 @@ var hideDialogLocationAdd = function (location) {
     for (var i = 1; i <= list.childElementCount; i++) {
         var text = document.querySelector("#containerLivestockAdd > ons-list-item:nth-child(" + i + ") > label.center.list-item__center")
         elements.push(text.innerHTML)
-        console.log(text.innerHTML)
     }
     //uncheck all checkboxes and check selected checkbox
     for (i = 0; i < elements.length; i++) {
@@ -306,7 +305,7 @@ function checkInputs() {
     var CodeDigit2 = document.getElementById("CodeDigit2").value;
     var CodeDigit3 = document.getElementById("CodeDigit3").value;
     var place = document.getElementById("livestockPlaceAdd").innerHTML;
-    var color = localStorage.getItem("MarkColor")
+    var color = fullColorHex(document.getElementById("rect1").style.fill);
     born = document.getElementById("BornOn").value;
     // localStorage.setItem("ChooseSelPlaceStorage", place);
     number = CodeDigit0 + CodeDigit1 + CodeDigit2 + CodeDigit3
@@ -318,20 +317,41 @@ function checkInputs() {
             AnimalLocationId = LivestockPlaces[i].id
         }
     }
-    console.log("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW")
-    console.log(AnimalLocationId)
-    console.log(LivestockPlaces)
-    console.log(place)
-    if (number.length == 4) {
-        RESTAddLivestock(born, color, number, AnimalLocationId, actualDate, email, guid)
-    } else {
+    if ((number.length == 4) && (place != "Bitte wählen" )) {
+        RESTAddLivestock(born, color, number, AnimalLocationId)
+    } else if (number.length != 4) {
         ons.notification.alert({
             message: 'Die Nummer muss aus 4 Ziffern bestehen',
             title: 'Ohrmarkennummer Fehler',
-
+        });
+    } else if (place == "Bitte wählen") {
+        ons.notification.alert({
+            message: 'Bitte wählen Sie einen Standort aus',
+            title: 'Standort Fehler',
         });
     }
 }
+
+//split rgb string
+var fullColorHex = function(rgb) {  
+    var rgb = rgb.replace("rgb(", ""); 
+    var rgb = rgb.replace(")", ""); 
+    var rgb = rgb.split(",");
+    var red = rgbToHex(rgb[0]);
+    var green = rgbToHex(rgb[1]);
+    var blue = rgbToHex(rgb[2]);
+    return red+green+blue;
+  };
+
+//red, green, blue from rgb to hex
+var rgbToHex = function (rgb) { 
+    var hex = Number(rgb).toString(16);
+    if (hex.length < 2) {
+         hex = "0" + hex;
+    }
+    return hex;
+  };
+
 
 function checkInputsUnsaved() {
     //set  cuurent view livestock number

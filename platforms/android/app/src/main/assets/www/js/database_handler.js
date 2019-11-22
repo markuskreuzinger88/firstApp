@@ -363,42 +363,6 @@ function getMaxIDDB() {
     });
 }
 
-function sampleLocations() {
-    write2DBLivestockLocationTester('1', 'Deckzentrum')
-    write2DBLivestockLocationTester('2', 'Wartestall')
-    write2DBLivestockLocationTester('3', 'Abferkelbox')
-    write2DBLivestockLocationTester('4', 'Futterventile')
-}
-
-
-function sampleDrugs() {
-    write2DBDrug('Aconitum', '838031', '0', 'Homöopathika', 'ml', '', 'false')
-    write2DBDrug('Advocid', '8-00295', '3', 'Standardarzneimittel', 'ml', '', 'false')
-    write2DBDrug('Baytril', '8-00988', '7', 'Fütterungsarzneimittel', 'ml', '', 'false')
-    write2DBDrug('Ceftiocyl Flow', '836487', '1', 'Homöopathika', 'ml', '', 'false')
-    write2DBDrug('Dexatat', 'EU/2/17/209/001-002', '30', 'Fütterungsarzneimittel', 'ml', '', 'false')
-    write2DBDrug('Melovem', '8-00718', '0', 'Standardarzneimittel', 'ml', '', 'false')
-    write2DBDrug('Neomycin-Penicillin', '837660', '20', 'Fütterungsarzneimittel', 'ml', '', 'false')
-    write2DBDrug('Oxytetracyclin', '13910', '100', 'Standardarzneimittel', 'ml', '', 'false')
-    write2DBDrug('Porcilis M Hyo', '838068', '0', 'Homöopathika', 'ml', '', 'false')
-    write2DBDrug('Repose 500', '838093', '17', 'Biologika', 'ml', '', 'false')
-    write2DBDrug('Dinolytic 5 mg/ml', '8-00003', '1', 'Standardarzneimittel', 'ml', '9088881277538', 'false')
-    write2DBDrug('Parvoruvac', '8-20066', '0', 'Standardarzneimittel', 'ml', '3411112293773', 'false')
-}
-
-function sampleLivestocks() {
-    write2DBLivestockTester('1', '2019-05-31', 'yellow', '1234', 'Dekzentrum', 'A', '2019-06-01', 'example@example.com', "123456789")
-    write2DBLivestockTester('2', '2019-05-02', 'red', '4567', 'Wartestall', 'A', '2019-04-01', 'example@example.com', "123456789")
-    write2DBLivestockTester('3', '2019-05-01', 'green', '8743', 'Abferkelbox', 'D', '2019-05-21', 'example@example.com', "123456789")
-    write2DBLivestockTester('4', '2019-05-30', 'blue', '1256', 'Futterventile', 'A', '2019-06-26', 'example@example.com', "123456789")
-    write2DBLivestockTester('5', '2019-05-27', 'orange', '7890', 'Abferkelbox', 'C', '2019-04-12', 'example@example.com', "123456789")
-    write2DBLivestockTester('6', '2019-05-09', 'white', '3456', 'Abferkelbox', 'C', '2019-03-01', 'example@example.com', "123456789")
-    write2DBLivestockTester('7', '2019-05-03', 'red', '4390', 'Futterventile', 'A', '2019-01-01', 'example@example.com', "123456789")
-    write2DBLivestockTester('8', '2019-05-19', 'blue', '4567', 'Wartestall', 'D', '2019-02-24', 'example@example.com', "123456789")
-    write2DBLivestockTester('9', '2019-05-15', 'yellow', '1238', 'Dekzentrum', 'B', '2019-01-16', 'example@example.com', "123456789")
-    write2DBLivestockTester('10', '2019-05-29', 'red', '9805', 'Dekzentrum', 'A', '2019-03-12', 'example@example.com', "123456789")
-}
-
 //add locations to database
 async function write2DBLivestockLocationTester(id, location) {
     await db.transaction(function (transaction) {

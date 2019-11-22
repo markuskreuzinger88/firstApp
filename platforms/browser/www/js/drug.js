@@ -1,37 +1,4 @@
-db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //create 20MB Database
-
-$(document).on('postpush', '#nav1', function (event) {
-    var event = event.originalEvent;
-    console.log(event)
-    if (event.enterPage.id === 'drug') {
-        localStorage.setItem('DBSortDrug', 'name_asc');
-        localStorage.setItem('DBFilterDrug', 'none');
-        ShowResultDBDrug1('SELECT * FROM drugs ORDER BY name ASC')
-    }
-});
-
-//remove checked items from dialog
-$(document).on('postpop', '#nav1', function (event) {
-    var event = event.originalEvent;
-    if (event.leavePage.id === 'drug') {
-        var checkItemExists1 = document.getElementById("checkSortDrug-1");
-        var checkItemExists2 = document.getElementById("checkFilterDrug-1");
-        if (checkItemExists1 != null) {
-            document.getElementById("checkSortDrug-1").checked = true;
-            document.getElementById("checkSortDrug-2").checked = false;
-            document.getElementById("checkSortDrug-3").checked = false;
-            document.getElementById("checkSortDrug-4").checked = false;
-        }
-        if (checkItemExists2 != null) {
-            document.getElementById("checkFilterDrug-1").checked = false;
-            document.getElementById("checkFilterDrug-2").checked = false;
-            document.getElementById("checkFilterDrug-3").checked = false;
-            document.getElementById("checkFilterDrug-4").checked = false;
-            document.getElementById("checkFilterDrug-5").checked = false;
-            document.getElementById("checkFilterDrug-6").checked = true;
-        }
-    }
-});
+var taggedDrugs = [];
 
 var showTemplateDialogDrug = function (my_dialog, my_dialog_html) {
 
@@ -68,28 +35,28 @@ function ShowResultDBDrug2(Command1, Command2) {
 }
 
 //display database results
-function DisplayResultDrug(results) {
-    for (i = 0; i < results.rows.length; i++) {
+function DisplayResultDrug() {
+    for (i = 0; i < DrugNbrs; i++) {
         list = document.createElement("ons-list-item")
         div_center = document.createElement("div")
-        div_center.setAttribute("id", i);
+        div_center.setAttribute("id", Drugs[i].id);
         div_center.setAttribute("class", "center");
         div_center.setAttribute("style", "margin-left: 10px");
         span_center1 = document.createElement("span")
-        span_center1.setAttribute("id", "drugID" + i);
+        span_center1.setAttribute("id", "drugID" + Drugs[i].id);
         span_center2 = document.createElement("span")
         span_center1.setAttribute("class", "list-item__title");
         span_center2.setAttribute("class", "list-item__subtitle");
-        span_center1.innerHTML = results.rows.item(i).name;
-        span_center2.innerHTML = results.rows.item(i).category + "<br>" + "Zul-Nr.: " +
-            results.rows.item(i).number;
+        span_center1.innerHTML = Drugs[i].name;
+        span_center2.innerHTML = Drugs[i].drugCategoryName + "<br>" + "Zul-Nr.: " +
+            Drugs[i].approvalNumber;
         list.setAttribute("tappable", true);
-        list.setAttribute("onclick", "drugTag(" + i + ")");
+        list.setAttribute("onclick", "drugTag(" + Drugs[i].id + ")");
         div_right = document.createElement("ons-checkbox")
         div_right.setAttribute("class", "right");
-        div_right.setAttribute("id", "tag" + i);
-        div_right.setAttribute("onclick", "drugTag(" + i + ")");
-        if (results.rows.item(i).tagged == "true") {
+        div_right.setAttribute("id", "tag" + Drugs[i].id);
+        //set item tag
+        if (taggedDrugs.includes(Drugs[i].id) === true) {
             div_right.checked = true;
         } else {
             div_right.checked = false;
@@ -98,28 +65,25 @@ function DisplayResultDrug(results) {
         div_center.appendChild(span_center1);
         div_center.appendChild(span_center2);
         list.appendChild(div_center);
-        console.log(list)
         document.getElementById("ContainerDrugs").appendChild(list);
     }
 }
 
 //add or remove tag drug for drug delivery
 function drugTag(id) {
-    console.log("TAGGED!!!!!!!!")
-    var tag = document.getElementById("tag" + id);
-    var name = document.getElementById("drugID" + id).innerHTML;
-    console.log(tag)
-    console.log(name)
-    if (tag.checked == true) {
-        tag.checked = false
-        db.transaction(function (tx) {
-            tx.executeSql("UPDATE drugs SET tagged=? where name = ?", ['false', name]);
-        });
+    var tagState = document.getElementById("tag" + id);
+    if (tagState.checked === true) {
+        tagState.checked = false;
+        //delete item from array
+        taggedDrugs = taggedDrugs.filter(function (item) {
+            return item !== id
+        })
     } else {
-        tag.checked = true
-        db.transaction(function (tx) {
-            tx.executeSql("UPDATE drugs SET tagged=? where name = ?", ['true', name]);
-        });
+        tagState.checked = true;
+        //add item to array
+        if (taggedDrugs.includes(id) === false) {
+            taggedDrugs.push(id);
+        }
     }
 }
 
@@ -152,51 +116,6 @@ var hideDialogFilterDrug = function (id, checkbox, command) {
     CommandDBDrugs()
 };
 
-//Command for Database sort or filter or search
-function CommandDBDrugs() {
-    //delete actual container
-    var list = document.getElementById("ContainerDrugs");
-    while (list.hasChildNodes()) {
-        list.removeChild(list.firstChild);
-    }
-    var sort = localStorage.DBSortDrug
-    var filter = localStorage.DBFilterDrug
-    console.log(sort)
-    console.log(filter)
-    if (sort == "name_asc") {
-        if (filter == "none") {
-            ShowResultDBDrug1('SELECT * FROM drugs ORDER BY name ASC')
-        } else if (filter == "tagged") {
-            ShowResultDBDrug2('SELECT * FROM drugs WHERE tagged = ? ORDER BY name ASC', 'true')
-        } else {
-            ShowResultDBDrug2('SELECT * FROM drugs WHERE category = ? ORDER BY name ASC', filter)
-        }
-    } else if (sort == "name_desc") {
-        if (filter == "none") {
-            ShowResultDBDrug1('SELECT * FROM drugs ORDER BY name DESC')
-        } else if (filter == "tagged") {
-            ShowResultDBDrug2('SELECT * FROM drugs WHERE tagged = ? ORDER BY name DESC', 'true')
-        } else {
-            ShowResultDBDrug2('SELECT * FROM drugs WHERE category = ? ORDER BY name DESC', filter)
-        }
-    } else if (sort == "number_asc") {
-        if (filter == "none") {
-            ShowResultDBDrug1('SELECT * FROM drugs ORDER BY number ASC')
-        } else if (filter == "tagged") {
-            ShowResultDBDrug2('SELECT * FROM drugs WHERE tagged = ? ORDER BY number ASC', 'true')
-        } else {
-            ShowResultDBDrug2('SELECT * FROM drugs WHERE category = ? ORDER BY number ASC', filter)
-        }
-    } else if (sort == "number_desc") {
-        if (filter == "none") {
-            ShowResultDBDrug1('SELECT * FROM drugs ORDER BY number DESC')
-        } else if (filter == "tagged") {
-            ShowResultDBDrug2('SELECT * FROM drugs WHERE tagged = ? ORDER BY number DESC', 'true')
-        } else {
-            ShowResultDBDrug2('SELECT * FROM drugs WHERE category = ? ORDER BY number DESC', filter)
-        }
-    }
-}
 
 function SearchDBDrug() {
     var regex = /^[0-9-]+$/;
