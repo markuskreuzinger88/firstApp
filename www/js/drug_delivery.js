@@ -1,4 +1,3 @@
-db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //create 20MB Database
 var email = "";
 var token = "";
 var drug = "";
@@ -38,116 +37,72 @@ function getDrugDeliveryView() {
         list.removeChild(list.firstChild);
     }
 
-    DisplayTaggedDrug()
+    DisplayLivestocks()
 }
 
-//get all livestocks and drugs which are tagged for drug delivery
-// function GetDBTaggedResult() {
-//     //check if element cointainer has onlick element for switch page to drug page
-//     //remove attribute becuase otherwise we swicht page if we want to set drug amount
-//     var checkAttr = document.getElementById("drugContainer").hasAttribute("onclick"); 
-//     if (checkAttr){
-//         $( "#drugContainer" ).removeAttr("onclick");
-//     }
-//     var checkAttr = document.getElementById("drugDeliveryContainer").hasAttribute("onclick"); 
-//     if (checkAttr){
-//         $( "#drugDeliveryContainer" ).removeAttr("onclick");
-//     }
-//     //remove childs from both containers
-//     var list = document.getElementById("drugDeliveryContainer");
-//     while (list.hasChildNodes()) {
-//         list.removeChild(list.firstChild);
-//     }
-//     var list = document.getElementById("drugContainer");
-//     while (list.hasChildNodes()) {
-//         list.removeChild(list.firstChild);
-//     }
-//     //read out Database
-//     db.transaction(function (transaction) {
-//         transaction.executeSql(
-//             'SELECT * FROM livestock WHERE tagged = ? ORDER BY number ASC', ['true'],
-//             function (tx, results) {
-//                 DisplayResultDrugDelivery(results)
-//             }, null);
-//     });
-//     db.transaction(function (transaction) {
-//         transaction.executeSql(
-//             'SELECT * FROM drugs WHERE tagged = ? ORDER BY Number DESC', ['true'],
-//             function (tx, results) {
-//                 DisplayTaggedDrug(results)
-//             }, null);
-//     });
-// }
-
-function DisplayResultDrugDelivery(results) {
-    arrID = [];
-    livestockResultsRowslLength = results.rows.length;
-    if (results.rows.length > 0) {
-        for (i = 0; i < results.rows.length; i++) {
-            list = document.createElement("ons-list-item")
-            list.setAttribute("onclick", "removeListItemLivestock(" + i + ")");
-            //create text center
-            div_center = document.createElement("div")
-            div_center.setAttribute("id", i);
-            div_center.setAttribute("class", "center");
-            div_center.setAttribute("style", "margin-left: 10px");
-            //create icon right
-            div_right = document.createElement("div")
-            div_right.setAttribute("class", "right");
-            icon_right = document.createElement("ons-icon")
-            icon_right.setAttribute("icon", "fa-trash");
-            icon_right.setAttribute("style", "color: red");
-            icon_right.setAttribute("size", "20px");
-            icon_right.setAttribute("onclick", "removeListItemLivestock(" + i + ")");
-            //add text center
-            span_center1 = document.createElement("span")
-            span_center1.setAttribute("id", "livestockIDDrug" + i);
-            span_center2 = document.createElement("span")
-            span_center1.setAttribute("class", "list-item__title");
-            span_center2.setAttribute("class", "list-item__subtitle");
-            span_center1.innerHTML = LiveStockNbr + results.rows.item(i).number;
-            span_center2.innerHTML = results.rows.item(i).place + "<br>" +
-                "Gruppe " + results.rows.item(i).livestock_group + "<br>" + results.rows.item(i).born;
-            div_left = document.createElement("div")
-            div_left.setAttribute("class", "left");
-            //create color mark right
-            input = document.createElement("input")
-            input.setAttribute("id", "livestockColorDrug" + i);
-            input.setAttribute("style",
-                "width: 40px; height :40px;margin-right: 5px;border-color : black; border: 2px solid black; border-radius: 10px; background-color:" + results.rows
-                .item(i).color);
-            input.setAttribute("size", "3");
-            input.setAttribute("disabled", "true");
-            list.setAttribute("tappable", true);
-            //append childs
-            div_left.appendChild(input);
-            div_right.appendChild(icon_right);
-            list.appendChild(div_left);
-            list.appendChild(div_right);
-            div_center.appendChild(span_center1);
-            div_center.appendChild(span_center2);
-            list.appendChild(div_center);
-            document.getElementById("drugDeliveryContainer").appendChild(list);
-            arrID.push(results.rows.item(i).id);
-            document.getElementById("removeLivestocks").style.visibility = "visible";
-            document.getElementById("removeLivestocks").disabled = false;
-            document.getElementById("livestockDrugDeliveryText").innerHTML = "Ausgewählte Nutztiere";
+function DisplayLivestocks() {
+    if (taggedLivestock.length > 0) {
+        for (i = 0; i < LivestockListLength; i++) {
+            if (taggedLivestock.includes(LivestockList[i].id) === true) {
+                //remove onlick attribute
+                document.getElementById("livestockContainer").removeAttribute("onclick");
+                list = document.createElement("ons-list-item")
+                list.setAttribute("onclick", "removeListItemLivestock(" + LivestockList[i].id + ")");
+                //create text center
+                div_center = document.createElement("div")
+                div_center.setAttribute("id", LivestockList[i].id);
+                div_center.setAttribute("class", "center");
+                div_center.setAttribute("style", "margin-left: 10px");
+                //create icon right
+                div_right = document.createElement("div")
+                div_right.setAttribute("class", "right");
+                icon_right = document.createElement("ons-icon")
+                icon_right.setAttribute("icon", "fa-trash");
+                icon_right.setAttribute("style", "color: red");
+                icon_right.setAttribute("size", "20px");
+                icon_right.setAttribute("onclick", "removeListItemLivestock(" + LivestockList[i].id + ")");
+                //add text center
+                span_center1 = document.createElement("span")
+                span_center1.setAttribute("id", "livestockIDDrug" + LivestockList[i].id);
+                span_center2 = document.createElement("span")
+                span_center1.setAttribute("class", "list-item__title");
+                span_center2.setAttribute("class", "list-item__subtitle");
+                span_center1.innerHTML = LiveStockNbr + LivestockList[i].number;
+                span_center2.innerHTML = LivestockList[i].animalLocationName + "<br>" + LivestockList[i].birthday.substring(0, 10);
+                div_left = document.createElement("div")
+                div_left.setAttribute("class", "left");
+                //create color mark right
+                input = document.createElement("input")
+                input.setAttribute("id", "livestockColorDrug" + LivestockList[i].id);
+                input.setAttribute("style",
+                    "width: 40px; height :40px;margin-right: 5px;border-color : black; border: 2px solid black; border-radius: 10px; background-color:" + LivestockList[i].color);
+                input.setAttribute("size", "3");
+                input.setAttribute("disabled", "true");
+                list.setAttribute("tappable", true);
+                //append childs
+                div_left.appendChild(input);
+                div_right.appendChild(icon_right);
+                list.appendChild(div_left);
+                list.appendChild(div_right);
+                div_center.appendChild(span_center1);
+                div_center.appendChild(span_center2);
+                list.appendChild(div_center);
+                document.getElementById("livestockContainer").appendChild(list);
+                // document.getElementById("removeLivestocks").style.visibility = "visible";
+                // document.getElementById("removeLivestocks").disabled = false;
+                // document.getElementById("livestockDrugDeliveryText").innerHTML = "Ausgewählte Nutztiere";
+            }
         }
     } else {
-        list = document.createElement("ons-list-item")
-        div = document.createElement("div")
-        div.innerHTML = "Kein Nutztier ausgewählt"
-        div.setAttribute("id", "livestockEmpty");
-        list.appendChild(div);
-        document.getElementById("drugDeliveryContainer").appendChild(list);
-        document.getElementById("drugDeliveryContainer").setAttribute("onclick", "onclick=nav1.pushPage('livestock_selector.html')");
-        document.getElementById("livestockDrugDeliveryText").innerHTML = "Nutztier auswählen";
+        document.getElementById("livestockContainer").setAttribute("onclick", "nav1.pushPage('livestock_selector.html')");
+        document.getElementById("livestockContainer").innerHTML = "Ken Nutztier ausgewählt";
         document.getElementById("removeLivestocks").style.visibility = "hidden";
         document.getElementById("removeLivestocks").disabled = true;
     }
+    DisplayDrugs()
 }
 
-function DisplayTaggedDrug() {
+function DisplayDrugs() {
     if (taggedDrugs.length > 0) {
         for (i = 0; i < DrugNbrs; i++) {
             if (taggedDrugs.includes(Drugs[i].id) === true) {
@@ -216,15 +171,13 @@ function DisplayTaggedDrug() {
         }
     } else {
         document.getElementById("drugContainer").setAttribute("onclick", "nav1.pushPage('drug.html')");
-        document.getElementById("drugContainer").innerHTML = "Arzneimittel auswählen"
+        document.getElementById("drugContainer").innerHTML = "Kein Arzneimittel ausgewählt"
         document.getElementById("removeDrugs").style.visibility = "hidden";
         document.getElementById("removeDrugs").disabled = true;
     }
 }
 
 function removeListItemDrug(id) {
-    alert(id)
-    alert(taggedDrugs)
     ons.notification.confirm({
         message: 'Möchtest du das Arzneimittel aus deiner Liste für die Arzneimittelvergabe löschen?',
         title: 'Arzneimittel entfernen',
@@ -384,12 +337,4 @@ function checkAmoutInputFields() {
         }
     }
     return true;
-}
-
-function selectNextPage() {
-    if (pageSelector == 'wurfindex') {
-        nav1.pushPage('livestock_action.html')
-    } else {
-        nav1.pushPage('drug.html')
-    }
 }

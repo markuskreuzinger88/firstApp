@@ -1,29 +1,21 @@
-//check first the number of pages in stack. If number is 5 than 
-//the page livestock.html is already loaded --> bring the page to the front
-function nextPage() {
-    //livestock.html already in stack
-    // if (document.querySelector('#nav1').pages.length == 6) {
-    //     document.querySelector('#nav1').bringPageTop('livestock.html')
-    // } else {
-        document.querySelector('#nav1').replacePage('livestock.html')
-    // }
-}
+// //check first the number of pages in stack. If number is 5 than 
+// //the page livestock.html is already loaded --> bring the page to the front
+// function nextPage() {
+//     //livestock.html already in stack
+//     // if (document.querySelector('#nav1').pages.length == 6) {
+//     //     document.querySelector('#nav1').bringPageTop('livestock.html')
+//     // } else {
+//         document.querySelector('#nav1').replacePage('livestock.html')
+//     // }
+// }
 
 //show Dialog for Livestock Groups
-var showTemplateDialogLivestockGroup = function (my_dialog, my_dialog_html) {
-
-    var dialog = document.getElementById(my_dialog);
-
-    if (dialog) {
-        dialog.show();
-    } else {
-        ons.createElement(my_dialog_html, {
-                append: true
-            })
-            .then(function (dialog) {
-                dialog.show();
-            });
-    }
+ function showTemplateDialogLivestockSelector() {
+    document.getElementById("locationButton1").style.visibility = "hidden";
+    document.getElementById("locationButton2").style.visibility = "hidden";
+    document.getElementById("locationButton1").disabled = true;
+    document.getElementById("locationButton2").disabled = true;
+    showTemplateDialogAdd('locationAdd', 'locationAdd.html')
 };
 
 //get user Input Group

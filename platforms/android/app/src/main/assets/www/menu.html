@@ -19,7 +19,7 @@
     <script type="text/javascript" src="js/livestock_detail.js"></script>
     <script type="text/javascript" src="js/livestock_action.js"></script>
     <script type="text/javascript" src="js/livestock_selector.js"></script>
-    <script type="text/javascript" src="js/drug_action_delivery.js"></script>
+    <script type="text/javascript" src="js/drug_delivery.js"></script>
     <script type="text/javascript" src="js/database_handler.js"></script>
     <script type="text/javascript" src="js/livestock_open_action.js"></script>
     <script type="text/javascript" src="js/general.js"></script>
@@ -37,11 +37,11 @@
     <!-- <script src="http://192.168.0.107:8080/target/target-script-min.js#anonymous"></script> -->
 
     <!-- <ons-navigator id="nav1" page="login.html"> </ons-navigator> -->
-    <ons-navigator id="nav1"> </ons-navigator>
+    <ons-navigator id="nav1"> </ons-navigator> 
 
     <!--  The Login Page -->
 
-    <template id="login.html">
+    <template id="login.html"> 
         <ons-page id="login">
             <div class="left">
                 <ons-icon size="20px" style="margin-left: 10px; margin-top: 10px; color: #008F97;" icon="fa-bug"
@@ -281,8 +281,7 @@
                 </ons-col>
             </ons-row>
             <ons-row class="user_cover">
-                <!-- <ons-col onclick="nav1.pushPage('drug_delivery.html')"> -->
-                <ons-col onclick="pushNextPage('drug_delivery', 'drug_action_delivery')">
+                <ons-col onclick="pushNextPage('drug_delivery', 'drug_delivery')">
                     <div class="user_thumbnail" id="drug_delivery">
                         <ons-icon icon="fa-syringe"></ons-icon>
                     </div>
@@ -853,7 +852,9 @@
                     <ons-back-button></ons-back-button>
                 </div>
                 <div class="center">Tierkartei</div>
-                <div class="right"></div>
+                <div class="right">
+                    <ons-toolbar-button id="livestockCheck" icon="fa-check" onclick="nav1.popPage()" style="visibility:hidden;"></ons-toolbar-button>
+                </div>
             </ons-toolbar>
             <ons-list style="position: sticky; top: 0; background-color: white; z-index: 1;">
                 <ons-list-item>
@@ -885,9 +886,9 @@
             </ons-list>
             <ons-list style="margin-top: 5px; margin-bottom: 20%" id="containerLivestock">
             </ons-list>
-            <ons-fab id="livestockFab" onclick="nav1.popPage()" position="bottom right" style="visibility:hidden;">
+            <!-- <ons-fab id="livestockFab" onclick="nav1.popPage()" position="bottom right" style="visibility:hidden;">
                 <ons-icon size="30px" icon="fa-arrow-right"></ons-icon>
-            </ons-fab>
+            </ons-fab> -->
         </ons-page>
     </template>
 
@@ -1347,10 +1348,10 @@
             </ons-list>
             <div style="text-align: center; padding: 5px;">
                 <p>
-                    <ons-button style="background-color: #2B605A; width: 100px;" onclick="showPrompt()">
+                    <ons-button id="locationButton1" style="background-color: #2B605A; width: 100px;" onclick="showPrompt()">
                         <ons-icon icon="fa-plus"></ons-icon>
                     </ons-button>
-                    <ons-button style="background-color: #802000; width: 100px;" onclick="showDeletePlaceIcon()">
+                    <ons-button id="locationButton2" style="background-color: #802000; width: 100px;" onclick="showDeletePlaceIcon()">
                         <ons-icon icon="fa-trash"></ons-icon>
                     </ons-button>
                 </p>
@@ -2475,8 +2476,8 @@
     <!-- ------------------------ DRUG AND ACTION DELIVERY PAGE ------------------------->
     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 
-    <template id="drug_action_delivery.html">
-        <ons-page id="drug_action_delivery">
+    <template id="drug_delivery.html">
+        <ons-page id="drug_delivery">
             <ons-toolbar>
                 <div class="left">
                     <ons-back-button></ons-back-button>
@@ -2651,145 +2652,13 @@
                     Nutztier auswählen
                 </ons-list-item>
                 <ons-list-item
-                    onclick="showTemplateDialogLivestockGroup('livestockGroupDialog', 'livestockGroupDialog.html')"
+                    onclick="showTemplateDialogLivestockSelector()"
                     modifier="chevron" tappable>
-                    Gruppe auswählen
+                    Standort auswählen
                 </ons-list-item>
             </ons-list>
         </ons-page>
     </template>
-
-    <template id="livestockGroupDialog.html">
-        <ons-dialog id="livestockGroupDialog" cancelable>
-            <div style="text-align: center; padding: 5px;">
-                <p>
-                    <b>
-                        Gruppe auswählen
-                    </b>
-                </p>
-            </div>
-            <ons-list>
-                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'A', 'checkBoxGroup-1')"
-                    tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkBoxGroup-1"></ons-checkbox>
-                    </label>
-                    <label class="center">
-                        Gruppe: A
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'B', 'checkBoxGroup-2')"
-                    tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkBoxGroup-2"></ons-checkbox>
-                    </label>
-                    <label class="center">
-                        Gruppe: B
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'C', 'checkBoxGroup-3')"
-                    tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkBoxGroup-3"></ons-checkbox>
-                    </label>
-                    <label class="center">
-                        Gruppe: C
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'D', 'checkBoxGroup-4')"
-                    tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkBoxGroup-4"></ons-checkbox>
-                    </label>
-                    <label class="center">
-                        Gruppe: D
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'E', 'checkBoxGroup-5')"
-                    tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkBoxGroup-5"></ons-checkbox>
-                    </label>
-                    <label class="center">
-                        Gruppe: E
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'F', 'checkBoxGroup-6')"
-                    tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkBoxGroup-6"></ons-checkbox>
-                    </label>
-                    <label class="center">
-                        Gruppe: F
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'G', 'checkBoxGroup-7')"
-                    tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkBoxGroup-7"></ons-checkbox>
-                    </label>
-                    <label class="center">
-                        Gruppe: G
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'H', 'checkBoxGroup-8')"
-                    tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkBoxGroup-8"></ons-checkbox>
-                    </label>
-                    <label class="center">
-                        Gruppe: H
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'I', 'checkBoxGroup-9')"
-                    tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkBoxGroup-9"></ons-checkbox>
-                    </label>
-                    <label class="center">
-                        Gruppe: I
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'J', 'checkBoxGroup-10')"
-                    tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkBoxGroup-10"></ons-checkbox>
-                    </label>
-                    <label class="center">
-                        Gruppe: J
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'K', 'checkBoxGroup-11')"
-                    tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkBoxGroup-11"></ons-checkbox>
-                    </label>
-                    <label class="center">
-                        Gruppe: K
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'L', 'checkBoxGroup-12')"
-                    tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkBoxGroup-12"></ons-checkbox>
-                    </label>
-                    <label class="center">
-                        Gruppe: L
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogLivestockGroup('livestockGroupDialog', 'M', 'checkBoxGroup-13')"
-                    tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkBoxGroup-13"></ons-checkbox>
-                    </label>
-                    <label class="center">
-                        Gruppe: M
-                    </label>
-                </ons-list-item>
-            </ons-list>
-        </ons-dialog>
-    </template>
-
 
     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
     <!-- ------------------------------- DRUG PAGE------------------------------- -->

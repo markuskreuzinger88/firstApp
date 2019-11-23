@@ -1,9 +1,9 @@
-    db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //create 20MB Database
     var LFBISNbr = "AT-3-4321056-"
     var leavePage = "";
     var LivestockList = [];
     var LivestockListFiltered = [];
     var networkConnection = true;
+    var taggedLivestock = [];
 
     //display Livestocks
     function updateLivestockView() {
@@ -57,7 +57,7 @@
 
     //check leaved page --> change icon
     function setIconForAction() {
-        if (leavePage == "livestock_selector") {
+        if ((leavePage == "drug_delivery") || (leavePage == "livestock_selector")) {
             col = document.getElementById("actionCol").innerHTML = "Scannen"
             icon = document.createElement("ons-icon")
             icon.setAttribute("icon", "fa-qrcode")
@@ -83,28 +83,21 @@
         }
     };
 
-    //remove Livestock Tag for drug delivery
+    //add or remove tag drug for drug delivery
     function livestockTag(id) {
-        var tag = document.getElementById("tag" + id);
-        var color = document.getElementById("livestockColor" + id).style.backgroundColor;
-        var number = document.getElementById("livestockID" + id).innerHTML;
-        console.log(number)
-        //only use livestock 4 digit number
-        number = number.slice(number.length - 4, number.length);
-        if (tag.checked == true) {
-            tag.checked = false
-            db.transaction(function (tx) {
-                tx.executeSql("UPDATE livestock SET tagged=? where Color = ? AND Number = ?", ['false',
-                    color, number
-                ]);
-            });
+        var tagState = document.getElementById("tag" + id);
+        if (tagState.checked === true) {
+            tagState.checked = false;
+            //delete item from array
+            taggedLivestock = taggedLivestock.filter(function (item) {
+                return item !== id
+            })
         } else {
-            tag.checked = true
-            db.transaction(function (tx) {
-                tx.executeSql("UPDATE livestock SET tagged=? where Color = ? AND Number = ?", ['true',
-                    color, number
-                ]);
-            });
+            tagState.checked = true;
+            //add item to array
+            if (taggedLivestock.includes(id) === false) {
+                taggedLivestock.push(id);
+            }
         }
     }
 
@@ -285,25 +278,14 @@
 
     //display livestock list result
     function DisplayResult(livestockList, listLength) {
-        // console.log(livestockList)
-        // var LivestockNumber = [];
-        // var LivestockPlace = [];
-        // var LivestockBorn = [];
-        // var LivestockColor = [];
-        // for (i = 0; i < listLength; i++) {
-        //     LivestockNumber.push(livestockList[i].number);
-        //     LivestockPlace.push(livestockList[i].place);
-        //     LivestockBorn.push(livestockList[i].birthday);
-        //     LivestockColor.push(livestockList[i].color);
-        // }
         for (i = 0; i < listLength; i++) {
             list = document.createElement("ons-list-item")
             div_center = document.createElement("div")
-            div_center.setAttribute("id", i);
+            div_center.setAttribute("id", livestockList[i].id);
             div_center.setAttribute("class", "center");
             div_center.setAttribute("style", "margin-left: 10px");
             span_center1 = document.createElement("span")
-            span_center1.setAttribute("id", "livestockID" + i);
+            span_center1.setAttribute("id", "livestockID" + livestockList[i].id);
             span_center2 = document.createElement("span")
             span_center1.setAttribute("class", "list-item__title");
             span_center2.setAttribute("class", "list-item__subtitle");
@@ -312,29 +294,30 @@
             div_left = document.createElement("div")
             div_left.setAttribute("class", "left");
             input = document.createElement("input")
-            input.setAttribute("id", "livestockColor" + i);
+            input.setAttribute("id", "livestockColor" + livestockList[i].id);
             input.setAttribute("style",
                 "width: 40px; height :40px;margin-right: 5px;border-color : black; border: 2px solid black; border-radius: 10px; background-color:" + livestockList[i].color);
             input.setAttribute("disabled", "true");
             list.setAttribute("tappable", true);
             //modify selection depending on last site --> when last page drug delivery
             //use tag icon else use chevron
-            if (leavePage == "livestock_selector") {
-                list.setAttribute("onclick", "livestockTag(" + i + ")");
+            if ((leavePage == "drug_delivery") || (leavePage == "livestock_selector")) {
+                list.setAttribute("onclick", "livestockTag(" + livestockList[i].id + ")");
                 div_right = document.createElement("ons-checkbox")
                 div_right.setAttribute("class", "right");
-                div_right.setAttribute("id", "tag" + i);
-                div_right.setAttribute("onclick", "livestockTag(" + i + ")");
-                if (livestockList[i].tagged == "true") {
+                div_right.setAttribute("id", "tag" + livestockList[i].id);
+                // div_right.setAttribute("onclick", "livestockTag(" + livestockList[i].id + ")");
+                //set item tag
+                if (taggedLivestock.includes(livestockList[i].id) === true) {
                     div_right.checked = true;
                 } else {
                     div_right.checked = false;
                 }
                 list.appendChild(div_right);
-                document.getElementById('livestockFab').style.visibility = 'visible';
+                document.getElementById('livestockCheck').style.visibility = 'visible';
             } else {
                 list.setAttribute("modifier", "chevron");
-                list.setAttribute("onclick", "livestockDetail(" + i + ")");
+                list.setAttribute("onclick", "livestockDetail(" + livestockList[i].id + ")");
             }
             div_left.appendChild(input);
             list.appendChild(div_left);

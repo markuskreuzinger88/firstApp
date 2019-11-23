@@ -2,8 +2,7 @@ db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //
 var number = "";
 var email = "";
 var bearerToken = "";
-
-
+var selectedLocationGroup = "dummy"
 var place = "";
 var createdOn = "";
 
@@ -19,10 +18,10 @@ var livestockObj = {
 
 function updateLivestockAddView() {
 
-    //create livestock location view
-    ons.createElement("locationAdd.html", {
-        append: true
-    });
+    // //create livestock location view
+    // ons.createElement("locationAdd.html", {
+    //     append: true
+    // });
 
     //set the last selected place for livestock
     if ("livestockPlaceAdd" in localStorage) {
@@ -189,6 +188,11 @@ var hideDialogColorAdd = function (color, colorText) {
 //update livestock location list
 function updateLivestockLocations() {
     var lastSelectedPlace = localStorage.getItem("livestockPlaceAdd");
+    document.getElementById("locationButton1").style.visibility = "visible";
+    document.getElementById("locationButton2").style.visibility = "visible";
+    document.getElementById("locationButton1").disabled = false;
+    document.getElementById("locationButton2").disabled = false;
+
     list = document.getElementById("containerLivestockAdd")
     //remove current items in view
     if (list) {
@@ -196,6 +200,7 @@ function updateLivestockLocations() {
             list.removeChild(list.firstChild);
         }
     }
+
     for (i = 0; i < LivestockLocationNbrs; i++) {
         var location = LivestockPlaces[i].name
 
@@ -292,8 +297,24 @@ var hideDialogLocationAdd = function (location) {
             document.getElementById("checkbox" + elements[i]).checked = true;
         }
     }
-    localStorage.setItem("livestockPlaceAdd", location);
-    document.getElementById("livestockPlaceAdd").innerHTML = location;
+    if (eventEnterPageId == "livestock_selector") {
+        //get selected location
+        //get all livestocks ID with this location
+        //save livestok ID in global array for drug delivery
+        selectedLocationGroup = location;
+        for (i = 0; i < LivestockListLength; i++) {
+            if (location.includes(LivestockList[i].animalLocationName) === true) {
+                alert(LivestockList[i].id)
+                //add item to array
+                if (taggedLivestock.includes(LivestockList[i].id) === false) {
+                    taggedLivestock.push(LivestockList[i].id);
+                }
+            }
+        }
+    } else {
+        localStorage.setItem("livestockPlaceAdd", location);
+        document.getElementById("livestockPlaceAdd").innerHTML = location;
+    }
     document.getElementById("locationAdd").hide();
 };
 
@@ -317,7 +338,7 @@ function checkInputs() {
             AnimalLocationId = LivestockPlaces[i].id
         }
     }
-    if ((number.length == 4) && (place != "Bitte wählen" )) {
+    if ((number.length == 4) && (place != "Bitte wählen")) {
         RESTAddLivestock(born, color, number, AnimalLocationId)
     } else if (number.length != 4) {
         ons.notification.alert({
@@ -333,24 +354,24 @@ function checkInputs() {
 }
 
 //split rgb string
-var fullColorHex = function(rgb) {  
-    var rgb = rgb.replace("rgb(", ""); 
-    var rgb = rgb.replace(")", ""); 
+var fullColorHex = function (rgb) {
+    var rgb = rgb.replace("rgb(", "");
+    var rgb = rgb.replace(")", "");
     var rgb = rgb.split(",");
     var red = rgbToHex(rgb[0]);
     var green = rgbToHex(rgb[1]);
     var blue = rgbToHex(rgb[2]);
-    return red+green+blue;
-  };
+    return red + green + blue;
+};
 
 //red, green, blue from rgb to hex
-var rgbToHex = function (rgb) { 
+var rgbToHex = function (rgb) {
     var hex = Number(rgb).toString(16);
     if (hex.length < 2) {
-         hex = "0" + hex;
+        hex = "0" + hex;
     }
     return hex;
-  };
+};
 
 
 function checkInputsUnsaved() {
