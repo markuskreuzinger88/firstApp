@@ -13,11 +13,13 @@ document.addEventListener("init", function (event) {
 
     //set menu background
     $("#menu .page__background").css("background", "linear-gradient(156deg, rgba(43,96,90,1) 0%, rgba(102,141,138,1) 40%, rgba(241,241,241,1) 40%)");
+
     //get page object
     var page = event.target;
     //set global page variable
     eventEnterPageId = page.id;
-    //livestock add page
+
+    //call main function for each page on init
     if (page.id === 'livestock_add') {
         updateLivestockAddView();
     } else if (page.id === 'livestock') {
@@ -26,10 +28,10 @@ document.addEventListener("init", function (event) {
         DisplayResultDrug()
     } else if (page.id === 'drug_delivery') {
         getDrugDeliveryView()
+    } else if (page.id=== 'Bestandsliste ID') {
+        setMarkDetailView()
     }
 });
-
-
 
 //on page postpush
 $(document).on('postpush', '#nav1', function (event) {

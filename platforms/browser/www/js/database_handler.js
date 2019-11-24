@@ -247,15 +247,6 @@ async function write2DBDrugDelivery2(id, drug, approval_number, delay, amount) {
 //     });
 // }
 
-//Get livestock Locations from Database 
-function getLocationDB() {
-    db.transaction(function (transaction) {
-        transaction.executeSql('SELECT * FROM animal_location', [], function (tx, results) {
-            var data2Arr = Array.from(results.rows);
-            updateLivestockLocations(data2Arr, results.rows.length)
-        }, null);
-    });
-}
 
 //write animal location to Database
 function write2DBLocation(id, location) {

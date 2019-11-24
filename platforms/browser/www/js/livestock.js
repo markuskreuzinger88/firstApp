@@ -329,28 +329,18 @@
     }
 
     //get livestock number 
-    function livestockDetail(ID) {
-        localStorage.LivestockColor = (document.getElementById("livestockColor" + ID).style.backgroundColor);
-        var LivestockNumber = (document.getElementById("livestockID" + ID).innerHTML);
-        var stringLen = LivestockNumber.length;
-        //only select last four numbers
-        localStorage.LivestockNumber = (document.getElementById("livestockID" + ID).innerHTML).slice(stringLen - 4,
-            stringLen);
-        getLivestockDBID()
-    }
-
-    //get livestock database id
-    function getLivestockDBID() {
-        var color = (localStorage.LivestockColor)
-        var number = (localStorage.LivestockNumber)
-        db.transaction(function (transaction) {
-            transaction.executeSql(
-                'SELECT * FROM livestock WHERE color = ? AND number = ?', [color, number],
-                function (tx, results) {
-                    localStorage.setItem("LivestockID", results.rows.item(0).id);
-                    document.querySelector('#nav1').pushPage('livestock_detail.html');
-                }, null);
-        });
+    function livestockDetail(id) { 
+        for (i = 0; i < LivestockListLength; i++) {
+            if (id === LivestockList[i].id) {
+                //save livestock properties for detail view
+                localStorage.setItem("LivestockColorDetail", LivestockList[i].color);
+                localStorage.setItem("LivestockNumberDetail", LivestockList[i].number);
+                localStorage.setItem("LivestockLocationDetail", LivestockList[i].animalLocationName );
+                localStorage.setItem("LivestockBirthdayDetail", LivestockList[i].birthday.substring(0, 10));
+                localStorage.setItem("LivestockIdDetail", LivestockList[i].id);
+            } 
+        }
+        document.querySelector('#nav1').pushPage('livestock_detail.html');
     }
 
     //update livestock location list

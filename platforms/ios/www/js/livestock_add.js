@@ -315,7 +315,7 @@ var hideDialogLocationAdd = function (location) {
         localStorage.setItem("livestockPlaceAdd", location);
         document.getElementById("livestockPlaceAdd").innerHTML = location;
     }
-    document.getElementById("locationAdd").hide();
+    document.getElementById("locationAdd").hide(); 
 };
 
 function checkInputs() {

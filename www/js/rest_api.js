@@ -139,6 +139,42 @@ function RESTAddLivestock(birthday, color, number, AnimalLocationId) {
     });
 }
 
+//REST delete Livestock 
+function RESTDeleteAnimal(id) {
+    var DEBUGIP = localStorage.getItem("settings_ipAdress")
+    var token = localStorage.getItem("bearerToken")
+    var endpoint = 'http://' + DEBUGIP + '/stablex/api/Animal/DeleteAnimal'
+    $.ajax({
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': token
+        },
+        url: endpoint,
+        contentType: "application/json",
+        type: "POST",
+        data: JSON.stringify({
+            "model": {
+                "ID": id
+            }
+        }),
+        success: function (response) {
+            var data = JSON.stringify(response);
+            var obj = JSON.parse(data);
+            //check if livestock delete is OK
+            if (response.success === true) {
+                document.querySelector('#nav1').popPage();
+            } else {
+                pushMsg(obj.messages[0].message)
+            }
+        },
+        error: function (xhr, status, error) {
+            var errorMessage = xhr.status + ': ' + xhr.statusText
+            alert('Livestock delete failed! Error - ' + errorMessage);
+        }
+    });
+}
+
 function RESTGetLocation() {
     var DEBUGIP = localStorage.getItem("settings_ipAdress")
     var token = localStorage.getItem("bearerToken")
@@ -186,6 +222,8 @@ function RESTSaveLocation(location) {
         type: "POST",
         data: JSON.stringify({
             "model": {
+                "CreatedBy": "IMPORT_STABLEX",
+                "CustomerId": 20,
                 "name": location
             }
         }),
@@ -195,8 +233,8 @@ function RESTSaveLocation(location) {
             // check if new Location was successfully saved
             if (response.success == true) {
                 RESTGetLocation()
-            } else {
-                pushMsg(obj.messages[0].message)
+            } else { 
+                pushMsg(obj.messages[0].message) 
             }
         },
         error: function (xhr, status, error) {
