@@ -25,48 +25,56 @@ function ShowResultDBDrug1(Command) {
     });
 }
 
-//display sort data with filter
-function ShowResultDBDrug2(Command1, Command2) {
-    db.transaction(function (transaction) {
-        transaction.executeSql(Command1, [Command2], function (tx, results) {
-            DisplayResultDrug(results)
-        }, null);
-    });
-}
+// //display sort data with filter
+// function ShowResultDBDrug2(Command1, Command2) {
+//     db.transaction(function (transaction) {
+//         transaction.executeSql(Command1, [Command2], function (tx, results) {
+//             DisplayResultDrug(results)
+//         }, null);
+//     });
+// }
 
 //display database results
 function DisplayResultDrug() {
-    for (i = 0; i < DrugNbrs; i++) {
-        list = document.createElement("ons-list-item")
-        div_center = document.createElement("div")
-        div_center.setAttribute("id", Drugs[i].id);
-        div_center.setAttribute("class", "center");
-        div_center.setAttribute("style", "margin-left: 10px");
-        span_center1 = document.createElement("span")
-        span_center1.setAttribute("id", "drugID" + Drugs[i].id);
-        span_center2 = document.createElement("span")
-        span_center1.setAttribute("class", "list-item__title");
-        span_center2.setAttribute("class", "list-item__subtitle");
-        span_center1.innerHTML = Drugs[i].name;
-        span_center2.innerHTML = Drugs[i].drugCategoryName + "<br>" + "Zul-Nr.: " +
-            Drugs[i].approvalNumber;
-        list.setAttribute("tappable", true);
-        list.setAttribute("onclick", "drugTag(" + Drugs[i].id + ")");
-        div_right = document.createElement("ons-checkbox")
-        div_right.setAttribute("class", "right");
-        div_right.setAttribute("id", "tag" + Drugs[i].id);
-        //set item tag
-        if (taggedDrugs.includes(Drugs[i].id) === true) {
-            div_right.checked = true;
-        } else {
-            div_right.checked = false;
+    var infiniteList = document.getElementById('ContainerDrugs');
+    infiniteList.delegate = {
+        createItemContent: function (i) {
+            list = document.createElement("ons-list-item")
+            div_center = document.createElement("div")
+            div_center.setAttribute("id", Drugs[i].id);
+            div_center.setAttribute("class", "center");
+            div_center.setAttribute("style", "margin-left: 10px");
+            span_center1 = document.createElement("span")
+            span_center1.setAttribute("id", "drugID" + Drugs[i].id);
+            span_center2 = document.createElement("span")
+            span_center1.setAttribute("class", "list-item__title");
+            span_center2.setAttribute("class", "list-item__subtitle");
+            span_center1.innerHTML = Drugs[i].name;
+            span_center2.innerHTML = Drugs[i].drugCategoryName + "<br>" + "Zul-Nr.: " +
+                Drugs[i].approvalNumber;
+            list.setAttribute("tappable", true);
+            list.setAttribute("onclick", "drugTag(" + Drugs[i].id + ")");
+            div_right = document.createElement("ons-checkbox")
+            div_right.setAttribute("class", "right");
+            div_right.setAttribute("id", "tag" + Drugs[i].id);
+            //set item tag
+            if (taggedDrugs.includes(Drugs[i].id) === true) {
+                div_right.checked = true;
+            } else {
+                div_right.checked = false;
+            }
+            list.appendChild(div_right);
+            div_center.appendChild(span_center1);
+            div_center.appendChild(span_center2);
+            list.appendChild(div_center);
+            return document.getElementById("ContainerDrugs").appendChild(list);
+        },
+        countItems: function () {
+            return DrugNbrs;
         }
-        list.appendChild(div_right);
-        div_center.appendChild(span_center1);
-        div_center.appendChild(span_center2);
-        list.appendChild(div_center);
-        document.getElementById("ContainerDrugs").appendChild(list);
-    }
+    };
+
+    infiniteList.refresh();
 }
 
 //add or remove tag drug for drug delivery

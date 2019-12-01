@@ -11,6 +11,10 @@ document.addEventListener("init", function (event) {
         append: true
     });
 
+    ons.createElement("drugDeliveryTemplate.html", {
+        append: true
+    });
+
     //set menu background
     $("#menu .page__background").css("background", "linear-gradient(156deg, rgba(43,96,90,1) 0%, rgba(102,141,138,1) 40%, rgba(241,241,241,1) 40%)");
 
@@ -28,7 +32,7 @@ document.addEventListener("init", function (event) {
         DisplayResultDrug()
     } else if (page.id === 'drug_delivery') {
         getDrugDeliveryView()
-    } else if (page.id=== 'Bestandsliste ID') {
+    } else if (page.id === 'Bestandsliste ID') {
         setMarkDetailView()
     }
 });
@@ -46,6 +50,9 @@ $(document).on('postpush', '#nav1', function (event) {
     } else if (event.enterPage.id === 'livestock_selector') {
         //update livestock locations after page load
         updateLivestockLocations()
+    } else if (event.enterPage.id === 'drug_delivery') {
+        //update diagnosis items after page load
+        updateDiagnosis()
     }
 });
 

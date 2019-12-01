@@ -5,6 +5,8 @@ var LivestockListLength = "";
 var LivestockList = "";
 var DrugNbrs = "";
 var Drugs = "";
+var DiagnosisNbrs = "";
+var Diagnosis = "";
 
 document.addEventListener('init', function (event) {
     eventTarget = event.target
@@ -20,7 +22,7 @@ function RESTLogin() {
     var email = document.getElementById("email").value;
     var psw = document.getElementById("psw").value;
     var DEBUGIP = localStorage.getItem("settings_ipAdress")
-    var endpoint = 'http://' + DEBUGIP + '/stablex/api/authentication/login'
+    var endpoint = 'http://' + DEBUGIP + '/api/authentication/login'
     $.ajax({
         url: endpoint,
         // contentType: "application/x-www-form-urlencoded",
@@ -49,6 +51,8 @@ function RESTLogin() {
                 RESTGetLocation()
                 //get Drugs 
                 RESTGetDrugs()
+                //get Diagnosis 
+                RESTGetDiagnosis()
                 document.querySelector('#nav1').pushPage('home_splitter.html');
             } else {
                 pushMsg(obj.messages[0].message)
@@ -65,7 +69,7 @@ function RESTLogin() {
 function RESTGetLivestock() {
     var DEBUGIP = localStorage.getItem("settings_ipAdress")
     var token = localStorage.getItem("bearerToken")
-    var endpoint = 'http://' + DEBUGIP + '/stablex/api/Animal/GetAnimals'
+    var endpoint = 'http://' + DEBUGIP + '/api/Animal/GetAnimals'
     $.ajax({
         headers: {
             'Accept': 'application/json',
@@ -95,7 +99,7 @@ function RESTGetLivestock() {
 function RESTAddLivestock(birthday, color, number, AnimalLocationId) {
     var DEBUGIP = localStorage.getItem("settings_ipAdress")
     var token = localStorage.getItem("bearerToken")
-    var endpoint = 'http://' + DEBUGIP + '/stablex/api/Animal/SaveAnimal'
+    var endpoint = 'http://' + DEBUGIP + '/api/Animal/SaveAnimal'
     $.ajax({
         headers: {
             'Accept': 'application/json',
@@ -143,7 +147,7 @@ function RESTAddLivestock(birthday, color, number, AnimalLocationId) {
 function RESTDeleteAnimal(id) {
     var DEBUGIP = localStorage.getItem("settings_ipAdress")
     var token = localStorage.getItem("bearerToken")
-    var endpoint = 'http://' + DEBUGIP + '/stablex/api/Animal/DeleteAnimal'
+    var endpoint = 'http://' + DEBUGIP + '/api/Animal/DeleteAnimal'
     $.ajax({
         headers: {
             'Accept': 'application/json',
@@ -178,7 +182,7 @@ function RESTDeleteAnimal(id) {
 function RESTGetLocation() {
     var DEBUGIP = localStorage.getItem("settings_ipAdress")
     var token = localStorage.getItem("bearerToken")
-    var endpoint = 'http://' + DEBUGIP + '/stablex/api/Animallocation/Getanimallocations'
+    var endpoint = 'http://' + DEBUGIP + '/api/Animallocation/Getanimallocations'
     $.ajax({
         headers: {
             'Accept': 'application/json',
@@ -196,6 +200,10 @@ function RESTGetLocation() {
             LivestockLocationNbrs = data.split("id").length - 1;
             //save places in global variable
             LivestockPlaces = obj.list;
+
+            console.log('hahahahahah')
+            console.log(LivestockPlaces)
+
             if (eventEnterPageId === 'livestock_add') {
                 updateLivestockLocations()
             }
@@ -210,7 +218,7 @@ function RESTGetLocation() {
 function RESTSaveLocation(location) {
     var DEBUGIP = localStorage.getItem("settings_ipAdress")
     var token = localStorage.getItem("bearerToken")
-    var endpoint = 'http://' + DEBUGIP + '/stablex/api/Animallocation/Saveanimallocation'
+    var endpoint = 'http://' + DEBUGIP + '/api/Animallocation/Saveanimallocation'
     $.ajax({
         headers: {
             'Accept': 'application/json',
@@ -233,8 +241,43 @@ function RESTSaveLocation(location) {
             // check if new Location was successfully saved
             if (response.success == true) {
                 RESTGetLocation()
-            } else { 
-                pushMsg(obj.messages[0].message) 
+            } else {
+                pushMsg(obj.messages[0].message)
+            }
+        },
+        error: function (xhr, status, error) {
+            var errorMessage = xhr.status + ': ' + xhr.statusText
+            alert('Get Location failed! Error - ' + errorMessage);
+        }
+    });
+}
+
+function RESTDeleteLocation(id) {
+    var DEBUGIP = localStorage.getItem("settings_ipAdress")
+    var token = localStorage.getItem("bearerToken")
+    var endpoint = 'http://' + DEBUGIP + '/api/Animallocation/Deleteanimallocation'
+    $.ajax({
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': token
+        },
+        url: endpoint,
+        contentType: "application/json",
+        type: "POST",
+        data: JSON.stringify({
+            "model": {
+                "id": id
+            }
+        }),
+        success: function (response) {
+            var data = JSON.stringify(response);
+            var obj = JSON.parse(data);
+            // check if new Location was successfully deleted
+            if (response.success == true) {
+                RESTGetLocation()
+            } else {
+                pushMsg(obj.messages[0].message)
             }
         },
         error: function (xhr, status, error) {
@@ -247,7 +290,7 @@ function RESTSaveLocation(location) {
 function RESTGetDrugs() {
     var DEBUGIP = localStorage.getItem("settings_ipAdress")
     var token = localStorage.getItem("bearerToken")
-    var endpoint = 'http://' + DEBUGIP + '/stablex/api/Drug/GetDrugs'
+    var endpoint = 'http://' + DEBUGIP + '/api/Drug/GetDrugs'
     $.ajax({
         headers: {
             'Accept': 'application/json',
@@ -265,9 +308,38 @@ function RESTGetDrugs() {
             DrugNbrs = data.split("id").length - 1;
             //save drugs in global variable
             Drugs = obj.list;
-            console.log("WWWWWWWWWWWWWWWWWWWWW")
-            console.log(obj.list)
-            console.log(DrugNbrs)   
+        },
+        error: function (xhr, status, error) {
+            var errorMessage = xhr.status + ': ' + xhr.statusText
+            alert('Get Drugs failed! Error - ' + errorMessage);
+        }
+    });
+}
+
+function RESTGetDiagnosis() {
+    var DEBUGIP = localStorage.getItem("settings_ipAdress")
+    var token = localStorage.getItem("bearerToken")
+    var endpoint = 'http://' + DEBUGIP + '/api/Diagnosis/GetDiagnoses'
+    $.ajax({
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': token
+        },
+        url: endpoint,
+        contentType: "application/json",
+        type: "POST",
+        data: JSON.stringify({}),
+        success: function (response) {
+            var data = JSON.stringify(response);
+            var obj = JSON.parse(data);
+            //get numbers of entries
+            DiagnosisNbrs = data.split("id").length - 1;
+            //save drugs in global variable
+            Diagnosis = obj.list;
+            console.log('hallo')
+            console.log(DiagnosisNbrs)
+            console.log(Diagnosis)
         },
         error: function (xhr, status, error) {
             var errorMessage = xhr.status + ': ' + xhr.statusText

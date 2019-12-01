@@ -278,7 +278,9 @@
 
     //display livestock list result
     function DisplayResult(livestockList, listLength) {
-        for (i = 0; i < listLength; i++) {
+        var infiniteList = document.getElementById('containerLivestock');
+        infiniteList.delegate = {
+            createItemContent: function (i) {
             list = document.createElement("ons-list-item")
             div_center = document.createElement("div")
             div_center.setAttribute("id", livestockList[i].id);
@@ -324,9 +326,14 @@
             div_center.appendChild(span_center1);
             div_center.appendChild(span_center2);
             list.appendChild(div_center);
-            document.getElementById("containerLivestock").appendChild(list);
+            return document.getElementById("containerLivestock").appendChild(list);
+        },
+        countItems: function () {
+            return listLength;
         }
-    }
+    };
+    infiniteList.refresh();
+}
 
     //get livestock number 
     function livestockDetail(id) { 

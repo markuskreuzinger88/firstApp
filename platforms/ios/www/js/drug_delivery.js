@@ -23,24 +23,23 @@ function getDrugDeliveryView() {
     document.getElementById("removeLivestocks").style.visibility = "hidden";
     document.getElementById("removeDrugs").style.visibility = "hidden";
 
+    document.getElementById("diagnosisContainer").innerHTML = localStorage.getItem("lastDiagnosis");
+
     CreatedOn.max = new Date().toISOString().split("T")[0];
     let today = new Date().toISOString().substr(0, 10);
     document.querySelector("#CreatedOn").value = today;
-
-    //remove childs from both containers
-    var list = document.getElementById("livestockContainer");
-    while (list.hasChildNodes()) {
-        list.removeChild(list.firstChild);
-    }
-    var list = document.getElementById("drugContainer");
-    while (list.hasChildNodes()) {
-        list.removeChild(list.firstChild);
-    }
 
     DisplayLivestocks()
 }
 
 function DisplayLivestocks() {
+
+    //remove childs from container
+    var list = document.getElementById("livestockContainer");
+    while (list.hasChildNodes()) {
+        list.removeChild(list.firstChild);
+    }
+
     if (taggedLivestock.length > 0) {
         for (i = 0; i < LivestockListLength; i++) {
             if (taggedLivestock.includes(LivestockList[i].id) === true) {
@@ -88,14 +87,14 @@ function DisplayLivestocks() {
                 div_center.appendChild(span_center2);
                 list.appendChild(div_center);
                 document.getElementById("livestockContainer").appendChild(list);
-                // document.getElementById("removeLivestocks").style.visibility = "visible";
-                // document.getElementById("removeLivestocks").disabled = false;
+                document.getElementById("removeLivestocks").style.visibility = "visible";
+                document.getElementById("removeLivestocks").disabled = false;
                 // document.getElementById("livestockDrugDeliveryText").innerHTML = "Ausgewählte Nutztiere";
             }
         }
     } else {
         document.getElementById("livestockContainer").setAttribute("onclick", "nav1.pushPage('livestock_selector.html')");
-        document.getElementById("livestockContainer").innerHTML = "Ken Nutztier ausgewählt";
+        document.getElementById("livestockContainer").innerHTML = "Kein Nutztier ausgewählt";
         document.getElementById("removeLivestocks").style.visibility = "hidden";
         document.getElementById("removeLivestocks").disabled = true;
     }
@@ -103,6 +102,13 @@ function DisplayLivestocks() {
 }
 
 function DisplayDrugs() {
+
+    //remove childs from container
+    var list = document.getElementById("drugContainer");
+    while (list.hasChildNodes()) {
+        list.removeChild(list.firstChild);
+    }
+
     if (taggedDrugs.length > 0) {
         for (i = 0; i < DrugNbrs; i++) {
             if (taggedDrugs.includes(Drugs[i].id) === true) {
@@ -187,9 +193,7 @@ function removeListItemDrug(id) {
         cancelable: true,
         callback: function (index) {
             if (index == 0) {
-                taggedDrugs = taggedDrugs.filter(function (item) {
-                    return item !== id
-                })
+                taggedDrugs.splice( taggedDrugs.indexOf(id), 1 );
                 getDrugDeliveryView()
             }
         }
@@ -197,10 +201,6 @@ function removeListItemDrug(id) {
 }
 
 function removeListItemLivestock(id) {
-    var color = document.getElementById("livestockColorDrug" + id).style.backgroundColor;
-    var number = document.getElementById("livestockIDDrug" + id).innerHTML;
-    //only use livestock 4 digit number
-    number = number.slice(number.length - 4, number.length);
     ons.notification.confirm({
         message: 'Möchtest du das Nutztier aus deiner Liste für die Arzneimittelvergabe löschen?',
         title: 'Nutztier entfernen',
@@ -210,15 +210,8 @@ function removeListItemLivestock(id) {
         cancelable: true,
         callback: function (index) {
             if (index == 0) {
-                db.transaction(function (tx) {
-                    tx.executeSql(
-                        "UPDATE livestock SET tagged=? where Color = ? AND Number = ?",
-                        ['false', color, number]);
-                }, function (error) {
-                    alert('Error: ' + error.message + ' code: ' + error.code);
-                }, function () {
-                    GetDBTaggedResult()
-                });
+                taggedLivestock.splice( taggedLivestock.indexOf(id), 1 );
+                DisplayLivestocks()
             }
         }
     });
@@ -234,15 +227,9 @@ function removeTagLivestock() {
         cancelable: true,
         callback: function (index) {
             if (index == 0) {
-                db.transaction(function (tx) {
-                    tx.executeSql(
-                        "UPDATE livestock SET tagged=?",
-                        ['false']);
-                }, function (error) {
-                    alert('Error: ' + error.message + ' code: ' + error.code);
-                }, function () {
-                    GetDBTaggedResult()
-                });
+                //delete array
+                taggedLivestock = [];
+                DisplayLivestocks()
             }
         }
     });
@@ -268,9 +255,6 @@ function removeTagDrugs() {
 
 function DoneButton() {
     createdOn = document.querySelector("#CreatedOn").value
-    console.log(createdOn)
-    console.log(drugResultsRowslLength)
-    console.log(livestockResultsRowslLength)
     /*check livestock nummber and color*/
     if (livestockResultsRowslLength > 0) {
         /*check drug field and if drug exists*/
@@ -326,6 +310,85 @@ function userTakeOverDrugs() {
         }
     });
 }
+
+//update livestock location list
+function updateDiagnosis() {
+    var lastDiagnosis = localStorage.getItem("lastDiagnosis");
+    list = document.getElementById("containerDiagnosis")
+    //remove current items in view
+    if (list) {
+        while (list.hasChildNodes()) {
+            list.removeChild(list.firstChild);
+        }
+    }
+
+    for (i = 0; i < DiagnosisNbrs; i++) {
+        var diagnosis = Diagnosis[i].name
+
+        list = document.createElement("ons-list-item")
+        list.setAttribute("onchange", "hideDialogDiagnosis('" + diagnosis + "')");
+        list.setAttribute("tappable");
+        //label left
+        label_left = document.createElement("label")
+        label_left.setAttribute("class", "left");
+        checkbox = document.createElement("ons-checkbox")
+        checkbox.setAttribute("input-id", "checkbox" + diagnosis);
+        //check checkbox if last diagnosis = current diagnosis
+        if (lastDiagnosis == diagnosis) {
+            checkbox.setAttribute("checked");
+        }
+        label_left.appendChild(checkbox);
+        //label center
+        label_center = document.createElement("label")
+        label_center.setAttribute("class", "center");
+        label_center.innerHTML = diagnosis;
+        label_center.setAttribute("onclick", "hideDialogDiagnosis('" + diagnosis + "')");
+        //append labels to list
+        list.appendChild(label_left);
+        list.appendChild(label_center);
+        document.getElementById("containerDiagnosis").appendChild(list);
+    }
+}
+
+//select location
+var hideDialogDiagnosis = function (diagnosis) {
+    list = document.getElementById("containerDiagnosis")
+    console.log(list.childElementCount)
+    var elements = [];
+    //first get all place items
+    for (var i = 1; i <= list.childElementCount; i++) {
+        var text = document.querySelector("#containerDiagnosis > ons-list-item:nth-child(" + i + ") > label.center.list-item__center")
+        elements.push(text.innerHTML)
+    }
+    //uncheck all checkboxes and check selected checkbox
+    for (i = 0; i < elements.length; i++) {
+        if (elements[i] != diagnosis) {
+            document.getElementById("checkbox" + elements[i]).checked = false;
+        } else {
+            document.getElementById("checkbox" + elements[i]).checked = true;
+        }
+    }
+    localStorage.setItem("lastDiagnosis", diagnosis);
+    document.getElementById("diagnosisContainer").innerHTML = diagnosis;
+    document.getElementById("drugDeliveryTemplate").hide();
+};
+
+//open Templates for current page
+var showTemplateDiagnosis = function (my_dialog, my_dialog_html) {
+
+    var dialog = document.getElementById(my_dialog);
+
+    if (dialog) {
+        dialog.show();
+    } else {
+        ons.createElement(my_dialog_html, {
+                append: true
+            })
+            .then(function (dialog) {
+                dialog.show();
+            });
+    }
+};
 
 function checkAmoutInputFields() {
     arrDrugAmount = []

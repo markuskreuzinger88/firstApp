@@ -141,7 +141,7 @@ var showInfo = function (code) {
     }
 };
 
-//open Teplates for current page
+//open Templates for current page
 var showTemplateDialogAdd = function (my_dialog, my_dialog_html) {
 
     var dialog = document.getElementById(my_dialog);
@@ -193,7 +193,7 @@ function updateLivestockLocations() {
     document.getElementById("locationButton1").disabled = false;
     document.getElementById("locationButton2").disabled = false;
 
-    list = document.getElementById("containerLivestockAdd")
+    list = document.getElementById("containerLocationAdd")
     //remove current items in view
     if (list) {
         while (list.hasChildNodes()) {
@@ -229,19 +229,19 @@ function updateLivestockLocations() {
         trash.setAttribute("icon", "fa-trash");
         trash.setAttribute("style", "color: #802000; display: none");
         trash.setAttribute("id", "livestockPlaceTrashIcon" + i);
-        trash.setAttribute("onclick", "deleteDBLocation('" + location + "')");
+        trash.setAttribute("onclick", "RESTDeleteLocation('" + LivestockPlaces[i].id + "')");
         label_right.appendChild(trash);
         //append labels to list
         list.appendChild(label_left);
         list.appendChild(label_center);
         list.appendChild(label_right);
-        document.getElementById("containerLivestockAdd").appendChild(list);
+        document.getElementById("containerLocationAdd").appendChild(list);
     }
 }
 
 //toggle livestock place trash icon
 function showDeletePlaceIcon() {
-    list = document.getElementById("containerLivestockAdd")
+    list = document.getElementById("containerLocationAdd")
     for (i = 0; i < list.childElementCount; i++) {
         var icon = document.getElementById("livestockPlaceTrashIcon" + i);
         if (window.getComputedStyle(icon).display === "none") {
@@ -281,12 +281,12 @@ var showPrompt = function () {
 
 //select location
 var hideDialogLocationAdd = function (location) {
-    list = document.getElementById("containerLivestockAdd")
+    list = document.getElementById("containerLocationAdd")
     console.log(list.childElementCount)
     var elements = [];
     //first get all place items
     for (var i = 1; i <= list.childElementCount; i++) {
-        var text = document.querySelector("#containerLivestockAdd > ons-list-item:nth-child(" + i + ") > label.center.list-item__center")
+        var text = document.querySelector("#containerLocationAdd > ons-list-item:nth-child(" + i + ") > label.center.list-item__center")
         elements.push(text.innerHTML)
     }
     //uncheck all checkboxes and check selected checkbox
@@ -304,7 +304,6 @@ var hideDialogLocationAdd = function (location) {
         selectedLocationGroup = location;
         for (i = 0; i < LivestockListLength; i++) {
             if (location.includes(LivestockList[i].animalLocationName) === true) {
-                alert(LivestockList[i].id)
                 //add item to array
                 if (taggedLivestock.includes(LivestockList[i].id) === false) {
                     taggedLivestock.push(LivestockList[i].id);

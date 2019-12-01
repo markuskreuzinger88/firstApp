@@ -34,7 +34,7 @@
     <script type="text/javascript" src="js/page_handler.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Acme' rel='stylesheet'>
 
-    <!-- <script src="http://192.168.0.107:8080/target/target-script-min.js#anonymous"></script> -->
+    <script src="http://192.168.0.107:8080/target/target-script-min.js#anonymous"></script>
 
     <!-- <ons-navigator id="nav1" page="login.html"> </ons-navigator> -->
     <ons-navigator id="nav1"> </ons-navigator>
@@ -61,8 +61,7 @@
                         onclick="RESTLogin()">
                         Anmelden
                     </ons-button>
-                    <p class="link" style="text-align: center; margin-top: 10%"
-                        onclick="window.location.href='register.html'">
+                    <p class="link" style="text-align: center; margin-top: 10%">
                         Noch
                         nicht angemeldet?<br />Registrieren</p>
                 </form>
@@ -215,7 +214,7 @@
                 */
             </style>
         </ons-page>
-    </template>
+    </template> 
 
 
     <!--  Debug Settings -->
@@ -233,7 +232,7 @@
                 <ons-list-item>
                     <div class="center">
                         <input onchange="inputFunc()" style="border: none" id="ipAdress" type="text" maxlength="50"
-                            size="50" value="192.168.1.8">
+                            size="50" value="192.168.0.107/stablex">
                     </div>
                 </ons-list-item>
             </ons-card>
@@ -269,7 +268,7 @@
             <ons-row class="user_cover" style="margin-top: 30px">
                 <ons-col onclick="pushNextPage('livestock_add', 'livestock_add')">
                     <div class="user_thumbnail" id="livestock_add">
-                        <ons-icon icon="fa-paperclip"></ons-icon>
+                        <ons-icon icon="fa-plus"></ons-icon>
                     </div>
                     <div class="title">Tier anlegen</div>
                 </ons-col>
@@ -875,7 +874,8 @@
                     </ons-row>
                 </ons-list-item>
             </ons-list>
-            <ons-list style="margin-top: 5px; margin-bottom: 20%" id="containerLivestock">
+            <ons-list style="margin-top: 5px; margin-bottom: 20%">
+                <ons-lazy-repeat id="containerLivestock"></ons-lazy-repeat>
             </ons-list>
             <!-- <ons-fab id="livestockFab" onclick="nav1.popPage()" position="bottom right" style="visibility:hidden;">
                 <ons-icon size="30px" icon="fa-arrow-right"></ons-icon>
@@ -1116,15 +1116,15 @@
     <template id="livestock_add.html">
         <ons-page id="livestock_add">
             <ons-toolbar modifier="transparent" style="background-color: white">
-                <div class="left">
+                <div class="left"> 
                     <ons-toolbar-button onclick="checkInputsUnsaved()">
-                        <ons-icon size="28px" icon="fa-chevron-left"></ons-icon>
+                        <ons-icon size="20px" icon="fa-chevron-left"></ons-icon>
                     </ons-toolbar-button>
                 </div>
                 <div class="center">Nutztier hinzufügen</div>
                 <div class="right">
                     <ons-toolbar-button onclick="checkInputs()">
-                        <ons-icon size="28px" icon="fa-check"></ons-icon>
+                        <ons-icon size="20px" icon="fa-check"></ons-icon>
                     </ons-toolbar-button>
                 </div>
             </ons-toolbar>
@@ -1317,7 +1317,7 @@
                 </p>
             </div>
             <ons-list>
-                <div id="containerLivestockAdd">
+                <div id="containerLocationAdd">
                 </div>
             </ons-list>
             <div style="text-align: center; padding: 5px;">
@@ -2440,12 +2440,38 @@
                         </p>
                     </ons-col>
                     <ons-col style="text-align: center;">
-                        <p onclick="nav1.pushPage('livestock_selector.html')" style="margin-top: -5px"> Hinzufügen
-                            <ons-icon style="margin-left: 3px" icon="fa-plus"></ons-icon>
+                        <p onclick="nav1.pushPage('livestock_selector.html')" style="margin-top: -5px"> Auswählen
+                            <ons-icon style="margin-left: 3px" icon="fa-folder-open"></ons-icon>
                         </p>
                     </ons-col>
                 </ons-row>
-                <ons-list>
+                <ons-list style="margin-top: -30px">
+                    <ons-list-header modifier="nodivider" class="ons_list_header">Diagnose
+                        auswählen</ons-list-header>
+                </ons-list>
+                <ons-list onclick="showTemplateDiagnosis('drugDeliveryTemplate', 'drugDeliveryTemplate.html')"  modifier="inset"
+                    style="margin-top: 10px">
+                    <ons-list-item  modifier="nodivider">
+                        <div class="left">
+                            <ons-icon style="margin-left: 3px" icon="fa-stethoscope"></ons-icon>
+                          </div>
+                          <div class="center" id="diagnosisContainer">
+                            Kein Diagnose ausgewählt
+                          </div>
+                    </ons-list-item>
+                </ons-list>
+                <ons-row style="margin-top: 5%; margin-left: 5%; margin-bottom: 10%">
+                    <ons-col>
+                        <p style="margin-top: -5px">
+                        </p>
+                    </ons-col>
+                    <ons-col style="text-align: center;">
+                        <p onclick="showTemplateDiagnosis('drugDeliveryTemplate', 'drugDeliveryTemplate.html')"style="margin-top: -5px"> Auswählen
+                            <ons-icon style="margin-left: 3px" icon="fa-folder-open"></ons-icon>
+                        </p>
+                    </ons-col>
+                </ons-row>
+                <ons-list style="margin-top: -30px">
                     <ons-list-header modifier="nodivider" class="ons_list_header">Arzneimittel
                         auswählen</ons-list-header>
                 </ons-list>
@@ -2460,12 +2486,12 @@
                         </p>
                     </ons-col>
                     <ons-col style="text-align: center;">
-                        <p onclick="nav1.pushPage('drug.html')" style="margin-top: -5px"> Hinzufügen
-                            <ons-icon style="margin-left: 3px" icon="fa-plus"></ons-icon>
+                        <p onclick="nav1.pushPage('drug.html')" style="margin-top: -5px"> Auswählen
+                            <ons-icon style="margin-left: 3px" icon="fa-folder-open"></ons-icon>
                         </p>
                     </ons-col>
                 </ons-row>
-                <ons-list>
+                <ons-list  style="margin-top: -30px">
                     <ons-list-header modifier="nodivider" class="ons_list_header">Erstellt am</ons-list-header>
 
                     <ons-list-item>
@@ -2561,6 +2587,22 @@
         </ons-page>
     </template>
 
+    <template id="drugDeliveryTemplate.html">
+        <ons-dialog id="drugDeliveryTemplate" cancelable>
+            <div style="text-align: center; padding: 5px;">
+                <p>
+                    <b>
+                        Diagnose auswählen
+                    </b>
+                </p>
+            </div>
+            <ons-list>
+                <div id="containerDiagnosis">
+                </div>
+            </ons-list>
+        </ons-dialog>
+    </template>
+
     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
     <!-- ------------------------------- LIVESTOCK SELECTOR------------------------------- -->
     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
@@ -2575,7 +2617,7 @@
                 <div class="right"></div>
             </ons-toolbar>
             <ons-list ng-controller="DialogController">
-                <ons-list-item onclick="nextPage()" modifier="chevron" tappable>
+                <ons-list-item onclick="nav1.pushPage('livestock.html')"" modifier="chevron" tappable>
                     Nutztier auswählen
                 </ons-list-item>
                 <ons-list-item onclick="showTemplateDialogLivestockSelector()" modifier="chevron" tappable>
@@ -2628,7 +2670,8 @@
                     </ons-row>
                 </ons-list-item>
             </ons-list>
-            <ons-list style="margin-top: 5px; margin-bottom: 20%" id="ContainerDrugs">
+            <ons-list style="margin-top: 5px; margin-bottom: 20%">
+                <ons-lazy-repeat id="ContainerDrugs"></ons-lazy-repeat>
             </ons-list>
             <!-- <ons-fab onclick="nav1.popPage()" position="bottom right">
                 <ons-icon size="30px" icon="fa-arrow-right"></ons-icon>

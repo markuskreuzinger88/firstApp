@@ -1,4 +1,3 @@
-db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //create 20MB Database
 
 //set first ons page
 ons.ready(async function () {
