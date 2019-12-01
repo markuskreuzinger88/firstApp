@@ -22,8 +22,11 @@ var pageSelector = "";
 function getDrugDeliveryView() {
     document.getElementById("removeLivestocks").style.visibility = "hidden";
     document.getElementById("removeDrugs").style.visibility = "hidden";
-
-    document.getElementById("diagnosisContainer").innerHTML = localStorage.getItem("lastDiagnosis");
+    if (localStorage.getItem("lastDiagnosis") === null){
+        document.getElementById("diagnosisContainer").innerHTML = 'Keine Diagnose ausgewählt'
+    } else {
+        document.getElementById("diagnosisContainer").innerHTML = localStorage.getItem("lastDiagnosis");
+    }
 
     CreatedOn.max = new Date().toISOString().split("T")[0];
     let today = new Date().toISOString().substr(0, 10);
