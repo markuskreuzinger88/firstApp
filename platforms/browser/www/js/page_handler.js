@@ -59,7 +59,20 @@ $(document).on('postpush', '#nav1', function (event) {
 //on page prepop
 $(document).on('prepop', '#nav1', function (event) {
     var event = event.originalEvent;
+    //set global page variable on pre pop page
+    eventEnterPageId = event.enterPage.id;
     if (event.enterPage.id === 'drug_delivery') {
         getDrugDeliveryView()
+    }
+});
+
+//on page postpop
+$(document).on('prepop', '#nav1', function (event) {
+    var event = event.originalEvent;
+    //set global page variable pn post pop page
+    // eventEnterPageId = event.enterPage.id;
+    if (event.enterPage.id === 'livestock') {
+        //update livestock locations for Filter after page load
+
     }
 });

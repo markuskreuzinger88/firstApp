@@ -41,6 +41,7 @@ function RESTLogin() {
             localStorage.setItem("lastname", response.user.lastName);
             localStorage.setItem("password", response.user.password);
             localStorage.setItem("lfbis", response.customer.lfbisId);
+            localStorage.setItem("user_email", email);
             localStorage.setItem("bearerToken", token);
 
             // check if login is successfull
@@ -87,6 +88,11 @@ function RESTGetLivestock() {
             LivestockListLength = data.split("id").length - 1;
             //save livestocks in global variable
             LivestockList = obj.list;
+
+            if (eventEnterPageId === 'Bestandsliste Arzneimittel') {
+                document.querySelector('#nav1').popPage();
+                updateLivestockView()
+            }
         },
         error: function (xhr, status, error) {
             var errorMessage = xhr.status + ': ' + xhr.statusText
@@ -158,16 +164,14 @@ function RESTDeleteAnimal(id) {
         contentType: "application/json",
         type: "POST",
         data: JSON.stringify({
-            "model": {
-                "ID": id
-            }
+            "id": id
         }),
         success: function (response) {
             var data = JSON.stringify(response);
             var obj = JSON.parse(data);
             //check if livestock delete is OK
             if (response.success === true) {
-                document.querySelector('#nav1').popPage();
+                RESTGetLivestock();
             } else {
                 pushMsg(obj.messages[0].message)
             }
@@ -201,9 +205,6 @@ function RESTGetLocation() {
             //save places in global variable
             LivestockPlaces = obj.list;
 
-            console.log('hahahahahah')
-            console.log(LivestockPlaces)
-
             if (eventEnterPageId === 'livestock_add') {
                 updateLivestockLocations()
             }
@@ -218,6 +219,7 @@ function RESTGetLocation() {
 function RESTSaveLocation(location) {
     var DEBUGIP = localStorage.getItem("settings_ipAdress")
     var token = localStorage.getItem("bearerToken")
+    var user_email = localStorage.getItem("user_email")
     var endpoint = 'http://' + DEBUGIP + '/api/Animallocation/Saveanimallocation'
     $.ajax({
         headers: {
@@ -230,8 +232,7 @@ function RESTSaveLocation(location) {
         type: "POST",
         data: JSON.stringify({
             "model": {
-                "CreatedBy": "IMPORT_STABLEX",
-                "CustomerId": 20,
+                "CreatedBy": user_email,
                 "name": location
             }
         }),
@@ -266,9 +267,7 @@ function RESTDeleteLocation(id) {
         contentType: "application/json",
         type: "POST",
         data: JSON.stringify({
-            "model": {
-                "id": id
-            }
+            "id": id
         }),
         success: function (response) {
             var data = JSON.stringify(response);

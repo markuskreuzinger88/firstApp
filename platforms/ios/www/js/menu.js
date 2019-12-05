@@ -76,3 +76,11 @@ $(document).on('postpush', '#nav1', function (event) {
 //     console.log(event)
 //     console.log("HHHHHHHHHHHHHHHHHHHHHHHH")
 // });
+
+function showModal() {
+    var modal = document.querySelector('ons-modal');
+    modal.show();
+    setTimeout(function() {
+      modal.hide();
+    }, 2000);
+  }

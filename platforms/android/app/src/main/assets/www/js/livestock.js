@@ -7,6 +7,7 @@
 
     //display Livestocks
     function updateLivestockView() {
+        
         // create element before use --> to update list in elemnt dynamically
         ons.createElement("locationFilter.html", {
             append: true
