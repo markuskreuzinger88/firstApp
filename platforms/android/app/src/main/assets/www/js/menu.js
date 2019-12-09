@@ -13,9 +13,8 @@ window.fn.load = function (page) {
         .then(menu.close.bind(menu));
 }
 
-var pushNextPage = function (id, page) {
-    document.getElementById(id).style.boxShadow = 'none';
-    localStorage.setItem("PageSelector", id);
+var pushNextPage = function (page) {
+    localStorage.setItem("PageSelector", page);
     nav1.pushPage(page + ".html")
 }
 

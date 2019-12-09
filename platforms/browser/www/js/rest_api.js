@@ -18,52 +18,52 @@ document.addEventListener('init', function (event) {
 
 //User Login
 function RESTLogin() {
-    // document.querySelector('#nav1').pushPage('home_splitter.html');
-    var email = document.getElementById("email").value;
-    var psw = document.getElementById("psw").value;
-    var DEBUGIP = localStorage.getItem("settings_ipAdress")
-    var endpoint = 'http://' + DEBUGIP + '/api/authentication/login'
-    $.ajax({
-        url: endpoint,
-        // contentType: "application/x-www-form-urlencoded",
-        contentType: "application/json",
-        type: "POST",
-        data: JSON.stringify({
-            "userName": email,
-            "password": psw
-        }),
-        success: function (response) {
-            var token = "bearer " + response.token
-            var data = JSON.stringify(response);
-            var obj = JSON.parse(data);
+    document.querySelector('#nav1').pushPage('home_splitter.html');
+    // var email = document.getElementById("email").value;
+    // var psw = document.getElementById("psw").value;
+    // var DEBUGIP = localStorage.getItem("settings_ipAdress")
+    // var endpoint = 'http://' + DEBUGIP + '/api/authentication/login'
+    // $.ajax({
+    //     url: endpoint,
+    //     // contentType: "application/x-www-form-urlencoded",
+    //     contentType: "application/json",
+    //     type: "POST",
+    //     data: JSON.stringify({
+    //         "userName": email,
+    //         "password": psw
+    //     }),
+    //     success: function (response) {
+    //         var token = "bearer " + response.token
+    //         var data = JSON.stringify(response);
+    //         var obj = JSON.parse(data);
 
-            localStorage.setItem("firstname", response.user.firstName);
-            localStorage.setItem("lastname", response.user.lastName);
-            localStorage.setItem("password", response.user.password);
-            localStorage.setItem("lfbis", response.customer.lfbisId);
-            localStorage.setItem("user_email", email);
-            localStorage.setItem("bearerToken", token);
+    //         localStorage.setItem("firstname", response.user.firstName);
+    //         localStorage.setItem("lastname", response.user.lastName);
+    //         localStorage.setItem("password", response.user.password);
+    //         localStorage.setItem("lfbis", response.customer.lfbisId);
+    //         localStorage.setItem("user_email", email);
+    //         localStorage.setItem("bearerToken", token);
 
-            // check if login is successfull
-            if (response.success == true) {
-                //get Livestock Database from server
-                RESTGetLivestock()
-                //get Livestock location
-                RESTGetLocation()
-                //get Drugs 
-                RESTGetDrugs()
-                //get Diagnosis 
-                RESTGetDiagnosis()
-                document.querySelector('#nav1').pushPage('home_splitter.html');
-            } else {
-                pushMsg(obj.messages[0].message)
-            }
-        },
-        error: function (xhr, status, error) {
-            var errorMessage = xhr.status + ': ' + xhr.statusText
-            alert('Login failed! Error - ' + errorMessage);
-        }
-    });
+    //         // check if login is successfull
+    //         if (response.success == true) {
+    //             //get Livestock Database from server
+    //             RESTGetLivestock()
+    //             //get Livestock location
+    //             RESTGetLocation()
+    //             //get Drugs 
+    //             RESTGetDrugs()
+    //             //get Diagnosis 
+    //             RESTGetDiagnosis()
+    //             document.querySelector('#nav1').pushPage('home_splitter.html');
+    //         } else {
+    //             pushMsg(obj.messages[0].message)
+    //         }
+    //     },
+    //     error: function (xhr, status, error) {
+    //         var errorMessage = xhr.status + ': ' + xhr.statusText
+    //         alert('Login failed! Error - ' + errorMessage);
+    //     }
+    // });
 }
 
 //REST get all Livestocks
