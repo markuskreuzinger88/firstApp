@@ -249,6 +249,7 @@
 
     //search livestock view from input
     function searchInputList() {
+        console.log(document.getElementById("SearchInput").value.length)
         // console.log(document.getElementById("SearchInput").value)
         localStorage.setItem('SearchFilter', document.getElementById("SearchInput").value);
         if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("PlaceFilter") === null)) {
@@ -273,8 +274,14 @@
 
     //filter livestock view input
     function filterLivestockListInput(livestock) {
-        var searchInputlength = localStorage.getItem('SearchFilter').length
-        return livestock.number.substring(0, searchInputlength) == localStorage.getItem('SearchFilter')
+        var searchValue = localStorage.getItem('SearchFilter')
+        var fullDigitSearch =  String(searchValue).padStart(4, '0'); 
+        console.log(fullDigitSearch)
+        if (searchValue > 0) {
+            return livestock.number.substring(0, fullDigitSearch.length) == fullDigitSearch  
+        } else {
+            return livestock.number.substring(0, fullDigitSearch.length) > fullDigitSearch
+        }
     }
 
     //display livestock list result

@@ -28,18 +28,20 @@
     <script type="text/javascript" src="js/debug_settings.js"></script>
     <link rel="stylesheet" type="text/css" href="css/livestock_add.css" />
     <link rel="stylesheet" type="text/css" href="css/livestock_action.css" />
+    <link rel="stylesheet" type="text/css" href="css/main.css" />
     <script type="text/javascript" src="js/jquery.qrcode.js"></script>
     <script type="text/javascript" src="js/qrcode2.js"></script>
     <script type="text/javascript" src="js/rest_api.js"></script>
     <script type="text/javascript" src="js/page_handler.js"></script>
+    <script type="text/javascript" src="js/livestock_group_add.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Acme' rel='stylesheet'>
 
-    <!-- <script src="http://192.168.0.107:8080/target/target-script-min.js#anonymous"></script> -->
+    <!-- <script src="http://10.0.0.8:8888/target/target-script-min.js#anonymous"></script> -->
 
     <!-- <ons-navigator id="nav1" page="login.html"> </ons-navigator> -->
     <ons-navigator id="nav1"> </ons-navigator>
 
-    <!--  The Login Page -->
+    <!--  The Login Page --> 
 
     <template id="login.html">
         <ons-page id="login">
@@ -577,7 +579,7 @@
                     width: 100%;
                 } */
 
-                input[type=number] {
+                /* input[type=number] {
                     border: 1px solid transparent;
                     background-color: #f1f1f1;
                     border-radius: 10px;
@@ -585,7 +587,7 @@
                     font-size: 16px;
                     background-color: #f1f1f1;
                     width: 100%;
-                }
+                } */
 
                 input[type=time] {
                     border: 1px solid transparent;
@@ -851,8 +853,9 @@
                                 style="width: 100px; border-right: none; border-left: none; border-top: none"
                                 onkeyup="searchInputList()">
                         </ons-col>
-                        <ons-col id="actionCol">Gruppen
-                                <ons-switch style="margin-left: 10px;"></ons-switch>
+                        <ons-col>
+                            Scannen
+                            <ons-icon id="FilterIcon" style="margin-left: 3px" icon="fa-qrcode"></ons-icon>
                         </ons-col>
                     </ons-row>
                 </ons-list-item>
@@ -1185,19 +1188,19 @@
                             <div id="livestockPlaceAdd" class="right"> Bitte wählen
                             </div>
                         </ons-list-item>
+                        <ons-list-item onclick="showTemplateDialogAdd('animalCategory', 'animalCategory.html')">
+                            <div class="center">
+                                Zuchtlinie
+                            </div> 
+                            <div id="animalCategoryText" class="right"> Bitte wählen
+                            </div>
+                        </ons-list-item>
                         <ons-list-item>
                             <div class="center">
-                                Geboren/Registriert am
+                              Registriert am
                             </div>
                             <div class="right">
                                 <input id="BornOn" type="date">
-                            </div>
-                        </ons-list-item>
-                        <ons-list-item modifier="longdivider">
-                            <div class="center">
-                                Zuchtlinie
-                            </div>
-                            <div class="right"> Edelschwein
                             </div>
                         </ons-list-item>
                     </ons-list>
@@ -1313,6 +1316,23 @@
         </ons-dialog>
     </template>
 
+        <template id="animalCategory.html">
+            <ons-dialog id="animalCategory" cancelable>
+                <div style="text-align: center; padding: 5px;">
+                    <p>
+                        <b>
+                            Zuchtlinie auswählen
+                        </b>
+                    </p>
+                </div>
+                <ons-list>
+                    <div id="containerAnimalCategory">
+                    </div>
+                </ons-list>
+            </ons-dialog>
+
+    </template>
+
     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
     <!-- -------------------------- LIVESTOCK GROUP ADD PAGE ------------------------- -->
     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
@@ -1321,14 +1341,13 @@
             <ons-page id="livestock_group_add">
                 <ons-toolbar modifier="transparent" style="background-color: white">
                     <div class="left">
-                            <ons-back-button></ons-back-button>
-                        <!-- <ons-toolbar-button onclick="checkInputsUnsaved()">
+                        <ons-toolbar-button onclick="checkInputsGroupUnsaved()">
                             <ons-icon size="20px" icon="fa-chevron-left"></ons-icon>
-                        </ons-toolbar-button> -->
+                        </ons-toolbar-button>
                     </div>
                     <div class="center">Gruppe anlegen</div>
                     <div class="right">
-                        <ons-toolbar-button onclick="checkInputs()">
+                        <ons-toolbar-button onclick="RESTAddLivestockGroup()">
                             <ons-icon size="20px" icon="fa-check"></ons-icon>
                         </ons-toolbar-button>
                     </div>
@@ -1337,21 +1356,34 @@
                     <form>
                         <ons-list>
                             <ons-list-header class="ons_list_header">Allgemeine Infos</ons-list-header>
-                            <ons-list-item>
-                                <div class="center">
-                                    Abteilnummer
-                                </div>
-                                <div class="right"> 
-                                        <input type="number" name="quantity" min="1" max="5">
-                                </div>
-                            </ons-list-item>
-    
+                                <ons-list-item onclick="showTemplateDialogAdd('locationAdd', 'locationAdd.html')">
+                                    <div class="center">
+                                        Standort
+                                    </div>
+                                    <div id="animalGroupPlaceText" class="right"> Bitte wählen
+                                    </div>
+                                </ons-list-item>
+                                <ons-list-item>
+                                    <div class="center">
+                                        Abteilnummer
+                                    </div>
+                                    <div class="right"> 
+                                            <input id="animalGroupNumberText" type="number" value="0" name="quantity" min="1" max="5">
+                                    </div>
+                                </ons-list-item>
                             <ons-list-item>
                                 <div class="center">
                                     Anzahl
                                 </div>
-                                <div id="livestockPlaceAdd" class="right"> 
-                                        <input type="number" name="quantity" min="1" max="5">
+                                <div class="right"> 
+                                        <input id="animalGroupCountText"  type="number" value="0" name="quantity" min="1" max="5">
+                                </div>
+                            </ons-list-item>
+                            <ons-list-item onclick="showTemplateDialogAdd('animalCategory', 'animalCategory.html')">
+                                <div class="center">
+                                    Zuchtlinie
+                                </div> 
+                                <div id="animalGroupCategoryText" class="right"> Bitte wählen
                                 </div>
                             </ons-list-item>
                             <ons-list-item>
@@ -1359,7 +1391,7 @@
                                    Registriert am
                                 </div>
                                 <div class="right">
-                                    <input id="BornOn" type="date">
+                                    <input id="animalGroupBornOnText" type="date">
                                 </div>
                             </ons-list-item>
                         </ons-list>

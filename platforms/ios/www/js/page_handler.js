@@ -11,6 +11,10 @@ document.addEventListener("init", function (event) {
         append: true
     });
 
+    ons.createElement("animalCategory.html", {
+        append: true
+    });
+    
     ons.createElement("drugDeliveryTemplate.html", {
         append: true
     });
@@ -34,6 +38,8 @@ document.addEventListener("init", function (event) {
         getDrugDeliveryView()
     } else if (page.id === 'Bestandsliste ID') {
         setMarkDetailView()
+    } else if (page.id === 'livestock_group_add') {
+        LivestockGroupReady()
     }
 });
 
@@ -41,9 +47,10 @@ document.addEventListener("init", function (event) {
 $(document).on('postpush', '#nav1', function (event) {
     var event = event.originalEvent;
     leavePage = event.leavePage.id;
-    if (event.enterPage.id === 'livestock_add') {
+    if ((event.enterPage.id === 'livestock_add') || (event.enterPage.id === 'livestock_group_add')) {
         //update livestock locations after page load
         updateLivestockLocations()
+        showAnimalCategory()
     } else if (event.enterPage.id === 'livestock') {
         //update livestock locations for Filter after page load
         updateLivestockLocationsFilter()

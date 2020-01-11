@@ -12,16 +12,12 @@ var networkConnection = false;
 var livestockObj = {
     color: "",
     place: "",
+    category: "",
     born: "",
     number: "",
 };
 
 function updateLivestockAddView() {
-
-    // //create livestock location view
-    // ons.createElement("locationAdd.html", {
-    //     append: true
-    // });
 
     //set the last selected place for livestock
     if ("livestockPlaceAdd" in localStorage) {
@@ -31,6 +27,15 @@ function updateLivestockAddView() {
         document.getElementById("livestockPlaceAdd").innerHTML = "Bitte wählen"
         livestockObj.place = "Bitte wählen"
     }
+
+        //set the last selected category for livestock
+        if ("lastAnimalCategory" in localStorage) {
+            document.getElementById("animalCategoryText").innerHTML = localStorage.getItem("lastAnimalCategory")
+            livestockObj.category = localStorage.getItem("lastAnimalCategory")
+        } else {
+            document.getElementById("animalCategoryText").innerHTML = "Bitte wählen"
+            livestockObj.category = "Bitte wählen"
+        }
 
     //set color of livestock mark and color selector
     if ("MarkColor" in localStorage) {
@@ -254,7 +259,6 @@ function showDeletePlaceIcon() {
 
 //show prompt to enter new livestock place
 var showPrompt = function () {
-    // updateLivestockLocations(LivestockPlaces, LivestockLocationNbrs)
     ons.notification.prompt({
             title: '',
             message: 'neuen Standort anlegen',
@@ -282,7 +286,6 @@ var showPrompt = function () {
 //select location
 var hideDialogLocationAdd = function (location) {
     list = document.getElementById("containerLocationAdd")
-    console.log(list.childElementCount)
     var elements = [];
     //first get all place items
     for (var i = 1; i <= list.childElementCount; i++) {
@@ -310,11 +313,108 @@ var hideDialogLocationAdd = function (location) {
                 }
             }
         }
-    } else {
+    } else if (eventEnterPageId == "livestock_add") {
         localStorage.setItem("livestockPlaceAdd", location);
         document.getElementById("livestockPlaceAdd").innerHTML = location;
+    } else if (eventEnterPageId == "livestock_group_add") {
+        localStorage.setItem("livestockPlaceAdd", location);
+        document.getElementById("animalGroupPlaceText").innerHTML = location;
     }
     document.getElementById("locationAdd").hide(); 
+};
+
+//select color
+var hideDialogColorAdd = function (color, colorText) {
+    //get index and color from parameter
+    var res = color.split("+");
+    var setIndex = res[0]
+    var setColor = res[1]
+    list = document.querySelector("#colorAdd > div.dialog > div > ons-list")
+    //set selected checbox and unset all other checkboxes
+    for (var i = 1; i <= list.childElementCount; i++) {
+        var checkboxID = "checkbox-" + i
+        if (setIndex == i) {
+            document.getElementById(checkboxID).checked = true;
+            localStorage.setItem("livestockColorCheckbox", checkboxID);
+        } else {
+            document.getElementById(checkboxID).checked = false;
+        }
+    }
+    // localStorage.setItem("livestockColor", setColor);
+    document.getElementById("rect1").style.fill = setColor;
+    document.getElementById("rect2").style.fill = setColor;
+    document.getElementById("circle1").style.fill = setColor;
+    document.getElementById("livestockColorAdd").innerHTML = colorText;
+    localStorage.setItem("MarkColor", setColor);
+    localStorage.setItem("MarkColorText", colorText);
+    document.getElementById("colorAdd").hide();
+};
+
+//update livestock location list
+function showAnimalCategory() {
+    var lastSelectedCategory = localStorage.getItem("lastAnimalCategory");
+    list = document.getElementById("containerAnimalCategory")
+    //remove current items in view
+    if (list) {
+        while (list.hasChildNodes()) {
+            list.removeChild(list.firstChild);
+        }
+    }
+
+    for (i = 0; i < AnimalSpeciesLength; i++) {
+        var category = AnimalSpeciesList[i].name
+        localStorage.setItem("animalCategoryText", location);
+        list = document.createElement("ons-list-item")
+        list.setAttribute("onchange", "hideDialogAnimalCategory('" + category + "')");
+        list.setAttribute("tappable");
+        //label left
+        label_left = document.createElement("label")
+        label_left.setAttribute("class", "left");
+        checkbox = document.createElement("ons-checkbox")
+        checkbox.setAttribute("input-id", "checkbox" + category);
+        //check checkbox if last selected place = current list place 
+        if (lastSelectedCategory == category) {
+            checkbox.setAttribute("checked");
+        }
+        label_left.appendChild(checkbox);
+        //label center
+        label_center = document.createElement("label")
+        label_center.setAttribute("class", "center");
+        label_center.innerHTML = category;
+        label_center.setAttribute("onclick", "hideDialogAnimalCategory('" + category + "')");
+        //append labels to list
+        list.appendChild(label_left);
+        list.appendChild(label_center);
+        list.appendChild(label_right);
+
+        document.getElementById("containerAnimalCategory").appendChild(list);
+    }
+}
+
+//hide Dialog Animal Category
+var hideDialogAnimalCategory = function (category) {
+    list = document.getElementById("containerAnimalCategory")
+    var elements = [];
+    //first get all place items
+    for (var i = 1; i <= list.childElementCount; i++) {
+        var text = document.querySelector("#containerAnimalCategory > ons-list-item:nth-child(" + i + ") > label.center.list-item__center")
+        elements.push(text.innerHTML)
+    }
+    //uncheck all checkboxes and check selected checkbox
+    for (i = 0; i < elements.length; i++) {
+        if (elements[i] != category) {
+            document.getElementById("checkbox" + elements[i]).checked = false;
+        } else {
+            document.getElementById("checkbox" + elements[i]).checked = true;
+        }
+    }
+    localStorage.setItem("lastAnimalCategory", category);
+    if (eventEnterPageId == "livestock_add") {
+        document.getElementById("animalCategoryText").innerHTML = category;
+    } else if (eventEnterPageId == "livestock_group_add") {
+        document.getElementById("animalGroupCategoryText").innerHTML = category;
+    }
+    document.getElementById("animalCategory").hide(); 
 };
 
 function checkInputs() {
@@ -383,9 +483,10 @@ function checkInputsUnsaved() {
 
     var color = document.getElementById("livestockColorAdd").innerHTML;
     var place = document.getElementById("livestockPlaceAdd").innerHTML;
+    var category = document.getElementById("animalCategoryText").innerHTML;
     var birthay = document.getElementById("BornOn").value;
 
-    if ((number !== livestockObj.number) || (color !== livestockObj.color) || (place !== livestockObj.place) || (birthay !== livestockObj.born)) {
+    if ((number !== livestockObj.number) || (color !== livestockObj.color) || (category !== livestockObj.category) || (place !== livestockObj.place) || (birthay !== livestockObj.born)) {
         ons.notification.confirm({
             message: 'Das Profil hat ungespeicherte Änderungen. Bist du sicher, dass du das Profil verlassen möchtest?',
             title: 'Ungespeicherte Änderungen',
