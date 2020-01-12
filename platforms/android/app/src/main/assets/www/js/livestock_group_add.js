@@ -31,7 +31,9 @@ function LivestockGroupReady() {
     }
 
     //get max date
-    animalGroupBornOnText.max = new Date().toISOString().split("T")[0];
+    var currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() + 1);
+    animalGroupBornOnText.max = currentDate.toISOString().split("T")[0];
 
     let today = new Date().toISOString().substr(0, 10);
     document.querySelector("#animalGroupBornOnText").value = today;

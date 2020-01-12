@@ -65,8 +65,10 @@ function updateLivestockAddView() {
     livestockObj.number = number
 
     //get max date
-    BornOn.max = new Date().toISOString().split("T")[0];
-    console.log(BornOn.max)
+    //BornOn.max = new Date().toISOString().split("T")[0];
+    var currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() + 1);
+    BornOn.max = currentDate.toISOString().split("T")[0];
 
     //calc window size of current device and adapte SVG Object
     var w = window.innerWidth;
@@ -169,9 +171,9 @@ var hideDialogColorAdd = function (color, colorText) {
     var res = color.split("+");
     var setIndex = res[0]
     var setColor = res[1]
-    list = document.querySelector("#colorAdd > div.dialog > div > ons-list")
+    list = document.getElementById("containerColorAdd")
     //set selected checbox and unset all other checkboxes
-    for (var i = 1; i <= list.childElementCount; i++) {
+    for (i = 0; i < list.childElementCount; i++) {
         var checkboxID = "checkbox-" + i
         if (setIndex == i) {
             document.getElementById(checkboxID).checked = true;
@@ -189,6 +191,53 @@ var hideDialogColorAdd = function (color, colorText) {
     localStorage.setItem("MarkColorText", colorText);
     document.getElementById("colorAdd").hide();
 };
+
+//update livestock location list
+function updateLivestockColors() {
+    var lastSelectedColor = localStorage.getItem("livestockColorCheckbox");
+    list = document.getElementById("containerColorAdd")
+    //remove current items in view
+    if (list) {
+        while (list.hasChildNodes()) {
+            list.removeChild(list.firstChild);
+        }
+    }
+
+    for (i = 0; i < AnimalColorNbr; i++) {
+        var color = AnimalColor[i].color
+        var name = AnimalColor[i].name
+
+        list = document.createElement("ons-list-item")
+        list.setAttribute("id", i +"+"+ color);
+        list.setAttribute("onchange", "hideDialogColorAdd(this.id,'" + name + "')");
+        list.setAttribute("tappable");
+        //label left
+        label_left = document.createElement("label")
+        label_left.setAttribute("class", "left");
+        checkbox = document.createElement("ons-checkbox")
+        checkbox.setAttribute("id", "checkbox-" + i);
+        //check checkbox if last selected color = current list color 
+        if (lastSelectedColor == "checkbox-" + i) {
+            checkbox.setAttribute("checked");
+        }
+        label_left.appendChild(checkbox);
+        //label center
+        label_center = document.createElement("label")
+        label_center.setAttribute("class", "center");
+        label_center.setAttribute("onchange", "hideDialogColorAdd(this.id,'" + name + "')");
+        colorSquare = document.createElement("ons-icon")
+        colorSquare.setAttribute("style", "margin-right: 10px; color: " + color);
+        colorSquare.setAttribute("icon", "fa-square-full");
+        label_center.appendChild(colorSquare);
+        text = document.createElement("div")
+        text.innerHTML = name;
+        label_center.appendChild(text);
+        //append labels to list
+        list.appendChild(label_left);
+        list.appendChild(label_center);
+        document.getElementById("containerColorAdd").appendChild(list);
+    }
+}
 
 //update livestock location list
 function updateLivestockLocations() {
@@ -321,33 +370,6 @@ var hideDialogLocationAdd = function (location) {
         document.getElementById("animalGroupPlaceText").innerHTML = location;
     }
     document.getElementById("locationAdd").hide(); 
-};
-
-//select color
-var hideDialogColorAdd = function (color, colorText) {
-    //get index and color from parameter
-    var res = color.split("+");
-    var setIndex = res[0]
-    var setColor = res[1]
-    list = document.querySelector("#colorAdd > div.dialog > div > ons-list")
-    //set selected checbox and unset all other checkboxes
-    for (var i = 1; i <= list.childElementCount; i++) {
-        var checkboxID = "checkbox-" + i
-        if (setIndex == i) {
-            document.getElementById(checkboxID).checked = true;
-            localStorage.setItem("livestockColorCheckbox", checkboxID);
-        } else {
-            document.getElementById(checkboxID).checked = false;
-        }
-    }
-    // localStorage.setItem("livestockColor", setColor);
-    document.getElementById("rect1").style.fill = setColor;
-    document.getElementById("rect2").style.fill = setColor;
-    document.getElementById("circle1").style.fill = setColor;
-    document.getElementById("livestockColorAdd").innerHTML = colorText;
-    localStorage.setItem("MarkColor", setColor);
-    localStorage.setItem("MarkColorText", colorText);
-    document.getElementById("colorAdd").hide();
 };
 
 //update livestock location list

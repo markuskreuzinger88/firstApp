@@ -26,6 +26,7 @@ function setMarkDetailView() {
     document.getElementById("rect1Detail").style.fill = localStorage.getItem('LivestockColorDetail')
     document.getElementById("rect2Detail").style.fill = localStorage.getItem('LivestockColorDetail')
     document.getElementById("circle1Detail").style.fill = localStorage.getItem('LivestockColorDetail')
+    document.getElementById("livestockColorDetail").innerHTML = localStorage.getItem('LivestockColorNameDetail');
     //set livestock number
     document.getElementById("CodeDigit0Detail").value = localStorage.getItem('LivestockNumberDetail').charAt(0);
     document.getElementById("CodeDigit1Detail").value = localStorage.getItem('LivestockNumberDetail').charAt(1);
@@ -34,7 +35,9 @@ function setMarkDetailView() {
     //set livestock location
     document.getElementById("livestockPlaceDetail").innerHTML = localStorage.getItem('LivestockLocationDetail');
     //set livestock birthday
-    document.getElementById("livestockBirthdayDetail").value = localStorage.getItem('LivestockBirthdayDetail');
+    document.getElementById("BornOnDetail").value = localStorage.getItem('LivestockBornOnDetail');
+    //set livestock category
+    document.getElementById("livestockCategoryDetail").innerHTML = localStorage.getItem('LivestockCategoryDetail');
     };
 
     function setActionDetailView(trashActive) {
@@ -644,3 +647,45 @@ function setMarkDetailView() {
             showTemplateDialog('stripOff', 'stripOff.html', '#CreatedOnStripOffDate', '#CreatedOnStripOffTime')
         }
     }
+
+    //show prompt to change livestock characteristics
+    var showPromptLivestockCharacteristics = function (message, type) {
+        var res = message.split("%");
+        var string1 = res[0]
+        var string2 = res[1]
+        var message = 'Möchtest du ' + string1 +" "+ '<b>' + string2 + '</b>' + ' des Nutztieres ändern';
+        ons.notification.confirm({
+            title: '',
+            message: message,
+            cancelable: true,
+            buttonLabels: ['JA', 'NEIN'],
+            callback: function (index) {
+                if (index == 0) {
+                    switch(type) {
+                        //new livestochk number
+                        case 'type1':
+                            ons.notification.prompt({
+                                title: '',
+                                message: 'Bitte gib einen neue vierstellige Nummer ein',
+                                inputType: 'number',
+                                cancelable: true
+                            })
+                            .then(function(input) {
+                              var message = (input.length == 4) ? 'Die neue Nummer ist: ' + input : 'Die Nummer muss vierstellig sein!';
+                              ons.notification.confirm({
+                                title: '',
+                                message,
+                                buttonLabels: ['OK'],
+                                callback: function (index) {
+                                    if ((index == 0) && (input.length == 4)) {
+                                        alert('verschicken')
+                                    }
+                                }
+                              });
+                            });
+                        case 'type2':
+                    }
+                }
+            }
+        })
+    };

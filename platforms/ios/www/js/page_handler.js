@@ -19,6 +19,14 @@ document.addEventListener("init", function (event) {
         append: true
     });
 
+    ons.createElement("colorAdd.html", {
+        append: true
+    });
+
+    ons.createElement("colorFilter.html", {
+        append: true
+    });
+    
     //set menu background
     $("#menu .page__background").css("background", "linear-gradient(156deg, rgba(43,96,90,1) 0%, rgba(102,141,138,1) 40%, rgba(241,241,241,1) 40%)");
 
@@ -47,13 +55,19 @@ document.addEventListener("init", function (event) {
 $(document).on('postpush', '#nav1', function (event) {
     var event = event.originalEvent;
     leavePage = event.leavePage.id;
-    if ((event.enterPage.id === 'livestock_add') || (event.enterPage.id === 'livestock_group_add')) {
-        //update livestock locations after page load
+    if (event.enterPage.id === 'livestock_add') {
+        //update livestock locations/category/colors after page load
+        updateLivestockLocations()
+        showAnimalCategory()
+        updateLivestockColors()
+    } else if (event.enterPage.id === 'livestock_group_add') {
+        //update livestock locations/category after page load
         updateLivestockLocations()
         showAnimalCategory()
     } else if (event.enterPage.id === 'livestock') {
         //update livestock locations for Filter after page load
         updateLivestockLocationsFilter()
+        updateLivestockColorFilter()
     } else if (event.enterPage.id === 'livestock_selector') {
         //update livestock locations after page load
         updateLivestockLocations()

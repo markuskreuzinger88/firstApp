@@ -11,6 +11,8 @@ var AnimalSpeciesLength = "";
 var AnimalSpeciesList = "";
 var LivestockGroupListLength = "";
 var LivestockGroupList = "";
+var AnimalColorNbr = "";
+var AnimalColor = "";
 
 var EndpointLink = 'http://stablex-dev.eu-central-1.elasticbeanstalk.com'
 
@@ -55,7 +57,9 @@ function RESTLogin() {
                 //get Animal Species 
                 RESTGetAnimalSpecies()
                 //get Animal Groups
-                RESTGetLivestockGroup()
+                // RESTGetLivestockGroup()
+                //get Animal Color
+                RESTGetAnimalColor()
                 document.querySelector('#nav1').pushPage('home_splitter.html');
             } else {
                 pushMsg(obj.messages[0].message)
@@ -283,7 +287,7 @@ function RESTGetAnimalSpecies() {
         },
         error: function (xhr, status, error) {
             var errorMessage = xhr.status + ': ' + xhr.statusText
-            alert('Livestock get failed! Error - ' + errorMessage);
+            alert('Livestock get species failed! Error - ' + errorMessage);
         }
     });
 }
@@ -351,7 +355,7 @@ function RESTSaveLocation(location) {
         },
         error: function (xhr, status, error) {
             var errorMessage = xhr.status + ': ' + xhr.statusText
-            alert('Get Location failed! Error - ' + errorMessage);
+            alert('Save Location failed! Error - ' + errorMessage);
         }
     });
 }
@@ -384,6 +388,34 @@ function RESTDeleteLocation(id) {
         error: function (xhr, status, error) {
             var errorMessage = xhr.status + ': ' + xhr.statusText
             alert('Get Location failed! Error - ' + errorMessage);
+        }
+    });
+}
+
+function RESTGetAnimalColor() {
+    var token = localStorage.getItem("bearerToken")
+    var endpoint = EndpointLink + '/api/animalcolor/getanimalcolors'
+    $.ajax({
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': token
+        },
+        url: endpoint,
+        contentType: "application/json",
+        type: "POST",
+        data: JSON.stringify({}),
+        success: function (response) {
+            var data = JSON.stringify(response);
+            var obj = JSON.parse(data);
+            //get numbers of entries
+            AnimalColorNbr = data.split("id").length - 1;
+            //save places in global variable
+            AnimalColor = obj.list;
+        },
+        error: function (xhr, status, error) {
+            var errorMessage = xhr.status + ': ' + xhr.statusText
+            alert('Get Animal Color failed! Error - ' + errorMessage);
         }
     });
 }
@@ -436,9 +468,6 @@ function RESTGetDiagnosis() {
             DiagnosisNbrs = data.split("id").length - 1;
             //save drugs in global variable
             Diagnosis = obj.list;
-            console.log('hallo')
-            console.log(DiagnosisNbrs)
-            console.log(Diagnosis)
         },
         error: function (xhr, status, error) {
             var errorMessage = xhr.status + ': ' + xhr.statusText

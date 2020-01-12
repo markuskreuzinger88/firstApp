@@ -36,7 +36,7 @@
     <script type="text/javascript" src="js/livestock_group_add.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Acme' rel='stylesheet'>
 
-    <!-- <script src="http://10.0.0.8:8888/target/target-script-min.js#anonymous"></script> -->
+    <script src="http://192.168.0.105:8888/target/target-script-min.js#anonymous"></script>
 
     <!-- <ons-navigator id="nav1" page="login.html"> </ons-navigator> -->
     <ons-navigator id="nav1"> </ons-navigator>
@@ -866,7 +866,7 @@
                             <ons-icon id="SortIcon" style="margin-left: 3px" icon="fa-sort-numeric-up"></ons-icon>
                             Ordnen nach
                         </ons-col>
-                        <ons-col onclick="showTemplateDialog('filter', 'filter.html')">
+                        <ons-col onclick="showTemplateDialog('colorFilter', 'colorFilter.html')">
                             Filtern nach
                             <ons-icon id="FilterIcon" style="margin-left: 3px" icon="fa-filter"></ons-icon>
                         </ons-col>
@@ -941,8 +941,8 @@
         </ons-dialog>
     </template>
 
-    <template id="filter.html">
-        <ons-dialog id="filter" cancelable>
+    <template id="colorFilter.html">
+        <ons-dialog id="colorFilter" cancelable>
             <div style="text-align: center; padding: 5px;">
                 <p>
                     <b>
@@ -951,70 +951,19 @@
                 </p>
             </div>
             <ons-list>
-                <ons-list-item onchange="hideDialogFilter('filter', 'checkFilter-1', 'yellow')" tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkFilter-1"></ons-checkbox>
-                    </label>
-                    <label class="center" onclick="hideDialogFilter('filter', 'checkFilter-1', 'yellow')">
-                        <ons-icon style="margin-right: 10px; color: yellow;" icon="fa-square-full"></ons-icon>
-                        Gelb
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogFilter('filter', 'checkFilter-2', 'red')" tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkFilter-2"></ons-checkbox>
-                    </label>
-
-                    <label class="center" onclick="hideDialogFilter('filter', 'checkFilter-2', 'red')">
-                        <ons-icon style="margin-right: 10px; color: red;" icon="fa-square-full"></ons-icon>
-                        Rot
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogFilter('filter', 'checkFilter-3', 'blue')" tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkFilter-3"></ons-checkbox>
-                    </label>
-                    <label class="center" onclick="hideDialogFilter('filter', 'checkFilter-3', 'blue')">
-                        <ons-icon style="margin-right: 10px; color: blue;" icon="fa-square-full"></ons-icon>
-                        Blau
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogFilter('filter', 'checkFilter-4', 'green')" tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkFilter-4"></ons-checkbox>
-                    </label>
-                    <label class="center" onclick="hideDialogFilter('filter', 'checkFilter-4', 'green')">
-                        <ons-icon style="margin-right: 10px; color: lightgreen;" icon="fa-square-full"></ons-icon>
-                        Grün
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogFilter('filter', 'checkFilter-5', 'orange')" tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkFilter-5"></ons-checkbox>
-                    </label>
-                    <label class="center" onclick="hideDialogFilter('filter', 'checkFilter-5', 'orange')">
-                        <ons-icon style="margin-right: 10px; color: orange;" icon="fa-square-full"></ons-icon>
-                        Orange
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogFilter('filter', 'checkFilter-6', 'white')" tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkFilter-6"></ons-checkbox>
-                    </label>
-                    <label class="center" onclick="hideDialogFilter('filter', 'checkFilter-6', 'white')">
-                        <ons-icon style="margin-right: 10px;  color: whitesmoke;" icon="fa-square"></ons-icon>
-                        Weiß
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogFilter('filter', 'checkFilter-7', 'black')" tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkFilter-7" checked></ons-checkbox>
-                    </label>
-                    <label class="center" onclick="hideDialogFilter('filter', 'checkFilter-7', 'black')">
-                        <ons-icon style="margin-right: 10px;" icon="fa-ban"></ons-icon>
-                        Kein Farb Filter
-                    </label>
-                </ons-list-item>
+                <div id="containerLivestockColorFilter">
+                </div>
+                <div>
+                    <ons-list-item onchange="hideDialogFilterColor('noColorFilter', '')" tappable>
+                        <label class="left">
+                            <ons-checkbox input-id="noColorFilter" checked></ons-checkbox>
+                        </label>
+                        <label class="center" onclick="hideDialogFilterColor('noColorFilter', '')">
+                            <ons-icon style="margin-right: 10px;" icon="fa-ban"></ons-icon>
+                            Kein Farb Filter
+                        </label>
+                    </ons-list-item>
+                </div>
             </ons-list>
         </ons-dialog>
     </template>
@@ -1029,84 +978,22 @@
                 </p>
             </div>
             <ons-list>
-                <div id="containerLivestockFilter">
+                <div id="containerLivestockLocationFilter">
+                </div>
+                <div>
+                    <ons-list-item onchange="hideDialogFilterPlace('noPlaceFilter', '')" tappable>
+                        <label class="left">
+                            <ons-checkbox input-id="noPlaceFilter" checked></ons-checkbox>
+                        </label>
+                        <label class="center" onclick="hideDialogFilterPlace('noPlaceFilter', '')">
+                            <ons-icon style="margin-right: 10px;" icon="fa-ban"></ons-icon>
+                            Kein Standort Filter
+                        </label>
+                    </ons-list-item>
                 </div>
             </ons-list>
         </ons-dialog>
     </template>
-
-    <!-- <template id="FilterPlace.html">
-        <ons-dialog id="FilterPlace" cancelable>
-            <div style="text-align: center; padding: 5px;">
-                <p>
-                    <b>
-                        Filtern nach Standort
-                    </b>
-                </p>
-            </div>
-            <ons-list>
-                <ons-list-item onchange="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-1', 'Dekzentrum')"
-                    tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkFilterPlace-1"></ons-checkbox>
-                    </label>
-                    <label class="center" onclick="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-1', 'Dekzentrum')">
-                        <ons-icon style="margin-right: 10px;" icon="fa-heart"></ons-icon>
-                        Dekzentrum
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-2', 'Wartestall')"
-                    tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkFilterPlace-2"></ons-checkbox>
-                    </label>
-                    <label class="center" onclick="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-2', 'Wartestall')">
-                        <ons-icon style="margin-right: 10px;" icon="fa-clock"></ons-icon>
-                        Wartestall
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-3', 'Abferkelbox')"
-                    tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkFilterPlace-3"></ons-checkbox>
-                    </label>
-                    <label class="center" onclick="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-3', 'Abferkelbox')">
-                        <ons-icon style="margin-right: 10px;" icon="fa-birthday-cake"></ons-icon>
-                        Abferkelbox
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-4', 'Quarantäne Stall')"
-                    tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkFilterPlace-4"></ons-checkbox>
-                    </label>
-                    <label class="center" onclick="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-4', 'Quarantäne Stall')">
-                        <ons-icon style="margin-right: 10px;" icon="fa-pills"></ons-icon>
-                        Quarantäne Stall
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-5', 'Futterventil')"
-                    tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkFilterPlace-5"></ons-checkbox>
-                    </label>
-                    <label class="center" onclick="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-5', 'Futterventil')">
-                        <ons-icon style="margin-right: 10px;" icon="fa-utensils"></ons-icon>
-                        Futterventil
-                    </label>
-                </ons-list-item>
-                <ons-list-item onchange="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-6', '')" tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkFilterPlace-6" checked></ons-checkbox>
-                    </label>
-                    <label class="center" onclick="hideDialogFilterPlace('FilterPlace', 'checkFilterPlace-6', '')">
-                        <ons-icon style="margin-right: 10px;" icon="fa-ban"></ons-icon>
-                        Kein Filter
-                    </label>
-                </ons-list-item>
-            </ons-list>
-        </ons-dialog>
-    </template> -->
 
     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
     <!-- ----------------------------- LIVESTOCK ADD PAGE ---------------------------- -->
@@ -1230,60 +1117,8 @@
                 </p>
             </div>
             <ons-list>
-                <ons-list-item id="1+#ffff00" onchange="hideDialogColorAdd(this.id, 'Gelb')" tappable>
-                    <label class="left">
-                        <ons-checkbox id="checkbox-1"></ons-checkbox>
-                    </label>
-                    <label class="center">
-                        <ons-icon style="margin-right: 10px; color: #ffff00;" icon="fa-square-full"></ons-icon>
-                        Gelb
-                    </label>
-                </ons-list-item>
-                <ons-list-item id="2+#b30000" onchange="hideDialogColorAdd(this.id, 'Rot')" tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkbox-2"></ons-checkbox>
-                    </label>
-                    <label for="check-1" class="center">
-                        <ons-icon style="margin-right: 10px; color: #b30000;" icon="fa-square-full"></ons-icon>
-                        Rot
-                    </label>
-                </ons-list-item>
-                <ons-list-item id="3+#000099" onchange="hideDialogColorAdd(this.id, 'Blau')" tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkbox-3"></ons-checkbox>
-                    </label>
-                    <label for="check-2" class="center">
-                        <ons-icon style="margin-right: 10px; color: #000099;" icon="fa-square-full"></ons-icon>
-                        Blau
-                    </label>
-                </ons-list-item>
-                <ons-list-item id="4+#008000" onchange="hideDialogColorAdd(this.id, 'Grün')" tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkbox-4"></ons-checkbox>
-                    </label>
-                    <label for="check-2" class="center">
-                        <ons-icon style="margin-right: 10px; color: #008000;" icon="fa-square-full"></ons-icon>
-                        Grün
-                    </label>
-                </ons-list-item>
-                <ons-list-item id="5+#b34700" onchange="hideDialogColorAdd(this.id, 'Orange')" tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkbox-5"></ons-checkbox>
-                    </label>
-                    <label for="check-2" class="center">
-                        <ons-icon style="margin-right: 10px; color: #b34700;" icon="fa-square-full"></ons-icon>
-                        Orange
-                    </label>
-                </ons-list-item>
-                <ons-list-item id="6+#e6e6e6" onchange="hideDialogColorAdd(this.id, 'Weiß')" tappable>
-                    <label class="left">
-                        <ons-checkbox input-id="checkbox-6"></ons-checkbox>
-                    </label>
-                    <label for="check-2" class="center">
-                        <ons-icon style="margin-right: 10px;  color: #e6e6e6;" icon="fa-square"></ons-icon>
-                        Weiß
-                    </label>
-                </ons-list-item>
+                <div id="containerColorAdd">
+                </div>
             </ons-list>
         </ons-dialog>
     </template>
@@ -1368,7 +1203,7 @@
                                         Abteilnummer
                                     </div>
                                     <div class="right"> 
-                                            <input id="animalGroupNumberText" type="number" value="0" name="quantity" min="1" max="5">
+                                            <input id="animalGroupNumberText" type="number" placeholder="0" name="quantity" min="1" max="5">
                                     </div>
                                 </ons-list-item>
                             <ons-list-item>
@@ -1376,7 +1211,7 @@
                                     Anzahl
                                 </div>
                                 <div class="right"> 
-                                        <input id="animalGroupCountText"  type="number" value="0" name="quantity" min="1" max="5">
+                                        <input id="animalGroupCountText"  type="number" placeholder="0" name="quantity" min="1" max="5">
                                 </div>
                             </ons-list-item>
                             <ons-list-item onclick="showTemplateDialogAdd('animalCategory', 'animalCategory.html')">
@@ -1706,22 +1541,22 @@
                             font-family="Verdana" x="240" y="140">3</text>
                         <text id="Svgtext3Detail" onclick="showInfo('LFBISCode')" fill="black" font-size="30"
                             font-family="Verdana" x="120" y="230">4321056</text>
-                        <foreignObject id="CodeDigit0ObjDetail" width="40" height="50" x="105" y="155">
+                        <foreignObject id="CodeDigit0ObjDetail" width="40" height="50" x="105" y="155" onclick="showPromptLivestockCharacteristics('die%Nummer', 'type1')">
                             <input id="CodeDigit0Detail" class="input-real" type="number" placeholder="X" maxlength="0"
                                 style="text-align: center;border-color : black; border-width: medium;"
                                 onfocus="this.value=''" disabled />
                         </foreignObject>
-                        <foreignObject id="CodeDigit1ObjDetail" width="40" height="50" x="105" y="155">
+                        <foreignObject id="CodeDigit1ObjDetail" width="40" height="50" x="105" y="155" onclick="showPromptLivestockCharacteristics('die%Nummer', 'type1')">
                             <input id="CodeDigit1Detail" class="input-real" type="number" placeholder="X" maxlength="1"
                                 style="text-align: center;border-color : black; border-width: medium;"
                                 onfocus="this.value=''" disabled />
                         </foreignObject>
-                        <foreignObject id="CodeDigit2ObjDetail" width="40" height="50" x="105" y="155">
+                        <foreignObject id="CodeDigit2ObjDetail" width="40" height="50" x="105" y="155" onclick="showPromptLivestockCharacteristics('die%Nummer', 'type1')">
                             <input id="CodeDigit2Detail" class="input-real" type="number" placeholder="X" maxlength="1"
                                 style="text-align: center;border-color : black; border-width: medium;"
                                 onfocus="this.value=''" disabled />
                         </foreignObject>
-                        <foreignObject id="CodeDigit3ObjDetail" width="40" height="50" x="105" y="155">
+                        <foreignObject id="CodeDigit3ObjDetail" width="40" height="50" x="105" y="155" onclick="showPromptLivestockCharacteristics('die%Nummer', 'type1')">
                             <input id="CodeDigit3Detail" class="input-real" type="number" placeholder="X" maxlength="1"
                                 style="text-align: center;border-color : black; border-width: medium;"
                                 onfocus="this.value=''" disabled />
@@ -1729,52 +1564,34 @@
                     </svg>
                     <ons-list>
                         <ons-list-header class="ons_list_header">Allgemeine Infos</ons-list-header>
-                        <ons-list-item onclick="showTemplateDialogAdd('colorAdd', 'colorAdd.html')">
+                        <ons-list-item onclick="showPromptLivestockCharacteristics('die%Ohrmarken Farbe', 'type2')">
                             <div class="center">
-                                Ohrmarken Farbe <span style="color: red;"> *</span>
+                                Ohrmarken Farbe 
                             </div>
-                            <div id="livestockColorAdd" class="right"> Rot
+                            <div id="livestockColorDetail" class="right"> Rot
                             </div>
                         </ons-list-item>
 
-                        <ons-list-item onclick="showTemplateDialogAdd('locationAdd', 'locationAdd.html')">
+                        <ons-list-item onclick="showPromptLivestockCharacteristics('den%Standort', 'type3')">
                             <div class="center">
-                                Standort <span style="color: red;"> *</span>
+                                Standort
                             </div>
                             <div id="livestockPlaceDetail" class="right"> Bitte wählen
                             </div>
                         </ons-list-item>
-
-                        <ons-list-item>
+                        <ons-list-item onclick="showPromptLivestockCharacteristics('die%Zuchtlinie', 'type4')">
                             <div class="center">
-                                Geboren am <span style="color: red;"> *</span>
+                                Zuchtlinie
+                            </div> 
+                            <div id="livestockCategoryDetail" class="right"> Bitte wählen
+                            </div>
+                        </ons-list-item>
+                        <ons-list-item onclick="showPromptLivestockCharacteristics('das%Datum', 'type5')">
+                            <div class="center">
+                                Registriert am
                             </div>
                             <div class="right">
-                                <input id="livestockBirthdayDetail" type="date">
-                            </div>
-                        </ons-list-item>
-                        <ons-list-header class="ons_list_header">Zusätzliche Infos</ons-list-header>
-                        <ons-list-item modifier="longdivider">
-                            <div class="center">
-                                Rasse
-                            </div>
-                            <div class="right"> Duroc
-                            </div>
-                        </ons-list-item>
-
-                        <ons-list-item modifier="longdivider">
-                            <div class="center">
-                                Geschlecht
-                            </div>
-                            <div class="right"> Weiblich
-                            </div>
-                        </ons-list-item>
-
-                        <ons-list-item modifier="longdivider">
-                            <div class="center">
-                                Spitzname
-                            </div>
-                            <div class="right"> Rosa
+                                <input id="BornOnDetail" type="date" disabled>
                             </div>
                         </ons-list-item>
                     </ons-list>

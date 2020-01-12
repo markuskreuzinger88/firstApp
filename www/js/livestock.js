@@ -125,33 +125,62 @@
         }
     };
 
-    //function for filter database
-    var hideDialogFilter = function (id, checkbox, color) {
-        document.getElementById("checkFilter-1").checked = false;
-        document.getElementById("checkFilter-2").checked = false;
-        document.getElementById("checkFilter-3").checked = false;
-        document.getElementById("checkFilter-4").checked = false;
-        document.getElementById("checkFilter-5").checked = false;
-        document.getElementById("checkFilter-6").checked = false;
-        document.getElementById("checkFilter-7").checked = false;
-        document.getElementById(checkbox).checked = true;
-        document.getElementById(id).hide();
-        //change icon color of button
-        var SortIcon = document.getElementById("FilterIcon");
-        SortIcon.style.color = color;
-        //remove Color Filter Storage if use disable filter
-        if (checkbox == "checkFilter-7") {
-            localStorage.removeItem('ColorFilter');
-            LivestockListFiltered = LivestockList
-        } else {
-            localStorage.setItem('ColorFilter', color);
-            // LivestockListFiltered = LivestockList.filter(filterLivestockListColor)
-            if ((localStorage.getItem("PlaceFilter") === null) && (localStorage.getItem("SearchFilter") === null)) {
-                LivestockListFiltered = LivestockList.filter(filterLivestockListColor)
-            } else {
-                LivestockListFiltered = LivestockListFiltered.filter(filterLivestockListColor)
+    // //function for filter database
+    // var hideDialogFilterColor = function (checkbox, color) {
+    //     document.getElementById("checkFilter-1").checked = false;
+    //     document.getElementById("checkFilter-2").checked = false;
+    //     document.getElementById("checkFilter-3").checked = false;
+    //     document.getElementById("checkFilter-4").checked = false;
+    //     document.getElementById("checkFilter-5").checked = false;
+    //     document.getElementById("checkFilter-6").checked = false;
+    //     document.getElementById("checkFilter-7").checked = false;
+    //     document.getElementById(checkbox).checked = true;
+    //     document.getElementById('colorFilter').hide();
+    //     //change icon color of button
+    //     var SortIcon = document.getElementById("FilterIcon");
+    //     SortIcon.style.color = color;
+    //     //remove Color Filter Storage if use disable filter
+    //     if (checkbox == "checkFilter-7") {
+    //         localStorage.removeItem('ColorFilter');
+    //         LivestockListFiltered = LivestockList
+    //     } else {
+    //         localStorage.setItem('ColorFilter', color);
+    //         // LivestockListFiltered = LivestockList.filter(filterLivestockListColor)
+    //         if ((localStorage.getItem("PlaceFilter") === null) && (localStorage.getItem("SearchFilter") === null)) {
+    //             LivestockListFiltered = LivestockList.filter(filterLivestockListColor)
+    //         } else {
+    //             LivestockListFiltered = LivestockListFiltered.filter(filterLivestockListColor)
+    //         }
+    //     }
+    //     showTemplateDialogView('locationFilter', 'locationFilter.html')
+    // };
+
+    //select color
+    var hideDialogFilterColor = function (checkbox, color) {
+        list = document.getElementById("containerLivestockColorFilter")
+        //get index and color from parameter
+        var res = checkbox.split("+");
+        var setIndex = res[0]
+        if (checkbox != 'noColorFilter') {
+            document.getElementById('noColorFilter').checked = false;
+            //set selected checbox and unset all other checkboxes
+            for (i = 0; i < list.childElementCount; i++) {
+                var checkboxID = "checkbox-" + i
+                if (setIndex == i) {
+                    document.getElementById(checkboxID).checked = true;
+                    localStorage.setItem("livestockColorCheckboxFilter", checkboxID);
+                } else {
+                    document.getElementById(checkboxID).checked = false;
+                }
             }
+        } else {
+            for (i = 0; i < list.childElementCount; i++) {
+                    var checkboxID = "checkbox-" + i
+                    document.getElementById(checkboxID).checked = false;
+                } 
+                document.getElementById('noColorFilter').checked = true;
         }
+        document.getElementById("colorFilter").hide();
         showTemplateDialogView('locationFilter', 'locationFilter.html')
     };
 
@@ -159,68 +188,45 @@
 
     //select location filter
     var hideDialogFilterPlace = function (location) {
-        list = document.getElementById("containerLivestockFilter")
+        list = document.getElementById("containerLivestockLocationFilter")
         var elements = [];
         //first get all place items
         for (var i = 1; i <= list.childElementCount; i++) {
-            var text = document.querySelector("#containerLivestockFilter > ons-list-item:nth-child(" + i + ") > label.center.list-item__center")
+            var text = document.querySelector("#containerLivestockLocationFilter > ons-list-item:nth-child(" + i + ") > label.center.list-item__center")
             elements.push(text.innerHTML)
         }
-        //uncheck all checkboxes and check selected checkbox
-        for (i = 0; i < elements.length; i++) {
-            if (elements[i] != location) {
-                document.getElementById("checkboxFilter" + elements[i]).checked = false;
-            } else {
-                document.getElementById("checkboxFilter" + elements[i]).checked = true;
+        if (checkbox != 'noColorFilter') {
+            //uncheck all checkboxes and check selected checkbox
+            for (i = 0; i < elements.length; i++) {
+                if (elements[i] != location) {
+                    document.getElementById("checkboxFilter" + elements[i]).checked = false;
+                } else {
+                    document.getElementById("checkboxFilter" + elements[i]).checked = true;
+                }
             }
-        }
-        if (location == "kein Standort Filter") {
-            localStorage.removeItem('PlaceFilter');
-            if (localStorage.getItem("ColorFilter") === null) {
-                LivestockListFiltered = LivestockList
+            if (location == "kein Standort Filter") {
+                localStorage.removeItem('PlaceFilter');
+                if (localStorage.getItem("ColorFilter") === null) {
+                    LivestockListFiltered = LivestockList
+                }
+            } else {
+                localStorage.setItem('PlaceFilter', location);
+                if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("SearchFilter") === null)) {
+                    LivestockListFiltered = LivestockList.filter(filterLivestockListPlace)
+                } else {
+                    LivestockListFiltered = LivestockListFiltered.filter(filterLivestockListPlace)
+                }
             }
         } else {
-            localStorage.setItem('PlaceFilter', location);
-            if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("SearchFilter") === null)) {
-                LivestockListFiltered = LivestockList.filter(filterLivestockListPlace)
-            } else {
-                LivestockListFiltered = LivestockListFiltered.filter(filterLivestockListPlace)
-            }
+            for (i = 0; i < elements.length; i++) {
+                document.getElementById("checkboxFilter" + elements[i]).checked = false;
+            } 
+            document.getElementById('noPlaceFilter').checked = true;
         }
         document.getElementById("locationFilter").hide();
         var listLength = Object.keys(LivestockListFiltered).length;
-        console.log(LivestockListFiltered)
         filterLivestockView(LivestockListFiltered, listLength)
     };
-
-
-    // //function for filter database
-    // var hideDialogFilterPlace = function (location) {
-    //     document.getElementById("checkFilterPlace-1").checked = false;
-    //     document.getElementById("checkFilterPlace-2").checked = false;
-    //     document.getElementById("checkFilterPlace-3").checked = false;
-    //     document.getElementById("checkFilterPlace-4").checked = false;
-    //     document.getElementById("checkFilterPlace-5").checked = false;
-    //     document.getElementById("checkFilterPlace-6").checked = false;
-    //     document.getElementById(checkbox).checked = true;
-    //     document.getElementById("locationFilter").hide();
-    //     //remove Color Filter Storage if use disable filter
-    //     if (location == "noFilter") {
-    //         localStorage.removeItem('PlaceFilter');
-    //         if (localStorage.getItem("ColorFilter") === null) {
-    //             LivestockListFiltered = LivestockList
-    //         }
-    //     } else {
-    //         localStorage.setItem('PlaceFilter', location);
-    //         if ((localStorage.getItem("ColorFilter") === null) && (localStorage.getItem("SearchFilter") === null)) {
-    //             LivestockListFiltered = LivestockList.filter(filterLivestockListPlace)
-    //         } else {
-    //             LivestockListFiltered = LivestockListFiltered.filter(filterLivestockListPlace)
-    //         }
-    //     }
-    //     var listLength = Object.keys(LivestockListFiltered).length;
-    //     filterLivestockView(LivestockListFiltered, listLength)
-    // };
 
     // function for dynamic sorting of livestock data list
     function compareValues(key, order = 'asc') {
@@ -349,9 +355,16 @@
             if (id === LivestockList[i].id) {
                 //save livestock properties for detail view
                 localStorage.setItem("LivestockColorDetail", LivestockList[i].color);
+                //search for color name
+                for (j = 0; j < AnimalColorNbr; j++) {
+                    if (LivestockList[i].color === AnimalColor[j].color) {
+                        localStorage.setItem("LivestockColorNameDetail", AnimalColor[j].name);
+                    }
+                }        
                 localStorage.setItem("LivestockNumberDetail", LivestockList[i].number);
-                localStorage.setItem("LivestockLocationDetail", LivestockList[i].animalLocationName );
-                localStorage.setItem("LivestockBirthdayDetail", LivestockList[i].birthday.substring(0, 10));
+                localStorage.setItem("LivestockLocationDetail", LivestockList[i].animalLocationName);
+                localStorage.setItem("LivestockBornOnDetail", LivestockList[i].birthday.substring(0, 10));
+                localStorage.setItem("LivestockCategoryDetail", LivestockList[i].animalSpeciesName);
                 localStorage.setItem("LivestockIdDetail", LivestockList[i].id);
             } 
         }
@@ -360,21 +373,15 @@
 
     //update livestock location list
     function updateLivestockLocationsFilter() {
-        list = document.getElementById("containerLivestockFilter")
-        noFilterParamter = "kein Standort Filter";
+        list = document.getElementById("containerLivestockLocationFilter")
         //remove current items in view
         if (list) {
             while (list.hasChildNodes()) {
                 list.removeChild(list.firstChild);
             }
         }
-        for (i = 0; i <= LivestockLocationNbrs; i++) {
-            if (i != LivestockLocationNbrs) {
-                var location = LivestockPlaces[i].name
-            } else {
-                //last item -> no filter
-                var location = noFilterParamter
-            }
+        for (i = 0; i < LivestockLocationNbrs; i++) {
+            var location = LivestockPlaces[i].name
             list = document.createElement("ons-list-item")
             list.setAttribute("onchange", "hideDialogFilterPlace('" + location + "')");
             list.setAttribute("tappable");
@@ -392,6 +399,53 @@
             //append labels to list
             list.appendChild(label_left);
             list.appendChild(label_center);
-            document.getElementById("containerLivestockFilter").appendChild(list);
+            document.getElementById("containerLivestockLocationFilter").appendChild(list);
+        }
+    }
+
+    function updateLivestockColorFilter() {
+        var lastSelectedColor = localStorage.getItem("livestockColorCheckboxFilter");
+        list = document.getElementById("containerLivestockColorFilter")
+        //remove current items in view
+        if (list) {
+            while (list.hasChildNodes()) {
+                list.removeChild(list.firstChild);
+            }
+        }
+        for (i = 0; i <= AnimalColorNbr; i++) {
+
+            var color = AnimalColor[i].color
+            var name = AnimalColor[i].name
+    
+            list = document.createElement("ons-list-item")
+            list.setAttribute("id", i +"+Filter"+ color);
+            list.setAttribute("onchange", "hideDialogFilterColor(this.id,'" + color + "')");
+            list.setAttribute("tappable");
+            //label left
+            label_left = document.createElement("label")
+            label_left.setAttribute("class", "left");
+            checkbox = document.createElement("ons-checkbox")
+            checkbox.setAttribute("id", "checkbox-" + i);
+            //check checkbox if last selected color = current list color 
+            if (lastSelectedColor == "checkbox-" + i) {
+                checkbox.setAttribute("checked");
+                document.getElementById('noColorFilter').checked = false;
+            }
+            label_left.appendChild(checkbox);
+            //label center
+            label_center = document.createElement("label")
+            label_center.setAttribute("class", "center");
+            label_center.setAttribute("onchange", "hideDialogFilterColor(this.id,'" + color + "')");
+            colorSquare = document.createElement("ons-icon")
+            colorSquare.setAttribute("style", "margin-right: 10px; color: " + color);
+            colorSquare.setAttribute("icon", "fa-square-full");
+            label_center.appendChild(colorSquare);
+            text = document.createElement("div")
+            text.innerHTML = name;
+            label_center.appendChild(text);
+            //append labels to list
+            list.appendChild(label_left);
+            list.appendChild(label_center);
+            document.getElementById("containerLivestockColorFilter").appendChild(list);
         }
     }
