@@ -56,7 +56,7 @@
                 <form action="/menu.html">
                     <input type="email" id="email" name="login" placeholder="Email"
                         value="markus.breiteneder@gmail.com">
-                    <input type="password" id="psw" name="login" placeholder="Passwort">
+                    <input type="password" id="psw" name="login" placeholder="Passwort" value="ua3z6P9o9lLZEh2fAVTY">
                     <p class="link" style="text-align: right">Passwort vergessen?</p>
                     <!-- <ons-button modifier="large" style="background-color: #008F97; text-align: center" onclick="checkInputsLogin()"> -->
                     <ons-button modifier="large" style="background-color: #2B605A; text-align: center"
@@ -840,10 +840,18 @@
                 </div>
                 <div class="center">Tierkartei</div>
                 <div class="right">
-                    <ons-toolbar-button id="livestockCheck" icon="fa-check" onclick="nav1.popPage()"
-                        style="visibility:hidden;"></ons-toolbar-button>
                 </div>
             </ons-toolbar>
+            <ons-tabbar>
+                <ons-tab page="animalList.html" label="TIER">
+                </ons-tab>
+                <ons-tab page="animalGroup.html" label="GRUPPEN">
+                </ons-tab>
+              </ons-tabbar>
+            </ons-page>
+        </template>
+        <template id="animalList.html">
+            <ons-page id="animalList">
             <ons-list style="position: sticky; top: 0; background-color: white; z-index: 1;">
                 <ons-list-item>
                     <ons-row style="margin-top: 5px; text-align: center">
@@ -881,6 +889,46 @@
             </ons-fab> -->
         </ons-page>
     </template>
+
+    <template id="animalGroup.html">
+        <ons-page id="animalGroup">
+        <ons-list style="position: sticky; top: 0; background-color: white; z-index: 1;">
+            <ons-list-item>
+                <ons-row style="margin-top: 5px; text-align: center">
+                    <ons-col style="border-right: thick solid black">
+                        <ons-icon style="margin-right: 3px" icon="fa-search"></ons-icon>
+                        <input id="SearchInput"
+                            style="width: 100px; border-right: none; border-left: none; border-top: none"
+                            onkeyup="searchInputList()">
+                    </ons-col>
+                    <ons-col>
+                        Scannen
+                        <ons-icon id="FilterIcon" style="margin-left: 3px" icon="fa-qrcode"></ons-icon>
+                    </ons-col>
+                </ons-row>
+            </ons-list-item>
+            <ons-list-item>
+                <ons-row style="margin-top: 5px; text-align: center">
+                    <ons-col style="border-right: thick solid black"
+                        onclick="showTemplateDialog('sort', 'sort.html')">
+                        <ons-icon id="SortIcon" style="margin-left: 3px" icon="fa-sort-numeric-up"></ons-icon>
+                        Ordnen nach
+                    </ons-col>
+                    <ons-col onclick="showTemplateDialog('colorFilter', 'colorFilter.html')">
+                        Filtern nach
+                        <ons-icon id="FilterIcon" style="margin-left: 3px" icon="fa-filter"></ons-icon>
+                    </ons-col>
+                </ons-row>
+            </ons-list-item>
+        </ons-list>
+        <ons-list style="margin-top: 5px; margin-bottom: 20%">
+            <ons-lazy-repeat id="containerLivestockGroup"></ons-lazy-repeat>
+        </ons-list>
+        <!-- <ons-fab id="livestockFab" onclick="nav1.popPage()" position="bottom right" style="visibility:hidden;">
+            <ons-icon size="30px" icon="fa-arrow-right"></ons-icon>
+        </ons-fab> -->
+    </ons-page>
+</template>
 
     <template id="sort.html">
         <ons-dialog id="sort" cancelable>
@@ -1252,12 +1300,18 @@
 
     <template id="livestock_detail.html">
         <ons-page id="livestock_detail">
-            <ons-toolbar>
+            <ons-toolbar modifier="transparent" style="background-color: white">
                 <div class="left">
-                    <ons-back-button></ons-back-button>
+                    <ons-toolbar-button onclick="checkInputsUnsavedDetail()">
+                        <ons-icon size="20px" icon="fa-chevron-left"></ons-icon>
+                    </ons-toolbar-button>
                 </div>
                 <div class="center">Nutztier</div>
-                <div class="right"></div>
+                <div class="right">
+                    <ons-toolbar-button id="saveEditButton" onclick="checkInputsDetail()" hidden>
+                        <ons-icon size="20px" icon="fa-check"></ons-icon>
+                    </ons-toolbar-button>
+                </div>
             </ons-toolbar>
             <!-- <ons-tabbar swipeable position="bottom"> -->
             <ons-tabbar position="bottom">
@@ -1519,6 +1573,17 @@
                         </ons-col>
                     </ons-row>
                 </ons-list-item>
+                <ons-list-item>
+                    <ons-row style="margin-top: 5px; text-align: center">
+                        <ons-col id="livestockDetailCol" style="border-right: thick solid black"
+                            onclick="editLivestock()">
+                            Bearbeiten
+                            <ons-icon id="SortIcon" style="margin-left: 3px" icon="fa-edit"></ons-icon>
+                        </ons-col>
+                        <ons-col>
+                        </ons-col>
+                    </ons-row>
+                </ons-list-item>
             </ons-list>
             <ons-card>
                 <form>
@@ -1541,22 +1606,22 @@
                             font-family="Verdana" x="240" y="140">3</text>
                         <text id="Svgtext3Detail" onclick="showInfo('LFBISCode')" fill="black" font-size="30"
                             font-family="Verdana" x="120" y="230">4321056</text>
-                        <foreignObject id="CodeDigit0ObjDetail" width="40" height="50" x="105" y="155" onclick="showPromptLivestockCharacteristics('die%Nummer', 'type1')">
+                        <foreignObject id="CodeDigit0ObjDetail" width="40" height="50" x="105" y="155">
                             <input id="CodeDigit0Detail" class="input-real" type="number" placeholder="X" maxlength="0"
                                 style="text-align: center;border-color : black; border-width: medium;"
                                 onfocus="this.value=''" disabled />
                         </foreignObject>
-                        <foreignObject id="CodeDigit1ObjDetail" width="40" height="50" x="105" y="155" onclick="showPromptLivestockCharacteristics('die%Nummer', 'type1')">
+                        <foreignObject id="CodeDigit1ObjDetail" width="40" height="50" x="105" y="155">
                             <input id="CodeDigit1Detail" class="input-real" type="number" placeholder="X" maxlength="1"
                                 style="text-align: center;border-color : black; border-width: medium;"
                                 onfocus="this.value=''" disabled />
                         </foreignObject>
-                        <foreignObject id="CodeDigit2ObjDetail" width="40" height="50" x="105" y="155" onclick="showPromptLivestockCharacteristics('die%Nummer', 'type1')">
+                        <foreignObject id="CodeDigit2ObjDetail" width="40" height="50" x="105" y="155">
                             <input id="CodeDigit2Detail" class="input-real" type="number" placeholder="X" maxlength="1"
                                 style="text-align: center;border-color : black; border-width: medium;"
                                 onfocus="this.value=''" disabled />
                         </foreignObject>
-                        <foreignObject id="CodeDigit3ObjDetail" width="40" height="50" x="105" y="155" onclick="showPromptLivestockCharacteristics('die%Nummer', 'type1')">
+                        <foreignObject id="CodeDigit3ObjDetail" width="40" height="50" x="105" y="155">
                             <input id="CodeDigit3Detail" class="input-real" type="number" placeholder="X" maxlength="1"
                                 style="text-align: center;border-color : black; border-width: medium;"
                                 onfocus="this.value=''" disabled />
@@ -1564,36 +1629,36 @@
                     </svg>
                     <ons-list>
                         <ons-list-header class="ons_list_header">Allgemeine Infos</ons-list-header>
-                        <ons-list-item onclick="showPromptLivestockCharacteristics('die%Ohrmarken Farbe', 'type2')">
+                        <ons-list-item>
                             <div class="center">
                                 Ohrmarken Farbe 
                             </div>
-                            <div id="livestockColorDetail" class="right"> Rot
+                            <div id="livestockColorDetail" onclick="showTemplateDialogAdd('colorAdd', 'colorAdd.html')" class="right"> Rot
                             </div>
                         </ons-list-item>
 
-                        <ons-list-item onclick="showPromptLivestockCharacteristics('den%Standort', 'type3')">
+                        <ons-list-item>
                             <div class="center">
                                 Standort
                             </div>
-                            <div id="livestockPlaceDetail" class="right"> Bitte wählen
+                            <div id="livestockPlaceDetail" onclick="showTemplateDialogAdd('locationAdd', 'locationAdd.html')" class="right"> Bitte wählen
                             </div>
                         </ons-list-item>
-                        <ons-list-item onclick="showPromptLivestockCharacteristics('die%Zuchtlinie', 'type4')">
+                        <ons-list-item>
                             <div class="center">
                                 Zuchtlinie
                             </div> 
-                            <div id="livestockCategoryDetail" class="right"> Bitte wählen
+                            <div id="livestockCategoryDetail" onclick="showTemplateDialogAdd('animalCategory', 'animalCategory.html')" class="right"> Bitte wählen
                             </div>
                         </ons-list-item>
-                        <ons-list-item onclick="showPromptLivestockCharacteristics('das%Datum', 'type5')">
+                        <ons-list-item>
                             <div class="center">
                                 Registriert am
                             </div>
                             <div class="right">
                                 <input id="BornOnDetail" type="date" disabled>
                             </div>
-                        </ons-list-item>
+                        </ons-list-item id="BornOnDetail">
                     </ons-list>
                 </form>
             </ons-card>
@@ -2319,10 +2384,10 @@
             </ons-toolbar>
             <ons-card>
                 <ons-list>
-                    <ons-list-header modifier="nodivider" class="ons_list_header">Nutztier
+                    <ons-list-header modifier="nodivider" class="ons_list_header">Nutztier/Gruppe
                         auswählen</ons-list-header>
                 </ons-list>
-                <ons-list onclick="nav1.pushPage('livestock_selector.html')" id="livestockContainer" modifier="inset"
+                <ons-list onclick="pushNextPage('livestock')" id="livestockContainer" modifier="inset"
                     style="padding: 10px; margin-top: 10px"> Kein Nutztier ausgewählt
                 </ons-list>
                 <ons-row style="margin-top: 5%; margin-left: 5%; margin-bottom: 10%">
@@ -2333,7 +2398,7 @@
                         </p>
                     </ons-col>
                     <ons-col style="text-align: center;">
-                        <p onclick="nav1.pushPage('livestock_selector.html')" style="margin-top: -5px"> Auswählen
+                        <p onclick="pushNextPage('livestock')" style="margin-top: -5px"> Auswählen
                             <ons-icon style="margin-left: 3px" icon="fa-folder-open"></ons-icon>
                         </p>
                     </ons-col>
@@ -2495,30 +2560,6 @@
                 </div>
             </ons-list>
         </ons-dialog>
-    </template>
-
-    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
-    <!-- ------------------------------- LIVESTOCK SELECTOR------------------------------- -->
-    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
-
-    <template id="livestock_selector.html">
-        <ons-page id="livestock_selector">
-            <ons-toolbar>
-                <div class="left">
-                    <ons-back-button></ons-back-button>
-                </div>
-                <div class="center">Nutztier hinzufügen</div>
-                <div class="right"></div>
-            </ons-toolbar>
-            <ons-list ng-controller="DialogController">
-                <ons-list-item onclick="nav1.pushPage('livestock.html')"" modifier=" chevron" tappable>
-                    Nutztier auswählen
-                </ons-list-item>
-                <ons-list-item onclick="showTemplateDialogLivestockSelector()" modifier="chevron" tappable>
-                    Standort auswählen
-                </ons-list-item>
-            </ons-list>
-        </ons-page>
     </template>
 
     <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->

@@ -13,10 +13,13 @@ var LivestockGroupListLength = "";
 var LivestockGroupList = "";
 var AnimalColorNbr = "";
 var AnimalColor = "";
+var AnimalColorNbr = "";
+var UnitsLength = "";
+var UnitsList = "";
 
 var EndpointLink = 'http://stablex-dev.eu-central-1.elasticbeanstalk.com'
 
-//User Login
+//User  Login
 function RESTLogin() {
     // document.querySelector('#nav1').pushPage('home_splitter.html');
     var email = document.getElementById("email").value;
@@ -57,9 +60,11 @@ function RESTLogin() {
                 //get Animal Species 
                 RESTGetAnimalSpecies()
                 //get Animal Groups
-                // RESTGetLivestockGroup()
+                RESTGetAnimalGroup()
                 //get Animal Color
                 RESTGetAnimalColor()
+                //get Units
+                RESTGetUnits()
                 document.querySelector('#nav1').pushPage('home_splitter.html');
             } else {
                 pushMsg(obj.messages[0].message)
@@ -154,6 +159,57 @@ function RESTAddLivestock(birthday, color, number, AnimalLocationId) {
     });
 }
 
+//REST add Livestock 
+function RESTUpdateLivestock(ID, born, color, number, AnimalLocationId) {
+    alert('hallo')
+    var token = localStorage.getItem("bearerToken")
+    var endpoint = EndpointLink + '/api/Animal/SaveAnimal'
+    $.ajax({
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': token
+        },
+        url: endpoint,
+        contentType: "application/json",
+        type: "POST",
+        data: JSON.stringify({
+            "model": {
+                "id":ID,
+                "animalLocationId": AnimalLocationId,
+                "typeId": 2,
+                "number": number,
+                "color": color,
+                "birthday": born
+            }
+        }),
+        success: function (response) {
+            var data = JSON.stringify(response);
+            var obj = JSON.parse(data);
+            //check if livestock add is OK
+            if (response.success === true) {
+                RESTGetLivestock()
+                document.querySelector('#nav1').popPage();
+            } else {
+                //check if current page is livestock_add page
+                // if (eventEnterPageId === 'livestock_add') {
+                //     ons.notification.alert({
+                //         message: 'Nutztier ist bereits in der Datenbank hinterlegt',
+                //         title: 'Nutztier vorhanden',
+                //     });
+                // }
+
+                pushMsg(obj.messages[0].message)
+            }
+        },
+        error: function (xhr, status, error) {
+            var errorMessage = xhr.status + ': ' + xhr.statusText
+            alert('Livestock add failed! Error - ' + errorMessage);
+        }
+    });
+}
+
+
 //REST add group of livestocks 
 function RESTAddLivestockGroup() {
     var place = document.getElementById("animalGroupPlaceText").innerHTML;
@@ -175,6 +231,7 @@ function RESTAddLivestockGroup() {
         data: JSON.stringify({
             "model": {
                 "count": count,
+                "animalLocationBoxNumber": number,
                 "animalLocationId": place,
                 "animalSpeciesId": category,
                 "birthday": born,
@@ -191,6 +248,7 @@ function RESTAddLivestockGroup() {
                 pushMsg(obj.messages[0].message)
             }
         },
+
         error: function (xhr, status, error) {
             var errorMessage = xhr.status + ': ' + xhr.statusText
             alert('Livestock add failed! Error - ' + errorMessage);
@@ -199,9 +257,9 @@ function RESTAddLivestockGroup() {
 }
 
 //REST get group of livestocks
-function RESTGetLivestockGroup() {
+function RESTGetAnimalGroup() {
     var token = localStorage.getItem("bearerToken")
-    var endpoint = EndpointLink + '/api/animal/getgroupofanimals'
+    var endpoint = EndpointLink + '/api/animalgroup/getanimalgroups'
     $.ajax({
         headers: {
             'Accept': 'application/json',
@@ -218,7 +276,6 @@ function RESTGetLivestockGroup() {
             var obj = JSON.parse(data);
             //get numbers of entries
             LivestockGroupListLength = data.split("id").length - 1;
-            alert(LivestockGroupListLength)
             //save livestocks in global variable
             LivestockGroupList = obj.list;
         },
@@ -228,6 +285,37 @@ function RESTGetLivestockGroup() {
         }
     });
 }
+
+//REST get group of livestocks
+function RESTGetUnits() {
+    var token = localStorage.getItem("bearerToken")
+    var endpoint = EndpointLink + '/api/unit/getunits'
+    $.ajax({
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': token
+        },
+        crossDomain: true,
+        url: endpoint,
+        contentType: "application/json",
+        type: "POST",
+        data: JSON.stringify({}),
+        success: function (response) {
+            var data = JSON.stringify(response);
+            var obj = JSON.parse(data);
+            //get numbers of entries
+            UnitsLength = data.split("id").length - 1;
+            //save livestocks in global variable
+            UnitsList = obj.list;
+        },
+        error: function (xhr, status, error) {
+            var errorMessage = xhr.status + ': ' + xhr.statusText
+            alert('Livestock Units get failed! Error - ' + errorMessage);
+        }
+    });
+}
+
 
 //REST delete Livestock 
 function RESTDeleteAnimal(id) {

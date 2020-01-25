@@ -152,16 +152,18 @@ var showInfo = function (code) {
 var showTemplateDialogAdd = function (my_dialog, my_dialog_html) {
 
     var dialog = document.getElementById(my_dialog);
-
-    if (dialog) {
-        dialog.show();
-    } else {
-        ons.createElement(my_dialog_html, {
-                append: true
-            })
-            .then(function (dialog) {
-                dialog.show();
-            });
+    var button = document.getElementById("saveEditButton");
+    if (((eventEnterPageId === 'Bestandsliste Arzneimittel') && (button.hidden === false)) || (eventEnterPageId === 'livestock_add')) {
+        if (dialog) {
+            dialog.show();
+        } else {
+            ons.createElement(my_dialog_html, {
+                    append: true
+                })
+                .then(function (dialog) {
+                    dialog.show();
+                });
+        }
     }
 };
 
@@ -172,6 +174,7 @@ var hideDialogColorAdd = function (color, colorText) {
     var setIndex = res[0]
     var setColor = res[1]
     list = document.getElementById("containerColorAdd")
+
     //set selected checbox and unset all other checkboxes
     for (i = 0; i < list.childElementCount; i++) {
         var checkboxID = "checkbox-" + i
@@ -182,11 +185,18 @@ var hideDialogColorAdd = function (color, colorText) {
             document.getElementById(checkboxID).checked = false;
         }
     }
-    // localStorage.setItem("livestockColor", setColor);
-    document.getElementById("rect1").style.fill = setColor;
-    document.getElementById("rect2").style.fill = setColor;
-    document.getElementById("circle1").style.fill = setColor;
-    document.getElementById("livestockColorAdd").innerHTML = colorText;
+    if (eventEnterPageId === 'livestock_add'){
+        document.getElementById("rect1").style.fill = setColor;
+        document.getElementById("rect2").style.fill = setColor;
+        document.getElementById("circle1").style.fill = setColor;
+        document.getElementById("livestockColorAdd").innerHTML = colorText;
+    } else if (eventEnterPageId === 'Bestandsliste Arzneimittel') { 
+        document.getElementById("rect1Detail").style.fill = setColor;
+        document.getElementById("rect2Detail").style.fill = setColor;
+        document.getElementById("circle1Detail").style.fill = setColor;
+        document.getElementById("livestockColorDetail").innerHTML = colorText;
+
+    }
     localStorage.setItem("MarkColor", setColor);
     localStorage.setItem("MarkColorText", colorText);
     document.getElementById("colorAdd").hide();
@@ -363,12 +373,13 @@ var hideDialogLocationAdd = function (location) {
             }
         }
     } else if (eventEnterPageId == "livestock_add") {
-        localStorage.setItem("livestockPlaceAdd", location);
         document.getElementById("livestockPlaceAdd").innerHTML = location;
     } else if (eventEnterPageId == "livestock_group_add") {
-        localStorage.setItem("livestockPlaceAdd", location);
         document.getElementById("animalGroupPlaceText").innerHTML = location;
+    } else if (eventEnterPageId == "Bestandsliste Arzneimittel") {
+        document.getElementById("livestockPlaceDetail").innerHTML = location;
     }
+    localStorage.setItem("livestockPlaceAdd", location);
     document.getElementById("locationAdd").hide(); 
 };
 
@@ -430,12 +441,15 @@ var hideDialogAnimalCategory = function (category) {
             document.getElementById("checkbox" + elements[i]).checked = true;
         }
     }
-    localStorage.setItem("lastAnimalCategory", category);
+
     if (eventEnterPageId == "livestock_add") {
         document.getElementById("animalCategoryText").innerHTML = category;
     } else if (eventEnterPageId == "livestock_group_add") {
         document.getElementById("animalGroupCategoryText").innerHTML = category;
+    } else if (eventEnterPageId == "Bestandsliste Arzneimittel") {
+        document.getElementById("livestockCategoryDetail").innerHTML = category;
     }
+    localStorage.setItem("lastAnimalCategory", category);
     document.getElementById("animalCategory").hide(); 
 };
 

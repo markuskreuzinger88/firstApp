@@ -7,15 +7,12 @@
 
     //display Livestocks
     function updateLivestockView() {
-        
         // create element before use --> to update list in elemnt dynamically
         ons.createElement("locationFilter.html", {
             append: true
         });
         //reset local storage variables
         resetLocalStorgageVariables()
-        //check leaved page --> change icon
-        setIconForAction()
         //sort list
         sortLivestockView('number', 'asc')
     }
@@ -54,19 +51,6 @@
         localStorage.removeItem('ColorFilter');
         localStorage.removeItem('PlaceFilter');
         localStorage.removeItem('SearchFilter');
-    }
-
-    //check leaved page --> change icon
-    function setIconForAction() {
-        if ((leavePage == "drug_delivery") || (leavePage == "livestock_selector")) {
-            col = document.getElementById("actionCol").innerHTML = "Scannen"
-            icon = document.createElement("ons-icon")
-            icon.setAttribute("icon", "fa-qrcode")
-            icon.setAttribute("style", "margin-left: 10px");
-            document.getElementById("actionCol").removeAttribute("onclick");
-            document.getElementById("actionCol").setAttribute("onclick", "scan()");
-            document.getElementById("actionCol").appendChild(icon);
-        }
     }
 
     //open sort or filter template 
@@ -124,36 +108,6 @@
             sortLivestockView('place', 'asc')
         }
     };
-
-    // //function for filter database
-    // var hideDialogFilterColor = function (checkbox, color) {
-    //     document.getElementById("checkFilter-1").checked = false;
-    //     document.getElementById("checkFilter-2").checked = false;
-    //     document.getElementById("checkFilter-3").checked = false;
-    //     document.getElementById("checkFilter-4").checked = false;
-    //     document.getElementById("checkFilter-5").checked = false;
-    //     document.getElementById("checkFilter-6").checked = false;
-    //     document.getElementById("checkFilter-7").checked = false;
-    //     document.getElementById(checkbox).checked = true;
-    //     document.getElementById('colorFilter').hide();
-    //     //change icon color of button
-    //     var SortIcon = document.getElementById("FilterIcon");
-    //     SortIcon.style.color = color;
-    //     //remove Color Filter Storage if use disable filter
-    //     if (checkbox == "checkFilter-7") {
-    //         localStorage.removeItem('ColorFilter');
-    //         LivestockListFiltered = LivestockList
-    //     } else {
-    //         localStorage.setItem('ColorFilter', color);
-    //         // LivestockListFiltered = LivestockList.filter(filterLivestockListColor)
-    //         if ((localStorage.getItem("PlaceFilter") === null) && (localStorage.getItem("SearchFilter") === null)) {
-    //             LivestockListFiltered = LivestockList.filter(filterLivestockListColor)
-    //         } else {
-    //             LivestockListFiltered = LivestockListFiltered.filter(filterLivestockListColor)
-    //         }
-    //     }
-    //     showTemplateDialogView('locationFilter', 'locationFilter.html')
-    // };
 
     //select color
     var hideDialogFilterColor = function (checkbox, color) {
@@ -317,7 +271,9 @@
             list.setAttribute("tappable", true);
             //modify selection depending on last site --> when last page drug delivery
             //use tag icon else use chevron
-            if ((leavePage == "drug_delivery") || (leavePage == "livestock_selector")) {
+            console.log(getDrugDeliverySiteActive)
+            if (getDrugDeliverySiteActive == 'true') {
+                // console.log('yo')
                 list.setAttribute("onclick", "livestockTag(" + livestockList[i].id + ")");
                 div_right = document.createElement("ons-checkbox")
                 div_right.setAttribute("class", "right");
@@ -330,7 +286,7 @@
                     div_right.checked = false;
                 }
                 list.appendChild(div_right);
-                document.getElementById('livestockCheck').style.visibility = 'visible';
+                // document.getElementById('livestockCheck').style.visibility = 'visible';
             } else {
                 list.setAttribute("modifier", "chevron");
                 list.setAttribute("onclick", "livestockDetail(" + livestockList[i].id + ")");
@@ -347,6 +303,54 @@
         }
     };
     infiniteList.refresh();
+}
+
+function DisplayResultGroup() {
+    var infiniteList = document.getElementById('containerLivestockGroup');
+    infiniteList.delegate = {
+        createItemContent: function (i) {
+        list = document.createElement("ons-list-item")
+        div_center = document.createElement("div")
+        div_center.setAttribute("id", LivestockGroupList[i].id);
+        div_center.setAttribute("class", "center");
+        div_center.setAttribute("style", "margin-left: 10px");
+        span_center1 = document.createElement("span")
+        span_center1.setAttribute("id", "livestockID" + LivestockGroupList[i].id);
+        span_center2 = document.createElement("span")
+        span_center1.setAttribute("class", "list-item__title");
+        span_center2.setAttribute("class", "list-item__subtitle");
+        span_center1.innerHTML = 'Box Nummer: ' + LivestockGroupList[i].animalLocationBoxName;
+        span_center2.innerHTML = 'Anzahl: ' + LivestockGroupList[i].animalCount + "<br>" + LivestockGroupList[i].birthday.substring(0, 10);
+        list.setAttribute("tappable", true);
+        if (getDrugDeliverySiteActive == 'true') {
+            // console.log('yo')
+            list.setAttribute("onclick", "livestockTag(" + LivestockGroupList[i].id + ")");
+            div_right = document.createElement("ons-checkbox")
+            div_right.setAttribute("class", "right");
+            div_right.setAttribute("id", "tag" + LivestockGroupList[i].id);
+            // div_right.setAttribute("onclick", "livestockTag(" + LivestockGroupList[i].id + ")");
+            //set item tag
+            if (taggedLivestock.includes(LivestockGroupList[i].id) === true) {
+                div_right.checked = true;
+            } else {
+                div_right.checked = false;
+            }
+            list.appendChild(div_right);
+            // document.getElementById('livestockCheck').style.visibility = 'visible';
+        } else {
+            list.setAttribute("modifier", "chevron");
+            list.setAttribute("onclick", "livestockDetail(" + LivestockGroupList[i].id + ")");
+        }
+        div_center.appendChild(span_center1);
+        div_center.appendChild(span_center2);
+        list.appendChild(div_center);
+        return document.getElementById("containerLivestockGroup").appendChild(list);
+    },
+    countItems: function () {
+        return LivestockGroupListLength;
+    }
+};
+infiniteList.refresh();
 }
 
     //get livestock number 
