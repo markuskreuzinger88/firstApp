@@ -271,7 +271,6 @@
             list.setAttribute("tappable", true);
             //modify selection depending on last site --> when last page drug delivery
             //use tag icon else use chevron
-            console.log(getDrugDeliverySiteActive)
             if (getDrugDeliverySiteActive == 'true') {
                 // console.log('yo')
                 list.setAttribute("onclick", "livestockTag(" + livestockList[i].id + ")");

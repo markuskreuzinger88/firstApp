@@ -22,12 +22,6 @@ var pageSelector = "";
 function getDrugDeliveryView() {
     document.getElementById("removeLivestocks").style.visibility = "hidden";
     document.getElementById("removeDrugs").style.visibility = "hidden";
-    if (localStorage.getItem("lastDiagnosis") === null){
-        document.getElementById("diagnosisContainer").innerHTML = 'Keine Diagnose ausgewählt'
-    } else {
-        document.getElementById("diagnosisContainer").innerHTML = localStorage.getItem("lastDiagnosis");
-    }
-
     CreatedOn.max = new Date().toISOString().split("T")[0];
     let today = new Date().toISOString().substr(0, 10);
     document.querySelector("#CreatedOn").value = today;
@@ -105,7 +99,6 @@ function DisplayLivestocks() {
 }
 
 function DisplayDrugs() {
-
     //remove childs from container
     var list = document.getElementById("drugContainer");
     while (list.hasChildNodes()) {

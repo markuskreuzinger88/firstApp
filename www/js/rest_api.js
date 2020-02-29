@@ -18,7 +18,7 @@ var UnitsLength = "";
 var UnitsList = "";
 
 // var BaseUrl = 'http://3.126.208.157:81' 
-var BaseUrl = 'http://ec2-3-126-208-157.eu-central-1.compute.amazonaws.com:81'
+var BaseUrl = 'http://ec2-3-126-208-157.eu-central-1.compute.amazonaws.com:81' 
 
 //User  Login
 function RESTLogin() {
@@ -92,12 +92,14 @@ function RESTGetLivestock() {
 //REST add Livestock 
 function RESTAddLivestock(birthday, color, number, AnimalLocationId) {
 
-    const newAnimalModel = new AnimalModel();
-
+    alert(birthday +" "+ color +" "+ number +" "+ AnimalLocationId)
+    const newAnimalModel = new APISaveParameter.AnimalModel();
+    
     newAnimalModel.AnimalLocationId = AnimalLocationId;
     newAnimalModel.Color = color;
     newAnimalModel.Number = number;
     newAnimalModel.Birthday = birthday;
+
 
     const newAnimalClient = new AnimalClient();
 
@@ -168,50 +170,32 @@ function RESTUpdateLivestock(ID, born, color, number, AnimalLocationId) {
     });
 }
 
-
 //REST add group of livestocks 
 function RESTAddLivestockGroup() {
-    var place = document.getElementById("animalGroupPlaceText").innerHTML;
-    var number = document.getElementById("animalGroupNumberText").value;
-    var count = document.getElementById("animalGroupCountText").value;
-    var category = document.getElementById("animalGroupCategoryText").innerHTML;
-    var born = document.getElementById("animalGroupBornOnText").value;
-    var token = localStorage.getItem("bearerToken")
-    var endpoint = EndpointLink + '/api/animal/creategroupofanimals'
-    $.ajax({
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': token
-        },
-        url: endpoint,
-        contentType: "application/json",
-        type: "POST",
-        data: JSON.stringify({
-            "model": {
-                "count": count,
-                "animalLocationBoxNumber": number,
-                "animalLocationId": place,
-                "animalSpeciesId": category,
-                "birthday": born,
-                "GroupName": number,
-            }
-        }),
-        success: function (response) {
-            var data = JSON.stringify(response);
-            var obj = JSON.parse(data);
-            //check if livestock add is OK
-            if (response.success === true) {
-                document.querySelector('#nav1').popPage();
-            } else {
-                pushMsg(obj.messages[0].message)
-            }
-        },
 
-        error: function (xhr, status, error) {
-            var errorMessage = xhr.status + ': ' + xhr.statusText
-            alert('Livestock add failed! Error - ' + errorMessage);
+    const newCreateGroupOfAnimalsParameter = new CreateGroupOfAnimalsParameter();
+    
+    newCreateGroupOfAnimalsParameter.Count = document.getElementById("animalGroupCountText").value;
+    newCreateGroupOfAnimalsParameter.AnimalLocationId = document.getElementById("animalGroupPlaceText").innerHTML;
+    newCreateGroupOfAnimalsParameter.AnimalLocationBoxNumber = document.getElementById("animalGroupNumberText").value;
+    newCreateGroupOfAnimalsParameter.AnimalSpeciesId = document.getElementById("animalGroupCategoryText").innerHTML;
+    newCreateGroupOfAnimalsParameter.Birthday = document.getElementById("animalGroupBornOnText").value;
+    newCreateGroupOfAnimalsParameter.GroupName = document.getElementById("animalGroupCategoryText").innerHTML;
+
+    const newAnimalClient = new AnimalClient();
+
+    newAnimalClient.CreateGroupOfAnimals(newCreateGroupOfAnimalsParameter, function (response) {
+        var data = JSON.stringify(response);
+        var obj = JSON.parse(data);
+        //check if livestock group add is OK
+        if (response.success === true) {
+            document.querySelector('#nav1').popPage();
+        } else {
+            pushMsg(obj.messages[0].message)
         }
+    }, function (xhr, status, error) {
+        var errorMessage = xhr.status + ': ' + xhr.statusText
+        alert('Animal Group Save failed! Error - ' + errorMessage);
     });
 }
 
