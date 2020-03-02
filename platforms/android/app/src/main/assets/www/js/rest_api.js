@@ -39,7 +39,7 @@ function RESTLogin() {
         localStorage.setItem("bearerToken", token);
         //check if login is successfull
         if (response.success == true) {
-            //get Livestock Database from server
+            // //get Livestock Database from server
             RESTGetLivestock()
             //get Livestock location
             RESTGetLocation()
@@ -67,8 +67,7 @@ function RESTLogin() {
 
 //REST get all Livestocks
 function RESTGetLivestock() {
-
-    const getParameter = new APIGetParameter();
+    const getParameter = new ApiGetParameter();
     const newGetAnimals = new AnimalClient();
 
     newGetAnimals.GetAnimals(getParameter, function (response) {
@@ -93,18 +92,19 @@ function RESTGetLivestock() {
 function RESTAddLivestock(birthday, color, number, AnimalLocationId) {
 
     alert(birthday +" "+ color +" "+ number +" "+ AnimalLocationId)
-    const newAnimalModel = new APISaveParameter.AnimalModel();
+    var newAnimalModel = new AnimalModel();
     
     newAnimalModel.AnimalLocationId = AnimalLocationId;
     newAnimalModel.Color = color;
     newAnimalModel.Number = number;
     newAnimalModel.Birthday = birthday;
 
+    var newSaveAnimalParameter = new SaveAnimalParameter();
+    newSaveAnimalParameter.model = newAnimalModel;
 
-    const newAnimalClient = new AnimalClient();
+    var newAnimalClient = new AnimalClient();  
 
-
-    newAnimalClient.SaveAnimal(newAnimalModel, function (response) {
+    newAnimalClient.SaveAnimal(newSaveAnimalParameter, function (response) {
         var data = JSON.stringify(response);
         var obj = JSON.parse(data);
         //check if livestock add is OK
@@ -202,7 +202,7 @@ function RESTAddLivestockGroup() {
 //REST get group of livestocks
 function RESTGetAnimalGroup() {
 
-    const getParameter = new APIGetParameter();
+    const getParameter = new ApiGetParameter();
     const newAnimalGroupClient = new AnimalGroupClient();
 
     newAnimalGroupClient.GetAnimalGroups(getParameter, function (response) {
@@ -221,7 +221,7 @@ function RESTGetAnimalGroup() {
 //REST get group of livestocks
 function RESTGetUnits() {
 
-    const getParameter = new APIGetParameter();
+    const getParameter = new ApiGetParameter();
     const newUnitClient = new UnitClient();
 
     newUnitClient.GetUnits(getParameter, function (response) {
@@ -231,7 +231,6 @@ function RESTGetUnits() {
         UnitsLength = data.split("id").length - 1;
         //save livestocks in global variable
         UnitsList = obj.list;
-        alert(data)
     }, function (xhr, status, error) {
         var errorMessage = xhr.status + ': ' + xhr.statusText
         alert('Get Units failed! Error - ' + errorMessage);
@@ -275,7 +274,7 @@ function RESTDeleteAnimal(id) {
 //REST get all Livestocks
 function RESTGetAnimalSpecies() {
 
-    const getParameter = new APIGetParameter();
+    const getParameter = new ApiGetParameter();
     const newAnimalSpeciesClient = new AnimalSpeciesClient();
 
     newAnimalSpeciesClient.GetAnimalSpecies(getParameter, function (response) {
@@ -293,7 +292,7 @@ function RESTGetAnimalSpecies() {
 
 function RESTGetLocation() {
 
-    const getParameter = new APIGetParameter();
+    const getParameter = new ApiGetParameter();
     const newAnimalLocation = new AnimalLocationClient();
 
     newAnimalLocation.GetAnimalLocations(getParameter, function (response) {
@@ -383,7 +382,7 @@ function RESTDeleteLocation(id) {
 
 function RESTGetAnimalColor() {
 
-    const getParameter = new APIGetParameter();
+    const getParameter = new ApiGetParameter();
     const newAnimalColorClient = new AnimalColorClient();
 
     newAnimalColorClient.GetAnimalColors(getParameter, function (response) {
@@ -401,7 +400,7 @@ function RESTGetAnimalColor() {
 
 function RESTGetDrugs() {
 
-    const getParameter = new APIGetParameter();
+    const getParameter = new ApiGetParameter();
     const newDrugClient = new DrugClient();
 
     newDrugClient.GetDrugs(getParameter, function (response) {

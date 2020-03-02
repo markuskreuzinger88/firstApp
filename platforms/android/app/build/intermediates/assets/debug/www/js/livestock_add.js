@@ -2,109 +2,133 @@ db = window.openDatabase("Database", "1.0", "Nutztier DB", 20 * 1024 * 1024); //
 var number = "";
 var email = "";
 var bearerToken = "";
-var switchState = "";
-var ipAdress = "";
+var selectedLocationGroup = "dummy"
 var place = "";
-var color = "";
-var born = "";
 var createdOn = "";
-var switchState = "";
 
-document.addEventListener("init", function (event) {
-    var page = event.target;
-    if (page.id === 'livestock_add') {
-        BornOn.max = new Date().toISOString().split("T")[0];
-        switchState = localStorage.getItem("settings_request")
-        ipAdress = localStorage.getItem("settings_ipAdress")
-        //calc window size and adapte SVG Object
-        var w = window.innerWidth;
-        var h = window.innerHeight;
-        var OffsestWidthX = (w - 250 - 50) / 2
-        //set Object width depending on Display width
-        document.getElementById("SvgObj").setAttribute("width", w - 30);
-        document.getElementById("rect1").setAttribute("x", OffsestWidthX);
-        document.getElementById("circle1").setAttribute("cx", OffsestWidthX + 130);
-        document.getElementById("circle2").setAttribute("cx", OffsestWidthX + 130);
-        document.getElementById("rect2").setAttribute("x", OffsestWidthX + 61);
-        document.getElementById("CodeDigit0Obj").setAttribute("x", OffsestWidthX + 40);
-        document.getElementById("CodeDigit1Obj").setAttribute("x", OffsestWidthX + 85);
-        document.getElementById("CodeDigit2Obj").setAttribute("x", OffsestWidthX + 130);
-        document.getElementById("CodeDigit3Obj").setAttribute("x", OffsestWidthX + 175);
-        document.getElementById("Svgtext1").setAttribute("x", OffsestWidthX + 40);
-        document.getElementById("Svgtext2").setAttribute("x", OffsestWidthX + 190);
-        document.getElementById("Svgtext3").setAttribute("x", OffsestWidthX + 70);
-        if (localStorage.getItem("ChooseSelPlaceStorage") !== null) {
-            document.getElementById("ChooseSelPlace").value = localStorage.getItem("ChooseSelPlaceStorage");
-        }
-        if (localStorage.getItem("MarkColor") !== null) {
-            document.getElementById("Color").style.backgroundColor = localStorage.getItem("MarkColor");
-            document.getElementById("rect1").style.fill = localStorage.getItem("MarkColor");
-            document.getElementById("rect2").style.fill = localStorage.getItem("MarkColor");
-            document.getElementById("circle1").style.fill = localStorage.getItem("MarkColor");
-        }
-        let today = new Date().toISOString().substr(0, 10);
-        document.querySelector("#BornOn").value = today;
-        db.transaction(function (transaction) {
-            transaction.executeSql('SELECT * FROM user', [], function (tx, results) {
-                //get email
-                email = results.rows.item(0).email;
-                //get user token
-                bearerToken = results.rows.item(0).bearerToken;
-            }, null);
-        });
+var networkConnection = false;
 
-        //select between inputs
-        $("#CodeDigit0").keyup(function () {
-            if (document.getElementById("CodeDigit0").value != '') {
-                if (document.getElementById("CodeDigit1").value == '') {
-                    document.getElementById("CodeDigit1").focus();
-                } else {
-                    document.getElementById("CodeDigit0").blur();
-                }
-            }
-        });
-        $("#CodeDigit1").keyup(function () {
-            if (document.getElementById("CodeDigit1").value != '') {
-                if (document.getElementById("CodeDigit2").value == '') {
-                    document.getElementById("CodeDigit2").focus();
-                } else {
-                    document.getElementById("CodeDigit1").blur();
-                }
-            }
-        });
-        $("#CodeDigit2").keyup(function () {
-            if (document.getElementById("CodeDigit2").value != '') {
-                if (document.getElementById("CodeDigit3").value == '') {
-                    document.getElementById("CodeDigit3").focus();
-                } else {
-                    document.getElementById("CodeDigit2").blur();
-                }
-            }
-        });
-        $("#CodeDigit3").keyup(function () {
-            if (document.getElementById("CodeDigit3").value != '') {
-                document.getElementById("CodeDigit3").blur();
-            }
-        });
-    }
-});
-
-var showTemplateDialogAdd = function (my_dialog, my_dialog_html) {
-
-    var dialog = document.getElementById(my_dialog);
-
-    if (dialog) {
-        dialog.show();
-    } else {
-        ons.createElement(my_dialog_html, {
-                append: true
-            })
-            .then(function (dialog) {
-                dialog.show();
-            });
-    }
+// Create livestock object to check if changes occures by clicking backbuton
+var livestockObj = {
+    color: "",
+    place: "",
+    category: "",
+    born: "",
+    number: "",
 };
 
+function updateLivestockAddView() {
+
+    //set the last selected place for livestock
+    if ("livestockPlaceAdd" in localStorage) {
+        document.getElementById("livestockPlaceAdd").innerHTML = localStorage.getItem("livestockPlaceAdd")
+        livestockObj.place = localStorage.getItem("livestockPlaceAdd")
+    } else {
+        document.getElementById("livestockPlaceAdd").innerHTML = "Bitte wählen"
+        livestockObj.place = "Bitte wählen"
+    }
+
+        //set the last selected category for livestock
+        if ("lastAnimalCategory" in localStorage) {
+            document.getElementById("animalCategoryText").innerHTML = localStorage.getItem("lastAnimalCategory")
+            livestockObj.category = localStorage.getItem("lastAnimalCategory")
+        } else {
+            document.getElementById("animalCategoryText").innerHTML = "Bitte wählen"
+            livestockObj.category = "Bitte wählen"
+        }
+
+    //set color of livestock mark and color selector
+    if ("MarkColor" in localStorage) {
+        document.getElementById("rect1").style.fill = localStorage.getItem("MarkColor");
+        document.getElementById("rect2").style.fill = localStorage.getItem("MarkColor");
+        document.getElementById("circle1").style.fill = localStorage.getItem("MarkColor");
+    } else {
+        document.getElementById("rect1").style.fill = "#ffff00";
+        document.getElementById("rect2").style.fill = "#ffff00";
+        document.getElementById("circle1").style.fill = "#ffff00";
+    }
+    //set color of livestock Text Field
+    if ("MarkColorText" in localStorage) {
+        document.getElementById("livestockColorAdd").innerHTML = localStorage.getItem("MarkColorText");
+        livestockObj.color = localStorage.getItem("MarkColorText")
+    } else {
+        document.getElementById("livestockColorAdd").innerHTML = "Gelb";
+        livestockObj.color = "Gelb"
+    }
+
+    //set  cuurent view livestock number
+    var CodeDigit0 = document.getElementById("CodeDigit0").value;
+    var CodeDigit1 = document.getElementById("CodeDigit1").value;
+    var CodeDigit2 = document.getElementById("CodeDigit2").value;
+    var CodeDigit3 = document.getElementById("CodeDigit3").value;
+    var number = CodeDigit0 + CodeDigit1 + CodeDigit2 + CodeDigit3
+    livestockObj.number = number
+
+    //get max date
+    //BornOn.max = new Date().toISOString().split("T")[0];
+    var currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() + 1);
+    BornOn.max = currentDate.toISOString().split("T")[0];
+
+    //calc window size of current device and adapte SVG Object
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+    var OffsestWidthX = (w - 250 - 50) / 2
+    //set Object width depending on Display width
+    document.getElementById("SvgObj").setAttribute("width", w - 30);
+    document.getElementById("rect1").setAttribute("x", OffsestWidthX);
+    document.getElementById("circle1").setAttribute("cx", OffsestWidthX + 130);
+    document.getElementById("circle2").setAttribute("cx", OffsestWidthX + 130);
+    document.getElementById("rect2").setAttribute("x", OffsestWidthX + 61);
+    document.getElementById("CodeDigit0Obj").setAttribute("x", OffsestWidthX + 40);
+    document.getElementById("CodeDigit1Obj").setAttribute("x", OffsestWidthX + 85);
+    document.getElementById("CodeDigit2Obj").setAttribute("x", OffsestWidthX + 130);
+    document.getElementById("CodeDigit3Obj").setAttribute("x", OffsestWidthX + 175);
+    document.getElementById("Svgtext1").setAttribute("x", OffsestWidthX + 40);
+    document.getElementById("Svgtext2").setAttribute("x", OffsestWidthX + 190);
+    document.getElementById("Svgtext3").setAttribute("x", OffsestWidthX + 70);
+    let today = new Date().toISOString().substr(0, 10);
+    document.querySelector("#BornOn").value = today;
+    livestockObj.born = today
+
+    //select between inputs
+    $("#CodeDigit0").keyup(function () {
+        if (document.getElementById("CodeDigit0").value != '') {
+            if (document.getElementById("CodeDigit1").value == '') {
+                document.getElementById("CodeDigit1").focus();
+            } else {
+                document.getElementById("CodeDigit0").blur();
+            }
+        }
+    });
+    $("#CodeDigit1").keyup(function () {
+        if (document.getElementById("CodeDigit1").value != '') {
+            if (document.getElementById("CodeDigit2").value == '') {
+                document.getElementById("CodeDigit2").focus();
+            } else {
+                document.getElementById("CodeDigit1").blur();
+            }
+        }
+    });
+    $("#CodeDigit2").keyup(function () {
+        if (document.getElementById("CodeDigit2").value != '') {
+            if (document.getElementById("CodeDigit3").value == '') {
+                document.getElementById("CodeDigit3").focus();
+            } else {
+                document.getElementById("CodeDigit2").blur();
+            }
+        }
+    });
+    $("#CodeDigit3").keyup(function () {
+        if (document.getElementById("CodeDigit3").value != '') {
+            document.getElementById("CodeDigit3").blur();
+        }
+    });
+
+}
+
+//only for Inormation
+//MAYBE DELETE????
 var showInfo = function (code) {
     if (code == "countryCode") {
         ons.notification.alert({
@@ -124,63 +148,425 @@ var showInfo = function (code) {
     }
 };
 
+//open Templates for current page
+var showTemplateDialogAdd = function (my_dialog, my_dialog_html) {
+
+    var dialog = document.getElementById(my_dialog);
+    var button = document.getElementById("saveEditButton");
+    if (((eventEnterPageId === 'Bestandsliste Arzneimittel') && (button.hidden === false)) || (eventEnterPageId === 'livestock_add')) {
+        if (dialog) {
+            dialog.show();
+        } else {
+            ons.createElement(my_dialog_html, {
+                    append: true
+                })
+                .then(function (dialog) {
+                    dialog.show();
+                });
+        }
+    }
+};
+
 //select color
-var hideDialogColorAdd = function (id, checkbox, color) {
-    document.getElementById("checkColor-1").checked = false;
-    document.getElementById("checkColor-2").checked = false;
-    document.getElementById("checkColor-3").checked = false;
-    document.getElementById("checkColor-4").checked = false;
-    document.getElementById("checkColor-5").checked = false;
-    document.getElementById("checkColor-6").checked = false;
-    document.getElementById(checkbox).checked = true;
-    document.getElementById("Color").style.backgroundColor = color;
-    document.getElementById("rect1").style.fill = color;
-    document.getElementById("rect2").style.fill = color;
-    document.getElementById("circle1").style.fill = color;
-    localStorage.setItem("MarkColor", color);
-    document.getElementById(id).hide();
+var hideDialogColorAdd = function (color, colorText) {
+    //get index and color from parameter
+    var res = color.split("+");
+    var setIndex = res[0]
+    var setColor = res[1]
+    list = document.getElementById("containerColorAdd")
+
+    //set selected checbox and unset all other checkboxes
+    for (i = 0; i < list.childElementCount; i++) {
+        var checkboxID = "checkbox-" + i
+        if (setIndex == i) {
+            document.getElementById(checkboxID).checked = true;
+            localStorage.setItem("livestockColorCheckbox", checkboxID);
+        } else {
+            document.getElementById(checkboxID).checked = false;
+        }
+    }
+    if (eventEnterPageId === 'livestock_add'){
+        document.getElementById("rect1").style.fill = setColor;
+        document.getElementById("rect2").style.fill = setColor;
+        document.getElementById("circle1").style.fill = setColor;
+        document.getElementById("livestockColorAdd").innerHTML = colorText;
+    } else if (eventEnterPageId === 'Bestandsliste Arzneimittel') { 
+        document.getElementById("rect1Detail").style.fill = setColor;
+        document.getElementById("rect2Detail").style.fill = setColor;
+        document.getElementById("circle1Detail").style.fill = setColor;
+        document.getElementById("livestockColorDetail").innerHTML = colorText;
+
+    }
+    localStorage.setItem("MarkColor", setColor);
+    localStorage.setItem("MarkColorText", colorText);
+    document.getElementById("colorAdd").hide();
+};
+
+//update livestock location list
+function updateLivestockColors() {
+    var lastSelectedColor = localStorage.getItem("livestockColorCheckbox");
+    list = document.getElementById("containerColorAdd")
+    //remove current items in view
+    if (list) {
+        while (list.hasChildNodes()) {
+            list.removeChild(list.firstChild);
+        }
+    }
+
+    for (i = 0; i < AnimalColorNbr; i++) {
+        var color = AnimalColor[i].color
+        var name = AnimalColor[i].name
+
+        list = document.createElement("ons-list-item")
+        list.setAttribute("id", i +"+"+ color);
+        list.setAttribute("onchange", "hideDialogColorAdd(this.id,'" + name + "')");
+        list.setAttribute("tappable");
+        //label left
+        label_left = document.createElement("label")
+        label_left.setAttribute("class", "left");
+        checkbox = document.createElement("ons-checkbox")
+        checkbox.setAttribute("id", "checkbox-" + i);
+        //check checkbox if last selected color = current list color 
+        if (lastSelectedColor == "checkbox-" + i) {
+            checkbox.setAttribute("checked");
+        }
+        label_left.appendChild(checkbox);
+        //label center
+        label_center = document.createElement("label")
+        label_center.setAttribute("class", "center");
+        label_center.setAttribute("onchange", "hideDialogColorAdd(this.id,'" + name + "')");
+        colorSquare = document.createElement("ons-icon")
+        colorSquare.setAttribute("style", "margin-right: 10px; color: " + color);
+        colorSquare.setAttribute("icon", "fa-square-full");
+        label_center.appendChild(colorSquare);
+        text = document.createElement("div")
+        text.innerHTML = name;
+        label_center.appendChild(text);
+        //append labels to list
+        list.appendChild(label_left);
+        list.appendChild(label_center);
+        document.getElementById("containerColorAdd").appendChild(list);
+    }
+}
+
+//update livestock location list
+function updateLivestockLocations() {
+    var lastSelectedPlace = localStorage.getItem("livestockPlaceAdd");
+    document.getElementById("locationButton1").style.visibility = "visible";
+    document.getElementById("locationButton2").style.visibility = "visible";
+    document.getElementById("locationButton1").disabled = false;
+    document.getElementById("locationButton2").disabled = false;
+
+    list = document.getElementById("containerLocationAdd")
+    //remove current items in view
+    if (list) {
+        while (list.hasChildNodes()) {
+            list.removeChild(list.firstChild);
+        }
+    }
+
+    for (i = 0; i < LivestockLocationNbrs; i++) {
+        var location = LivestockPlaces[i].name
+
+        list = document.createElement("ons-list-item")
+        list.setAttribute("onchange", "hideDialogLocationAdd('" + location + "')");
+        list.setAttribute("tappable");
+        //label left
+        label_left = document.createElement("label")
+        label_left.setAttribute("class", "left");
+        checkbox = document.createElement("ons-checkbox")
+        checkbox.setAttribute("input-id", "checkbox" + location);
+        //check checkbox if last selected place = current list place 
+        if (lastSelectedPlace == location) {
+            checkbox.setAttribute("checked");
+        }
+        label_left.appendChild(checkbox);
+        //label center
+        label_center = document.createElement("label")
+        label_center.setAttribute("class", "center");
+        label_center.innerHTML = location;
+        label_center.setAttribute("onclick", "hideDialogLocationAdd('" + location + "')");
+        //label right
+        label_right = document.createElement("label")
+        label_right.setAttribute("class", "right");
+        trash = document.createElement("ons-icon")
+        trash.setAttribute("icon", "fa-trash");
+        trash.setAttribute("style", "color: #802000; display: none");
+        trash.setAttribute("id", "livestockPlaceTrashIcon" + i);
+        trash.setAttribute("onclick", "RESTDeleteLocation('" + LivestockPlaces[i].id + "')");
+        label_right.appendChild(trash);
+        //append labels to list
+        list.appendChild(label_left);
+        list.appendChild(label_center);
+        list.appendChild(label_right);
+        document.getElementById("containerLocationAdd").appendChild(list);
+    }
+}
+
+//toggle livestock place trash icon
+function showDeletePlaceIcon() {
+    list = document.getElementById("containerLocationAdd")
+    for (i = 0; i < list.childElementCount; i++) {
+        var icon = document.getElementById("livestockPlaceTrashIcon" + i);
+        if (window.getComputedStyle(icon).display === "none") {
+            icon.style.display = "block";
+        } else {
+            icon.style.display = "none";
+        }
+    }
+}
+
+//show prompt to enter new livestock place
+var showPrompt = function () {
+    ons.notification.prompt({
+            title: '',
+            message: 'neuen Standort anlegen',
+            cancelable: true,
+        })
+        .then(function (input) {
+            var input = input.trim()
+            var message = input ? 'Neuer Standort: ' + '<b>' + input + '</b>' : 'Du hast keinen Standort eingegeben';
+            ons.notification.confirm({
+                title: '',
+                message: message,
+                cancelable: true,
+                buttonLabels: ['OK'],
+                callback: function (index) {
+                    if (index == 0) {
+                        if (input !== "") {
+                            RESTSaveLocation(input)
+                        }
+                    }
+                }
+            })
+        });
+};
+
+//select location
+var hideDialogLocationAdd = function (location) {
+    list = document.getElementById("containerLocationAdd")
+    var elements = [];
+    //first get all place items
+    for (var i = 1; i <= list.childElementCount; i++) {
+        var text = document.querySelector("#containerLocationAdd > ons-list-item:nth-child(" + i + ") > label.center.list-item__center")
+        elements.push(text.innerHTML)
+    }
+    //uncheck all checkboxes and check selected checkbox
+    for (i = 0; i < elements.length; i++) {
+        if (elements[i] != location) {
+            document.getElementById("checkbox" + elements[i]).checked = false;
+        } else {
+            document.getElementById("checkbox" + elements[i]).checked = true;
+        }
+    }
+    if (eventEnterPageId == "livestock_selector") {
+        //get selected location
+        //get all livestocks ID with this location
+        //save livestok ID in global array for drug delivery
+        selectedLocationGroup = location;
+        for (i = 0; i < LivestockListLength; i++) {
+            if (location.includes(LivestockList[i].animalLocationName) === true) {
+                //add item to array
+                if (taggedLivestock.includes(LivestockList[i].id) === false) {
+                    taggedLivestock.push(LivestockList[i].id);
+                }
+            }
+        }
+    } else if (eventEnterPageId == "livestock_add") {
+        document.getElementById("livestockPlaceAdd").innerHTML = location;
+    } else if (eventEnterPageId == "livestock_group_add") {
+        document.getElementById("animalGroupPlaceText").innerHTML = location;
+    } else if (eventEnterPageId == "Bestandsliste Arzneimittel") {
+        document.getElementById("livestockPlaceDetail").innerHTML = location;
+    }
+    localStorage.setItem("livestockPlaceAdd", location);
+    document.getElementById("locationAdd").hide(); 
+};
+
+//update livestock location list
+function showAnimalCategory() {
+    var lastSelectedCategory = localStorage.getItem("lastAnimalCategory");
+    list = document.getElementById("containerAnimalCategory")
+    //remove current items in view
+    if (list) {
+        while (list.hasChildNodes()) {
+            list.removeChild(list.firstChild);
+        }
+    }
+
+    for (i = 0; i < AnimalSpeciesLength; i++) {
+        var category = AnimalSpeciesList[i].name
+        localStorage.setItem("animalCategoryText", location);
+        list = document.createElement("ons-list-item")
+        list.setAttribute("onchange", "hideDialogAnimalCategory('" + category + "')");
+        list.setAttribute("tappable");
+        //label left
+        label_left = document.createElement("label")
+        label_left.setAttribute("class", "left");
+        checkbox = document.createElement("ons-checkbox")
+        checkbox.setAttribute("input-id", "checkbox" + category);
+        //check checkbox if last selected place = current list place 
+        if (lastSelectedCategory == category) {
+            checkbox.setAttribute("checked");
+        }
+        label_left.appendChild(checkbox);
+        //label center
+        label_center = document.createElement("label")
+        label_center.setAttribute("class", "center");
+        label_center.innerHTML = category;
+        label_center.setAttribute("onclick", "hideDialogAnimalCategory('" + category + "')");
+        //append labels to list
+        list.appendChild(label_left);
+        list.appendChild(label_center);
+        list.appendChild(label_right);
+
+        document.getElementById("containerAnimalCategory").appendChild(list);
+    }
+}
+
+//hide Dialog Animal Category
+var hideDialogAnimalCategory = function (category) {
+    list = document.getElementById("containerAnimalCategory")
+    var elements = [];
+    //first get all place items
+    for (var i = 1; i <= list.childElementCount; i++) {
+        var text = document.querySelector("#containerAnimalCategory > ons-list-item:nth-child(" + i + ") > label.center.list-item__center")
+        elements.push(text.innerHTML)
+    }
+    //uncheck all checkboxes and check selected checkbox
+    for (i = 0; i < elements.length; i++) {
+        if (elements[i] != category) {
+            document.getElementById("checkbox" + elements[i]).checked = false;
+        } else {
+            document.getElementById("checkbox" + elements[i]).checked = true;
+        }
+    }
+
+    if (eventEnterPageId == "livestock_add") {
+        document.getElementById("animalCategoryText").innerHTML = category;
+    } else if (eventEnterPageId == "livestock_group_add") {
+        document.getElementById("animalGroupCategoryText").innerHTML = category;
+    } else if (eventEnterPageId == "Bestandsliste Arzneimittel") {
+        document.getElementById("livestockCategoryDetail").innerHTML = category;
+    }
+    localStorage.setItem("lastAnimalCategory", category);
+    document.getElementById("animalCategory").hide(); 
 };
 
 function checkInputs() {
-    var actualDateNew = new Date();
-    var actualDate = actualDateNew.getTime();
+    let today = new Date().toISOString().substr(0, 10);
+    var actualDate = today;
     var CodeDigit0 = document.getElementById("CodeDigit0").value;
     var CodeDigit1 = document.getElementById("CodeDigit1").value;
     var CodeDigit2 = document.getElementById("CodeDigit2").value;
     var CodeDigit3 = document.getElementById("CodeDigit3").value;
-    place = document.getElementById("ChooseSelPlace").value;
-    color = document.getElementById("Color").style.backgroundColor;
+    var place = document.getElementById("livestockPlaceAdd").innerHTML;
+    var color = fullColorHex(document.getElementById("rect1").style.fill);
     born = document.getElementById("BornOn").value;
-    group = document.getElementById("ChooseGroupe").value;
-    localStorage.setItem("ChooseSelPlaceStorage", place);
+    // localStorage.setItem("ChooseSelPlaceStorage", place);
     number = CodeDigit0 + CodeDigit1 + CodeDigit2 + CodeDigit3
-    if (number.length == 4) {
-        checkLivestockDB(born, color, number, place, actualDate, group, email)
-    } else {
+    //generate guid for livestock
+    guid = create_UUID();
+    //get animal location ID
+    for (i = 0; i < LivestockLocationNbrs; i++) {
+        if (place == LivestockPlaces[i].name) {
+            AnimalLocationId = LivestockPlaces[i].id
+        }
+    }
+    if ((number.length == 4) && (place != "Bitte wählen")) {
+        RESTAddLivestock(born, color, number, AnimalLocationId)
+    } else if (number.length != 4) {
         ons.notification.alert({
             message: 'Die Nummer muss aus 4 Ziffern bestehen',
             title: 'Ohrmarkennummer Fehler',
         });
+    } else if (place == "Bitte wählen") {
+        ons.notification.alert({
+            message: 'Bitte wählen Sie einen Standort aus',
+            title: 'Standort Fehler',
+        });
     }
 }
 
-function checkLivestockDB(born, color, number, place, actualDate, group, email) {
-    db.transaction(function (transaction) {
-        transaction.executeSql(
-            'SELECT * FROM livestock WHERE color = ? AND number = ?', [color, number],
-            function (tx, results) {
-                if (results.rows.length == 0) {
-                    if (switchState == 'true') {
-                        RESTAddLivestock()
-                    } else {
-                        write2DBLivestock(born, color, number, place, actualDate, group, email)
-                    }
-                } else {
-                    ons.notification.alert({
-                        message: 'Nutztier ist bereits in der Datenbank hinterlegt',
-                        title: 'Nutztier vorhanden',
-                    });
+//split rgb string
+var fullColorHex = function (rgb) {
+    var rgb = rgb.replace("rgb(", "");
+    var rgb = rgb.replace(")", "");
+    var rgb = rgb.split(",");
+    var red = rgbToHex(rgb[0]);
+    var green = rgbToHex(rgb[1]);
+    var blue = rgbToHex(rgb[2]);
+    return red + green + blue;
+};
+
+//red, green, blue from rgb to hex
+var rgbToHex = function (rgb) {
+    var hex = Number(rgb).toString(16);
+    if (hex.length < 2) {
+        hex = "0" + hex;
+    }
+    return hex;
+};
+
+
+function checkInputsUnsaved() {
+    //set  cuurent view livestock number
+    var CodeDigit0 = document.getElementById("CodeDigit0").value;
+    var CodeDigit1 = document.getElementById("CodeDigit1").value;
+    var CodeDigit2 = document.getElementById("CodeDigit2").value;
+    var CodeDigit3 = document.getElementById("CodeDigit3").value;
+    var number = CodeDigit0 + CodeDigit1 + CodeDigit2 + CodeDigit3
+
+    var color = document.getElementById("livestockColorAdd").innerHTML;
+    var place = document.getElementById("livestockPlaceAdd").innerHTML;
+    var category = document.getElementById("animalCategoryText").innerHTML;
+    var birthay = document.getElementById("BornOn").value;
+
+    if ((number !== livestockObj.number) || (color !== livestockObj.color) || (category !== livestockObj.category) || (place !== livestockObj.place) || (birthay !== livestockObj.born)) {
+        ons.notification.confirm({
+            message: 'Das Profil hat ungespeicherte Änderungen. Bist du sicher, dass du das Profil verlassen möchtest?',
+            title: 'Ungespeicherte Änderungen',
+            buttonLabels: ['Ja', 'Nein'],
+            animation: 'default',
+            primaryButtonIndex: 1,
+            cancelable: true,
+            callback: function (index) {
+                if (index == 0) {
+                    document.querySelector('#nav1').popPage();
                 }
-            }, null);
-    });
+            }
+        });
+    } else {
+        document.querySelector('#nav1').popPage();
+    }
 }
+
+//create livestock guid
+function create_UUID() {
+    var dt = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = (dt + Math.random() * 16) % 16 | 0;
+        dt = Math.floor(dt / 16);
+        return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+    return uuid;
+}
+
+// function checkLivestockDB(born, color, number, place, actualDate, email, guid) {
+//     var id = '-1'
+//     db.transaction(function (transaction) {
+//         transaction.executeSql(
+//             'SELECT * FROM livestock WHERE color = ? AND number = ?', [color, number],
+//             function (tx, results) {
+//                 if (results.rows.length == 0) {
+//                     writeLivestockDatabaseAndServer(id, born, color, number, place, actualDate, "dummy@dummy.at", "no_tag", guid)
+//                 } else {
+//                     ons.notification.alert({
+//                         message: 'Nutztier ist bereits in der Datenbank hinterlegt',
+//                         title: 'Nutztier vorhanden',
+//                     });
+//                 }
+//                 document.querySelector('#nav1').popPage();
+//             }, null);
+//     });
+// }

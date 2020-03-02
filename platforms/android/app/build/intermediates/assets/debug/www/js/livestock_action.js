@@ -14,88 +14,88 @@ $(document).on('postpush', '#nav1', function (event) {
         var daysLeft = Math.ceil((livestockActionDate - actualDate) / 24 / 60 / 60 / 1000);
         var daysLeftABS = Math.abs(daysLeft);
         console.log(daysLeftABS)
-        db.transaction(function (transaction) {
-            transaction.executeSql(
-                'SELECT * FROM livestock_action WHERE future = ? AND livestock_id = ? ORDER BY date DESC', ['false', livestock_id],
-                function (tx, results) {
-                    if (daysLeftABS != 0) {
-                        if (livestockActionEdit == 'true') {
-                            if (results.rows.item(0).type == 'Belegung') {
-                                document.getElementById('livestockActionListField1').setAttribute('disabled')
-                                document.getElementById('livestockActionListField1').removeAttribute('modifier')
-                                document.getElementById('livestockActionListField3').setAttribute('disabled')
-                                document.getElementById('livestockActionListField3').removeAttribute('modifier')
-                                document.getElementById('livestockActionListField4').setAttribute('disabled')
-                                document.getElementById('livestockActionListField4').removeAttribute('modifier')
-                                document.getElementById('livestockActionListField5').setAttribute('disabled')
-                                document.getElementById('livestockActionListField5').removeAttribute('modifier')
-                            } else if (results.rows.item(0).type == 'Kontrolle 1') {
-                                document.getElementById('livestockActionListField1').setAttribute('disabled')
-                                document.getElementById('livestockActionListField1').removeAttribute('modifier')
-                                document.getElementById('livestockActionListField2').setAttribute('disabled')
-                                document.getElementById('livestockActionListField2').removeAttribute('modifier')
-                                document.getElementById('livestockActionListField4').setAttribute('disabled')
-                                document.getElementById('livestockActionListField4').removeAttribute('modifier')
-                                document.getElementById('livestockActionListField5').setAttribute('disabled')
-                                document.getElementById('livestockActionListField5').removeAttribute('modifier')
-                            } else if (results.rows.item(0).type == 'Kontrolle 2') {
-                                document.getElementById('livestockActionListField1').setAttribute('disabled')
-                                document.getElementById('livestockActionListField1').removeAttribute('modifier')
-                                document.getElementById('livestockActionListField2').setAttribute('disabled')
-                                document.getElementById('livestockActionListField2').removeAttribute('modifier')
-                                document.getElementById('livestockActionListField3').setAttribute('disabled')
-                                document.getElementById('livestockActionListField3').removeAttribute('modifier')
-                                document.getElementById('livestockActionListField5').setAttribute('disabled')
-                                document.getElementById('livestockActionListField5').removeAttribute('modifier')
-                            } else if (results.rows.item(0).type == 'Abgeferkelt') {
-                                document.getElementById('livestockActionListField1').setAttribute('disabled')
-                                document.getElementById('livestockActionListField1').removeAttribute('modifier')
-                                document.getElementById('livestockActionListField2').setAttribute('disabled')
-                                document.getElementById('livestockActionListField2').removeAttribute('modifier')
-                                document.getElementById('livestockActionListField3').setAttribute('disabled')
-                                document.getElementById('livestockActionListField3').removeAttribute('modifier')
-                                document.getElementById('livestockActionListField4').setAttribute('disabled')
-                                document.getElementById('livestockActionListField4').removeAttribute('modifier')
-                            } else if (results.rows.item(0).type == 'Abgesetzt') {
-                                document.getElementById('livestockActionListField2').setAttribute('disabled')
-                                document.getElementById('livestockActionListField2').removeAttribute('modifier')
-                                document.getElementById('livestockActionListField3').setAttribute('disabled')
-                                document.getElementById('livestockActionListField3').removeAttribute('modifier')
-                                document.getElementById('livestockActionListField4').setAttribute('disabled')
-                                document.getElementById('livestockActionListField4').removeAttribute('modifier')
-                                document.getElementById('livestockActionListField5').setAttribute('disabled')
-                                document.getElementById('livestockActionListField5').removeAttribute('modifier')
-                            }
-                        } else {
-                            //if no date from each action is reached than user can do nothing
-                            document.getElementById('livestockActionListField1').setAttribute('disabled')
-                            document.getElementById('livestockActionListField1').removeAttribute('modifier')
-                            document.getElementById('livestockActionListField2').setAttribute('disabled')
-                            document.getElementById('livestockActionListField2').removeAttribute('modifier')
-                            document.getElementById('livestockActionListField3').setAttribute('disabled')
-                            document.getElementById('livestockActionListField3').removeAttribute('modifier')
-                            document.getElementById('livestockActionListField4').setAttribute('disabled')
-                            document.getElementById('livestockActionListField4').removeAttribute('modifier')
-                            document.getElementById('livestockActionListField5').setAttribute('disabled')
-                            document.getElementById('livestockActionListField5').removeAttribute('modifier')
-                            livestockActionEditAlert('Du kannst den Wurfindex dieses Nutztieres erst 7 Tage vor dem ersten ausgewählten Datum wieder bearbeiten')
-                        }
-                    } else { 
-                        //if last action date is equal than current date
-                        document.getElementById('livestockActionListField1').setAttribute('disabled')
-                        document.getElementById('livestockActionListField1').removeAttribute('modifier')
-                        document.getElementById('livestockActionListField2').setAttribute('disabled')
-                        document.getElementById('livestockActionListField2').removeAttribute('modifier')
-                        document.getElementById('livestockActionListField3').setAttribute('disabled')
-                        document.getElementById('livestockActionListField3').removeAttribute('modifier')
-                        document.getElementById('livestockActionListField4').setAttribute('disabled')
-                        document.getElementById('livestockActionListField4').removeAttribute('modifier')
-                        document.getElementById('livestockActionListField5').setAttribute('disabled')
-                        document.getElementById('livestockActionListField5').removeAttribute('modifier')
-                        livestockActionEditAlert('Du hast heute schon ein Ereigniss für diese Nutztier abgespeichert')
-                    }
-                }, null);
-        });
+        // db.transaction(function (transaction) {
+        //     transaction.executeSql(
+        //         'SELECT * FROM livestock_action WHERE future = ? AND livestock_id = ? ORDER BY date DESC', ['false', livestock_id],
+        //         function (tx, results) {
+        //             if (daysLeftABS != 0) {
+        //                 if (livestockActionEdit == 'true') {
+        //                     if (results.rows.item(0).type == 'Belegung') {
+        //                         document.getElementById('livestockActionListField1').setAttribute('disabled')
+        //                         document.getElementById('livestockActionListField1').removeAttribute('modifier')
+        //                         document.getElementById('livestockActionListField3').setAttribute('disabled')
+        //                         document.getElementById('livestockActionListField3').removeAttribute('modifier')
+        //                         document.getElementById('livestockActionListField4').setAttribute('disabled')
+        //                         document.getElementById('livestockActionListField4').removeAttribute('modifier')
+        //                         document.getElementById('livestockActionListField5').setAttribute('disabled')
+        //                         document.getElementById('livestockActionListField5').removeAttribute('modifier')
+        //                     } else if (results.rows.item(0).type == 'Kontrolle 1') {
+        //                         document.getElementById('livestockActionListField1').setAttribute('disabled')
+        //                         document.getElementById('livestockActionListField1').removeAttribute('modifier')
+        //                         document.getElementById('livestockActionListField2').setAttribute('disabled')
+        //                         document.getElementById('livestockActionListField2').removeAttribute('modifier')
+        //                         document.getElementById('livestockActionListField4').setAttribute('disabled')
+        //                         document.getElementById('livestockActionListField4').removeAttribute('modifier')
+        //                         document.getElementById('livestockActionListField5').setAttribute('disabled')
+        //                         document.getElementById('livestockActionListField5').removeAttribute('modifier')
+        //                     } else if (results.rows.item(0).type == 'Kontrolle 2') {
+        //                         document.getElementById('livestockActionListField1').setAttribute('disabled')
+        //                         document.getElementById('livestockActionListField1').removeAttribute('modifier')
+        //                         document.getElementById('livestockActionListField2').setAttribute('disabled')
+        //                         document.getElementById('livestockActionListField2').removeAttribute('modifier')
+        //                         document.getElementById('livestockActionListField3').setAttribute('disabled')
+        //                         document.getElementById('livestockActionListField3').removeAttribute('modifier')
+        //                         document.getElementById('livestockActionListField5').setAttribute('disabled')
+        //                         document.getElementById('livestockActionListField5').removeAttribute('modifier')
+        //                     } else if (results.rows.item(0).type == 'Abgeferkelt') {
+        //                         document.getElementById('livestockActionListField1').setAttribute('disabled')
+        //                         document.getElementById('livestockActionListField1').removeAttribute('modifier')
+        //                         document.getElementById('livestockActionListField2').setAttribute('disabled')
+        //                         document.getElementById('livestockActionListField2').removeAttribute('modifier')
+        //                         document.getElementById('livestockActionListField3').setAttribute('disabled')
+        //                         document.getElementById('livestockActionListField3').removeAttribute('modifier')
+        //                         document.getElementById('livestockActionListField4').setAttribute('disabled')
+        //                         document.getElementById('livestockActionListField4').removeAttribute('modifier')
+        //                     } else if (results.rows.item(0).type == 'Abgesetzt') {
+        //                         document.getElementById('livestockActionListField2').setAttribute('disabled')
+        //                         document.getElementById('livestockActionListField2').removeAttribute('modifier')
+        //                         document.getElementById('livestockActionListField3').setAttribute('disabled')
+        //                         document.getElementById('livestockActionListField3').removeAttribute('modifier')
+        //                         document.getElementById('livestockActionListField4').setAttribute('disabled')
+        //                         document.getElementById('livestockActionListField4').removeAttribute('modifier')
+        //                         document.getElementById('livestockActionListField5').setAttribute('disabled')
+        //                         document.getElementById('livestockActionListField5').removeAttribute('modifier')
+        //                     }
+        //                 } else {
+        //                     //if no date from each action is reached than user can do nothing
+        //                     document.getElementById('livestockActionListField1').setAttribute('disabled')
+        //                     document.getElementById('livestockActionListField1').removeAttribute('modifier')
+        //                     document.getElementById('livestockActionListField2').setAttribute('disabled')
+        //                     document.getElementById('livestockActionListField2').removeAttribute('modifier')
+        //                     document.getElementById('livestockActionListField3').setAttribute('disabled')
+        //                     document.getElementById('livestockActionListField3').removeAttribute('modifier')
+        //                     document.getElementById('livestockActionListField4').setAttribute('disabled')
+        //                     document.getElementById('livestockActionListField4').removeAttribute('modifier')
+        //                     document.getElementById('livestockActionListField5').setAttribute('disabled')
+        //                     document.getElementById('livestockActionListField5').removeAttribute('modifier')
+        //                     // livestockActionEditAlert('Du kannst den Wurfindex dieses Nutztieres erst 7 Tage vor dem ersten ausgewählten Datum wieder bearbeiten')
+        //                 }
+        //             } else { 
+        //                 //if last action date is equal than current date
+        //                 document.getElementById('livestockActionListField1').setAttribute('disabled')
+        //                 document.getElementById('livestockActionListField1').removeAttribute('modifier')
+        //                 document.getElementById('livestockActionListField2').setAttribute('disabled')
+        //                 document.getElementById('livestockActionListField2').removeAttribute('modifier')
+        //                 document.getElementById('livestockActionListField3').setAttribute('disabled')
+        //                 document.getElementById('livestockActionListField3').removeAttribute('modifier')
+        //                 document.getElementById('livestockActionListField4').setAttribute('disabled')
+        //                 document.getElementById('livestockActionListField4').removeAttribute('modifier')
+        //                 document.getElementById('livestockActionListField5').setAttribute('disabled')
+        //                 document.getElementById('livestockActionListField5').removeAttribute('modifier')
+        //                 // livestockActionEditAlert('Du hast heute schon ein Ereigniss für diese Nutztier abgespeichert')
+        //             }
+        //         }, null);
+        // });
     }
 });
 

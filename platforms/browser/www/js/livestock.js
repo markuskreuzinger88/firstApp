@@ -14,7 +14,7 @@
         //reset local storage variables
         resetLocalStorgageVariables()
         //sort list
-        sortLivestockView('number', 'asc')
+        sortLivestockView('number', 'desc')
     }
 
     //display sorted livestock list
@@ -33,6 +33,7 @@
         while (list.hasChildNodes()) {
             list.removeChild(list.firstChild);
         }
+        alert(updatedListLength)
         DisplayResult(updatedList, updatedListLength)
     }
 
@@ -246,9 +247,14 @@
 
     //display livestock list result
     function DisplayResult(livestockList, listLength) {
-        var infiniteList = document.getElementById('containerLivestock');
+        var infiniteList = document.getElementById('containerLivestock'); 
+        alert(listLength)
         infiniteList.delegate = {
             createItemContent: function (i) {
+                // alert(livestockList[i].id)
+                // alert(livestockList[i].number) 
+                // alert(livestockList[i].animalLocationName)
+                // alert(livestockList[i].birthday)
             list = document.createElement("ons-list-item")
             div_center = document.createElement("div")
             div_center.setAttribute("id", livestockList[i].id);
@@ -260,7 +266,8 @@
             span_center1.setAttribute("class", "list-item__title");
             span_center2.setAttribute("class", "list-item__subtitle");
             span_center1.innerHTML = LiveStockNbr + livestockList[i].number;
-            span_center2.innerHTML = livestockList[i].animalLocationName + "<br>" + livestockList[i].birthday.substring(0, 10);
+            span_center2.innerHTML = livestockList[i].animalLocationName;
+            // span_center2.innerHTML = livestockList[i].animalLocationName + "<br>" + livestockList[i].birthday.substring(0, 10);
             div_left = document.createElement("div")
             div_left.setAttribute("class", "left");
             input = document.createElement("input")
@@ -269,8 +276,8 @@
                 "width: 40px; height :40px;margin-right: 5px;border-color : black; border: 2px solid black; border-radius: 10px; background-color:" + livestockList[i].color);
             input.setAttribute("disabled", "true");
             list.setAttribute("tappable", true);
-            //modify selection depending on last site --> when last page drug delivery
-            //use tag icon else use chevron
+            // modify selection depending on last site --> when last page drug delivery
+            // use tag icon else use chevron
             if (getDrugDeliverySiteActive == 'true') {
                 // console.log('yo')
                 list.setAttribute("onclick", "livestockTag(" + livestockList[i].id + ")");

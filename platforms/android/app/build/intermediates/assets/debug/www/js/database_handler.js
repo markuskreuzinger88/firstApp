@@ -1,5 +1,7 @@
 db = window.openDatabase("Database", "1.0", "Nutztier db", 20 * 1024 * 1024); //create 20MB Database
 var enterPage = ""
+var MinLocationIDDB = "";
+var MinAnimalIDDB = "";
 
 $(document).on('postpush', '#nav1', function (event) {
     var event = event.originalEvent;
@@ -122,21 +124,67 @@ function deleteActionItem(id, type) {
     });
 }
 
-
-//add livestock to database
-function write2DBLivestock(born, color, number, place, created, group, email) {
+//write a single new livestock to database
+function writeLivestockDatabaseAndServer(id, birthday, color, number, place, created, user, tagged, guid) {
     db.transaction(function (transaction) {
         var executeQuery =
-            "INSERT INTO livestock (born, color, number, place, created, livestock_group, user, tagged, sync) VALUES (?,?,?,?,?,?,?,?,?)";
-        transaction.executeSql(executeQuery, [born, color, number, place, created, group, email, "false", "true"],
+            "INSERT INTO livestock (id, birthday, color, number, place, created, user, tagged, guid) VALUES (?,?,?,?,?,?,?,?,?)";
+        transaction.executeSql(executeQuery, [id, birthday, color, number, place, created, user, tagged, guid],
             function (tx, result) {
-                document.querySelector('#nav1').popPage();
+                //if data is successfully stored in DB and Networkconnection is valid --> write Data to Server DB
+                if (networkConnection == true) {
+                    RESTAddLivestock(birthday, color, number, place, created, email, guid)
+                }
             },
             function (error) {
                 alert('Error: ' + error.message + ' code: ' + error.code);
             });
     });
 }
+
+//update DB LIvestock ID after sync with Server
+function updateDBLivestockID(id, color, number) {
+    alert("ID = " + id)
+    db.transaction(function (tx) {
+        tx.executeSql("UPDATE livestock SET id = ? WHERE color = ? and number = ?" [id, color, number]);
+    });
+}
+
+// //delete Livestock from DB
+// function deleteDBLivestock(color, number) {
+//     alert("delete Livestock")
+//     db.transaction(function (tx) {
+//         tx.executeSql("DELETE FROM livestock WHERE color = ? and number = ?", [color, number]);
+//     });
+// }
+
+// //write livestock list to Database
+// //check first if ID already exists in Database
+// //if ID exists than update Database entry else
+// //insert entry to Database
+// async function write2DBLivestockArr(id, birthday, color, number, place, created, email, guid) {
+//     await db.transaction(function (tx) {
+//         //search livestock in database
+//         tx.executeSql('SELECT * FROM livestock WHERE id = ?', [id], function (tx, results) {
+//             if (results.rows.length > 0) {
+//                 //ID exits in Database
+//                 tx.executeSql("UPDATE livestock SET birthday = ?, color = ?, number = ?, place = ?, created = ?, user = ?, tagged = ?, guid = ? WHERE id=?" [birthday, color, number, place, created, email, "false", guid, id]);
+//             } else {
+//                 //ID does not exits
+//                 //Note: remove success and error function after development process 
+//                 var executeQuery =
+//                     "INSERT INTO livestock (id, birthday, color, number, place, created, user, tagged, guid) VALUES (?,?,?,?,?,?,?,?,?)";
+//                 tx.executeSql(executeQuery, [id, birthday, color, number, place, created, email, "false", guid],
+//                     function (tx, result) {
+//                         console.log("success")
+//                     },
+//                     function (error) {
+//                         alert('Error: ' + error.message + ' code: ' + error.code);
+//                     });
+//             }
+//         }, null);
+//     });
+// }
 
 //add drug delivery to database
 async function write2DBDrugDelivery() {
@@ -178,16 +226,36 @@ async function write2DBDrugDelivery2(id, drug, approval_number, delay, amount) {
         });
 }
 
-//Write to database
-function write2DBLogin(bearerToken, refreshToken) {
-    var email = document.getElementById("email").value;
-    var psw = document.getElementById("psw").value;
+// //Write Login Data to Database
+// function write2DBLogin(firstname, lastname, token, lfbis) {
+//     var email = document.getElementById("email").value;
+//     var psw = document.getElementById("psw").value;
+//     db.transaction(function (transaction) {
+//         var executeQuery =
+//             "INSERT INTO user (email, password, firstname, lastname, token, lfbis) VALUES (?,?,?,?,?,?)";
+//         transaction.executeSql(executeQuery, [email, psw, firstname, lastname, token, lfbis],
+//             function (tx, result) {
+//                 //get Livestock Database from server
+//                 RESTGetLivestock()
+//                 //get Livestock location
+//                 RESTGetLocation()
+//                 document.querySelector('#nav1').pushPage('home_splitter.html');
+//             },
+//             function (error) {
+//                 alert('Error: ' + error.message + ' code: ' + error.code);
+//             });
+//     });
+// }
+
+
+//write animal location to Database
+function write2DBLocation(id, location) {
     db.transaction(function (transaction) {
         var executeQuery =
-            "INSERT INTO user (bearerToken, refreshToken, email, password) VALUES (?,?,?,?)";
-        transaction.executeSql(executeQuery, [bearerToken, refreshToken, email, psw],
+            "INSERT INTO animal_location (id, location) VALUES (?,?)";
+        transaction.executeSql(executeQuery, [id, location],
             function (tx, result) {
-                document.querySelector('#nav1').pushPage('home_splitter.html');
+                getLocationDB()
             },
             function (error) {
                 alert('Error: ' + error.message + ' code: ' + error.code);
@@ -195,40 +263,118 @@ function write2DBLogin(bearerToken, refreshToken) {
     });
 }
 
-function sampleDrugs() {
-    write2DBDrug('Aconitum', '838031', '0', 'Homöopathika', 'ml', '', 'false')
-    write2DBDrug('Advocid', '8-00295', '3', 'Standardarzneimittel', 'ml', '', 'false')
-    write2DBDrug('Baytril', '8-00988', '7', 'Fütterungsarzneimittel', 'ml', '', 'false')
-    write2DBDrug('Ceftiocyl Flow', '836487', '1', 'Homöopathika', 'ml', '', 'false')
-    write2DBDrug('Dexatat', 'EU/2/17/209/001-002', '30', 'Fütterungsarzneimittel', 'ml', '', 'false')
-    write2DBDrug('Melovem', '8-00718', '0', 'Standardarzneimittel', 'ml', '', 'false')
-    write2DBDrug('Neomycin-Penicillin', '837660', '20', 'Fütterungsarzneimittel', 'ml', '', 'false')
-    write2DBDrug('Oxytetracyclin', '13910', '100', 'Standardarzneimittel', 'ml', '', 'false')
-    write2DBDrug('Porcilis M Hyo', '838068', '0', 'Homöopathika', 'ml', '', 'false')
-    write2DBDrug('Repose 500', '838093', '17', 'Biologika', 'ml', '', 'false')
-    write2DBDrug('Dinolytic 5 mg/ml', '8-00003', '1', 'Standardarzneimittel', 'ml', '9088881277538', 'false')
-    write2DBDrug('Parvoruvac', '8-20066', '0', 'Standardarzneimittel', 'ml', '3411112293773', 'false')
+//delete animal location from Database
+function deleteDBLocation(location) {
+    var lastSelectedPlace = localStorage.getItem("livestockPlace");
+    ons.notification.confirm({
+        title: '',
+        message: "Möchtest du " + '<b>' + location + '</b>' + " löschen?",
+        cancelable: true,
+        buttonLabels: ['Ja', 'Nein'],
+        callback: function (index) {
+            if (index == 0) {
+                //delete local storage if last selected place is place to be deleted
+                if (lastSelectedPlace == location) {
+                    localStorage.removeItem('livestockPlace');
+                    document.getElementById("livestockPlace").value = "Auswählen"
+                }
+                //remove from database
+                db.transaction(function (tx) {
+                        tx.executeSql('DELETE FROM animal_location WHERE location = ?', [location]);
+                    },
+                    function (error) {
+                        alert('Error: ' + error.message + ' code: ' + error.code);
+                    },
+                    function () {
+                        getLocationDB()
+                    });
+            }
+        }
+    })
 }
 
-function sampleLivestocks() {
-    write2DBLivestockTester('2019-05-31', 'yellow', '1234', 'Dekzentrum', 'A', '2019-06-01', 'example@example.com')
-    write2DBLivestockTester('2019-05-02', 'red', '4567', 'Wartestall', 'A', '2019-04-01', 'example@example.com')
-    write2DBLivestockTester('2019-05-01', 'green', '8743', 'Abferkelbox', 'D', '2019-05-21', 'example@example.com')
-    write2DBLivestockTester('2019-05-30', 'blue', '1256', 'Futterventile', 'A', '2019-06-26', 'example@example.com')
-    write2DBLivestockTester('2019-05-27', 'orange', '7890', 'Abferkelbox', 'C', '2019-04-12', 'example@example.com')
-    write2DBLivestockTester('2019-05-09', 'white', '3456', 'Abferkelbox', 'C', '2019-03-01', 'example@example.com')
-    write2DBLivestockTester('2019-05-03', 'red', '4390', 'Futterventile', 'A', '2019-01-01', 'example@example.com')
-    write2DBLivestockTester('2019-05-19', 'blue', '4567', 'Wartestall', 'D', '2019-02-24', 'example@example.com')
-    write2DBLivestockTester('2019-05-15', 'yellow', '1238', 'Dekzentrum', 'B', '2019-01-16', 'example@example.com')
-    write2DBLivestockTester('2019-05-29', 'red', '9805', 'Dekzentrum', 'A', '2019-03-12', 'example@example.com')
+//Function for get livestock Data from Database --> show livestock data in view
+function getLivestockDB() {
+    db.transaction(function (transaction) {
+        transaction.executeSql('SELECT * FROM livestock', [], function (tx, results) {
+            var data2Arr = Array.from(results.rows);
+            updateLivestockView(data2Arr, results.rows.length)
+        }, null);
+    });
+}
+
+//Function for get livestock unsafed items from database
+function checkLivestockUnsafedIems() {
+    db.transaction(function (transaction) {
+        transaction.executeSql('SELECT * FROM livestock WHERE id = ?', ['-1'], function (tx, results) {
+            var data2Arr = Array.from(results.rows);
+            alert("Unsafed ITEMS = " + results.rows.length)
+            for (i = 0; i < results.rows.length; i++) {
+                alert(data2Arr[i].birthday + " " + data2Arr[i].color + " " + data2Arr[i].number + " " + data2Arr[i].created + " " + data2Arr[i].user + " " + data2Arr[i].guid)
+                RESTAddLivestock(data2Arr[i].birthday, data2Arr[i].color, data2Arr[i].number, "place_dummy", data2Arr[i].created, data2Arr[i].user, data2Arr[i].guid)
+            };
+        }, null);
+    });
+} 
+
+// //Function get min ID from database
+// function getMinIDDB() {
+//     var DatabaseTables = ["animal_location", "livestock"];
+//     for (i = 0; i < DatabaseTables.length; i++) {
+//         console.log(DatabaseTables[i]); 
+//         var testString = toString(DatabaseTables[i])
+//         db.transaction(function (transaction) {
+//             transaction.executeSql("SELECT MIN(id) FROM " + testString + "", [], function (tx, results) {
+//                 var minID = (results.rows[0]["MIN(id)"]);
+//                 //check if ID is negative
+//                 if (Math.sign(minID) == "-1") {
+//                     MinLocationIDDB = minID;
+//                 } else {
+//                     MinLocationIDDB = "0";
+//                 }
+//                 console.log("LocationID: " + MinLocationIDDB);
+//                 return MinLocationIDDB;
+//             }, null);
+//             // transaction.executeSql('SELECT MIN(id) FROM livestock', [], function (tx, results) {
+//             //     var minID = (results.rows[0]["MIN(id)"]);
+//             //     MinAnimalIDDB = minID;
+//             //     console.log("AnimalID: " + MinAnimalIDDB);
+//             // }, null);
+//         });
+//     }
+// }
+
+//Function get max ID from database
+function getMaxIDDB() {
+    db.transaction(function (transaction) {
+        console.log("MAX") 
+        transaction.executeSql('SELECT MAX(id) FROM animal_location', [], function (tx, results) {
+            console.log(results.rows[0]["MAX(id)"]);
+        }, null);
+    });
+}
+
+//add locations to database
+async function write2DBLivestockLocationTester(id, location) {
+    await db.transaction(function (transaction) {
+        var executeQuery =
+            "INSERT INTO animal_location (id, location) VALUES (?,?)";
+        transaction.executeSql(executeQuery, [id, location],
+            function (tx, result) {
+                console.log("Animal location added")
+            },
+            function (error) {
+                alert('Error: ' + error.message + ' code: ' + error.code);
+            });
+    });
 }
 
 //add livestock to database
-async function write2DBLivestockTester(born, color, number, place, group, created, email) {
+async function write2DBLivestockTester(id, birthday, color, number, place, created, email, guid) {
     await db.transaction(function (transaction) {
         var executeQuery =
-            "INSERT INTO livestock (born, color, number, place, created,  livestock_group, user, tagged, sync) VALUES (?,?,?,?,?,?,?,?,?)";
-        transaction.executeSql(executeQuery, [born, color, number, place, created, group, email, "false", "true"],
+            "INSERT INTO livestock (id, birthday, color, number, place, created, user, tagged, guid) VALUES (?,?,?,?,?,?,?,?,?)";
+        transaction.executeSql(executeQuery, [id, birthday, color, number, place, created, email, "false", guid],
             function (tx, result) {
                 console.log("Livestock added")
             },
